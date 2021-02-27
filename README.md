@@ -1,7 +1,8 @@
 # CRUDRecipeEF
-## Console app project to practice CRUD with EF and relationships. App is split up into a presentation layer (Console) and the data layer + business layer are in the same class library
+## Console app project to practice CRUD with EF and relationships. 
+*App is split up into a presentation layer (Console) and the data layer + business layer are in the same class library*
 
-### Link to UML https://drive.google.com/file/d/1wK_0AYogciHfWensgVgt9arEkGfge9xd/view?usp=sharing
+[UML](https://drive.google.com/file/d/1wK_0AYogciHfWensgVgt9arEkGfge9xd/view?usp=sharing)
 #### The idea:
 Recipes app (we can start it in a console app and then move it to either mvc or web api)
 
