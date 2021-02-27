@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDRecipeEF.PL", "CRUDRecipeEF.PL\CRUDRecipeEF.PL.csproj", "{CBED96DB-8CE5-4AA1-832B-EBA5CD71B458}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDRecipeEF.BL.DL", "CRUDRecipeEF.BL.DL\CRUDRecipeEF.BL.DL.csproj", "{2E1F02C9-CA4F-469B-8AD8-D2C8115EA5FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBED96DB-8CE5-4AA1-832B-EBA5CD71B458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBED96DB-8CE5-4AA1-832B-EBA5CD71B458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBED96DB-8CE5-4AA1-832B-EBA5CD71B458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBED96DB-8CE5-4AA1-832B-EBA5CD71B458}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E1F02C9-CA4F-469B-8AD8-D2C8115EA5FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E1F02C9-CA4F-469B-8AD8-D2C8115EA5FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E1F02C9-CA4F-469B-8AD8-D2C8115EA5FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E1F02C9-CA4F-469B-8AD8-D2C8115EA5FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4CCB9027-06B2-4191-B24F-27B4172D0572}
+	EndGlobalSection
+EndGlobal
