@@ -4,7 +4,7 @@
 
 ## [UML](https://drive.google.com/file/d/1wK_0AYogciHfWensgVgt9arEkGfge9xd/view?usp=sharing)
 #### The idea:
-**Recipes app (we can start it in a console app and then move it to either mvc or web api)
+- Recipes app (we can start it in a console app and then move it to either mvc or web api)
 
 - A recipe has a list of ingredients and a ingredient can belong to many recipes : many-to-many relationship
 - For that we could use data annotations
