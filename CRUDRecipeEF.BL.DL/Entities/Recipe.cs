@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CRUDRecipeEF.BL.DL
 {
-    public class Recipes
+    public class Recipe
     {
-        public int RecipeID { get; set; }
+        public int Id { get; set; }
 
-        public List<Ingridients> Ingridients { get; set; }
-        public string RecipeName { get; set; }
+        public List<Ingredient> Ingredients = new List<Ingredient>();
+        public string Name { get; set; }
 
         
     }
