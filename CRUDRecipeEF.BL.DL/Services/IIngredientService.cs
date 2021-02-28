@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CRUDRecipeEF.BL.DL.Entities;
 
 namespace CRUDRecipeEF.BL.DL.Services
 {
