@@ -17,3 +17,7 @@
 - This app will cover data annotations, CRUD, many to many, one to one, one to many, linq, dependency injection, services 
 
 
+### How to contribue
+- Create a new branch with a name, number of the issue and if wanted add a short title for example (feature-4-Create-Ingredient-Class)
+- Remember to pull from master now and then so we dont have a bunch of conflicts, its a good idea to only change the code that you need to implement this feature
+- When your done with the issue, create a pull request and have someone review it. 
