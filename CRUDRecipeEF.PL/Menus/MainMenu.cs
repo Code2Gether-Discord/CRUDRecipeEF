@@ -2,7 +2,7 @@
 
 namespace CRUDRecipeEF.PL.Menus
 {
-    public class Menu
+    public class MainMenu
     {
         public void Run()
         {
