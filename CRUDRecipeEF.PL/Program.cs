@@ -12,7 +12,7 @@ namespace CRUDRecipeEF.PL
         {
             var host = CreateHostBuilder().Build();
             //App starting point
-            host.Services.GetRequiredService<Menu>().Run();
+            host.Services.GetRequiredService<MainMenu>().Run();
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace CRUDRecipeEF.PL
              config.AddJsonFile("appsettings.json"))
               .ConfigureServices(services =>
               {
-                  services.AddSingleton<Menu>();
+                  services.AddSingleton<MainMenu>();
               });
         }
     }
