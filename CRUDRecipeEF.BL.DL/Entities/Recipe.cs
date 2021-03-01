@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CRUDRecipeEF.BL.DL.Entities
 {
@@ -6,9 +7,9 @@ namespace CRUDRecipeEF.BL.DL.Entities
     {
         public int Id { get; set; }
 
-        public List<Ingredient> Ingredients = new List<Ingredient>();
-        public string Name { get; set; }
+        [Required]
+        public string Name { get; set; } 
 
-        
+        public List<Ingredient> Ingredients = new List<Ingredient>();
     }
 }
