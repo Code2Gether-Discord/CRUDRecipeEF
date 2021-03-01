@@ -1,6 +1,4 @@
-﻿using System;
-using System.Configuration;
-using CRUDRecipeEF.BL.DL.Entities;
+﻿using CRUDRecipeEF.BL.DL.Entities;
 using CRUDRecipeEF.PL.Menus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +10,6 @@ namespace CRUDRecipeEF.PL
 {
     class Program
     {
-        public IConfiguration Configuration { get; set; }
         static void Main(string[] args)
         {
             var host = CreateHostBuilder().Build();
@@ -29,11 +26,11 @@ namespace CRUDRecipeEF.PL
             return Host.CreateDefaultBuilder()
               .ConfigureAppConfiguration(config =>
              config.AddJsonFile("appsettings.json"))
-              .ConfigureServices(services =>
+              .ConfigureServices((hostContext, services) =>
               {
                   services.AddSingleton<MainMenu>();
                   services.AddDbContext<RecipeContext>(options =>
-                  options.UseSqlite(Configuration.GetConnectionString("")));
+                  options.UseSqlite(hostContext.Configuration.GetConnectionString("Default")));
               });
         }
     }
