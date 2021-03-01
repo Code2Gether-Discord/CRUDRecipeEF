@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CRUDRecipeEF.BL.DL.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace CRUDRecipeEF.BL.DL.Entities
+namespace CRUDRecipeEF.BL.DL.Data
 {
     public class RecipeContext : DbContext
     {
