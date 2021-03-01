@@ -1,18 +1,15 @@
-﻿
-using CRUDRecipeEF.BL.DL.Data;
-using CRUDRecipeEF.BL.DL.Entities;
+﻿using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.PL.Menus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-
 namespace CRUDRecipeEF.PL
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
             //App starting point
@@ -31,8 +28,9 @@ namespace CRUDRecipeEF.PL
               .ConfigureServices((hostContext, services) =>
               {
                   services.AddSingleton<MainMenu>();
-                  services.AddDbContext<RecipeContext>(options => {
-                      options.UseSqlite(hostContext.Configuration.GetConnectionString("Default"));            
+                  services.AddDbContext<RecipeContext>(options =>
+                  {
+                      options.UseSqlite(hostContext.Configuration.GetConnectionString("Default"));
                   });
               });
         }
