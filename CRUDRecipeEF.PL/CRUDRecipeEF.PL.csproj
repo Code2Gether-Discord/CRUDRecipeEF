@@ -16,4 +16,8 @@
     <ProjectReference Include="..\CRUDRecipeEF.BL.DL\CRUDRecipeEF.BL.DL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CRUDRecipeEF.BL.DL\CRUDRecipeEF.BL.DL.csproj" />
+  </ItemGroup>
+
 </Project>
