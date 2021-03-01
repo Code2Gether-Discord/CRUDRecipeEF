@@ -8,8 +8,8 @@ namespace CRUDRecipeEF.BL.DL.Entities
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; } 
+        public string Name { get; set; }
 
-        public List<Ingredient> Ingredients = new List<Ingredient>();
+        public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
     }
 }

@@ -10,6 +10,6 @@ namespace CRUDRecipeEF.BL.DL.Entities
         [Required]
         public string Name { get; set; }
 
-        public List<Recipe> Recipes = new List<Recipe>();
+        public List<Recipe> Recipes { get; set; } = new List<Recipe>();
     }
 }
