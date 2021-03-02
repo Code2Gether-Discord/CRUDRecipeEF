@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CRUDRecipeEF.BL.DL.DTOs;
-using CRUDRecipeEF.BL.DL.Entities;
 
 namespace CRUDRecipeEF.BL.DL.Services
 {
+
     public interface IRecipeService
     {
-        RecipeDetailDTO GetRecipeByName(string name);
+        Task<RecipeDetailDTO> GetRecipeByName(string name);
 
-        IEnumerable<RecipeDetailDTO> GetAllRecipes();
+        Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes();
 
-        string AddRecipe(RecipeAddDTO recipe);
+        Task<string> AddRecipe(RecipeAddDTO recipe);
 
-        string AddIngredientToRecipe(IngredientAddDTO ingredient, string recipeName);
+        Task<string> AddIngredientToRecipe(IngredientAddDTO ingredient, string recipeName);
 
-        void RemoveIngredientFromRecipe(string ingredientName, string recipeName);
+        Task RemoveIngredientFromRecipe(string ingredientName, string recipeName);
 
-        void DeleteRecipe(string name);
+        Task DeleteRecipe(string name);
     }
 }

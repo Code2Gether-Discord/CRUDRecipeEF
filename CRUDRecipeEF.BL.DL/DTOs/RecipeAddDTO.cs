@@ -8,6 +8,6 @@ namespace CRUDRecipeEF.BL.DL.DTOs
         [StringLength(200, MinimumLength = 3)]
         public string Name { get; set; }
 
-        public List<IngredientDetailDTO> Ingredients { get; set; } = new List<IngredientDetailDTO>();
+        public List<IngredientAddDTO> Ingredients { get; set; } = new List<IngredientAddDTO>();
     }
 }

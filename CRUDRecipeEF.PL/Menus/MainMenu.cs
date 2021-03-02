@@ -1,12 +1,25 @@
-﻿using System;
+﻿using CRUDRecipeEF.BL.DL.DTOs;
+using CRUDRecipeEF.BL.DL.Services;
+using static System.Console;
 
 namespace CRUDRecipeEF.PL.Menus
 {
     public class MainMenu
     {
+        private readonly IRecipeService _recipeService;
+
+        public MainMenu(IRecipeService recipeService)
+        {
+            _recipeService = recipeService;
+        }
+
         public void Run()
         {
-            Console.WriteLine("Hello there!");
+            WriteLine("Hello there!");
+            _recipeService.AddRecipe(new RecipeAddDTO() { Name = "brains" });
+            WriteLine(_recipeService.GetRecipeByName("human brains"));
+            var recipes = _recipeService.GetAllRecipes();
+            ReadLine();
         }
     }
 }
