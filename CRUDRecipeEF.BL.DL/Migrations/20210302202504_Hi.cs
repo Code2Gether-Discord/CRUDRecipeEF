@@ -2,7 +2,7 @@
 
 namespace CRUDRecipeEF.BL.DL.Migrations
 {
-    public partial class Init : Migration
+    public partial class Hi : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

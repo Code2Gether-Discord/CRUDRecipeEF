@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUDRecipeEF.BL.DL.Migrations
 {
     [DbContext(typeof(RecipeContext))]
-    [Migration("20210301223009_Init")]
-    partial class Init
+    [Migration("20210302202504_Hi")]
+    partial class Hi
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

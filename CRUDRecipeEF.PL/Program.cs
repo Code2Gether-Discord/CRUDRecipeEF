@@ -30,7 +30,7 @@ namespace CRUDRecipeEF.PL
               {
                   services.AddTransient<IRecipeService, RecipeService>();
                   services.AddAutoMapper(typeof(RecipeService).Assembly);
-                  services.AddSingleton<MainMenu>();
+                  services.AddTransient<MainMenu>();
 
                   services.AddDbContext<RecipeContext>(options =>
                   {

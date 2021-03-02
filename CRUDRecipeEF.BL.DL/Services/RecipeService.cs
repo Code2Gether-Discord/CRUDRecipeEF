@@ -34,23 +34,17 @@ namespace CRUDRecipeEF.BL.DL.Services
             throw new System.NotImplementedException();
         }
 
-        public async Task<string> AddRecipe(RecipeAddDTO recipe)
+        public async Task<string> AddRecipe(RecipeAddDTO recipeAddDTO)
         {
-            if (await RecipeExists(recipe.Name))
+            if (await RecipeExists(recipeAddDTO.Name))
             {
                 throw new ArgumentException("Recipe exists");
             }
 
-            var ingredients = new List<Ingredient>();
-            foreach (var ingredient in recipe.Ingredients)
-            {
-                ingredients.Add(new Ingredient() { Name = ingredient.Name });
-            }
-
-            await _context.AddAsync(new Recipe() { Name = recipe.Name, Ingredients = ingredients });
+            await _context.AddAsync(_mapper.Map<Recipe>(recipeAddDTO));
             await Save();
 
-            return recipe.Name;
+            return recipeAddDTO.Name;
         }
 
         public async Task DeleteRecipe(string name)
