@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
@@ -12,10 +13,12 @@ namespace CRUDRecipeEF.BL.DL.Services
     public class RecipeService : IRecipeService
     {
         private readonly RecipeContext _context;
+        private readonly IMapper _mapper;
 
-        public RecipeService(RecipeContext context)
+        public RecipeService(RecipeContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         private async Task Save()
@@ -26,7 +29,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         private async Task<bool> RecipeExists(string recipeName) =>
             await _context.Recipes.AnyAsync(r => r.Name.ToLower() == recipeName.ToLower());
 
-        public string AddIngredientToRecipe(IngredientAddDTO ingredient, string recipeName)
+        public Task<string> AddIngredientToRecipe(IngredientAddDTO ingredient, string recipeName)
         {
             throw new System.NotImplementedException();
         }
@@ -43,34 +46,49 @@ namespace CRUDRecipeEF.BL.DL.Services
             {
                 ingredients.Add(new Ingredient() { Name = ingredient.Name });
             }
-            
-            await _context.AddAsync(new Recipe() {Name = recipe.Name, Ingredients = ingredients });
+
+            await _context.AddAsync(new Recipe() { Name = recipe.Name, Ingredients = ingredients });
             await Save();
 
             return recipe.Name;
         }
 
-        public void DeleteRecipe(string name)
+        public async Task DeleteRecipe(string name)
+        {
+
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower());
+
+            if (recipe == null)
+            {
+                throw new ArgumentException("Recipe doesnt exist");
+            }
+
+            _context.Remove(recipe);
+            await Save();
+        }
+
+        public Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes()
         {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<RecipeDetailDTO> GetAllRecipes()
+        public async Task<RecipeDetailDTO> GetRecipeByName(string name)
+        {
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Name == name);
+
+            if (recipe == null)
+            {
+                throw new ArgumentException("Recipe doesnt exist");
+            }
+            return _mapper.Map<RecipeDetailDTO>(recipe);
+        }
+
+        public Task RemoveIngredientFromRecipe(string ingredientName, string recipeName)
         {
             throw new System.NotImplementedException();
         }
 
-        public RecipeDetailDTO GetRecipeByName(string name)
-        {
-            throw new System.NotImplementedException();
-        }
 
-        public void RemoveIngredientFromRecipe(string ingredientName, string recipeName)
-        {
-            throw new System.NotImplementedException();
-        }
-
-    
 
     }
 }

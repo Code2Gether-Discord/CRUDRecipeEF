@@ -1,4 +1,5 @@
 ﻿using CRUDRecipeEF.BL.DL.Data;
+using CRUDRecipeEF.BL.DL.Services;
 using CRUDRecipeEF.PL.Menus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +28,10 @@ namespace CRUDRecipeEF.PL
             return Host.CreateDefaultBuilder(args)
               .ConfigureServices((hostContext, services) =>
               {
+                  services.AddTransient<IRecipeService, RecipeService>();
+                  services.AddAutoMapper(typeof(RecipeService).Assembly);
                   services.AddSingleton<MainMenu>();
+
                   services.AddDbContext<RecipeContext>(options =>
                   {
                       options.UseSqlite(hostContext.Configuration.GetConnectionString("Default"));
