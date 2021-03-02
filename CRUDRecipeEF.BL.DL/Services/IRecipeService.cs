@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
+using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
 
 namespace CRUDRecipeEF.BL.DL.Services
 {
     public interface IRecipeService
     {
-        Recipe GetRecipeByName(string name);
+        RecipeDetailDTO GetRecipeByName(string name);
 
-        IEnumerable<Recipe> GetAllRecipes();
+        IEnumerable<RecipeDetailDTO> GetAllRecipes();
 
-        string AddRecipe(Recipe recipe);
+        string AddRecipe(RecipeAddDTO recipe);
 
-        string AddIngredientToRecipe(Ingredient ingredient, string recipeName);
+        string AddIngredientToRecipe(IngredientAddDTO ingredient, string recipeName);
 
         void RemoveIngredientFromRecipe(string ingredientName, string recipeName);
 
