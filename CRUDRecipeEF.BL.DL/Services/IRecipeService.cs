@@ -4,6 +4,7 @@ using CRUDRecipeEF.BL.DL.Entities;
 
 namespace CRUDRecipeEF.BL.DL.Services
 {
+
     public interface IRecipeService
     {
         RecipeDetailDTO GetRecipeByName(string name);
