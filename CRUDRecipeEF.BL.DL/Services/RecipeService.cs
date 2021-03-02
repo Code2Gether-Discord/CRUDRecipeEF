@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
+using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRUDRecipeEF.BL.DL.Services
@@ -16,6 +18,11 @@ namespace CRUDRecipeEF.BL.DL.Services
             _context = context;
         }
 
+        private async Task Save()
+        {
+            await _context.SaveChangesAsync();
+        }
+
         private async Task<bool> RecipeExists(string recipeName) =>
             await _context.Recipes.AnyAsync(r => r.Name.ToLower() == recipeName.ToLower());
 
@@ -24,9 +31,23 @@ namespace CRUDRecipeEF.BL.DL.Services
             throw new System.NotImplementedException();
         }
 
-        public string AddRecipe(RecipeAddDTO recipe)
+        public async Task<string> AddRecipe(RecipeAddDTO recipe)
         {
-            throw new System.NotImplementedException();
+            if (await RecipeExists(recipe.Name))
+            {
+                throw new ArgumentException("Recipe exists");
+            }
+
+            var ingredients = new List<Ingredient>();
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                ingredients.Add(new Ingredient() { Name = ingredient.Name });
+            }
+            
+            await _context.AddAsync(new Recipe() {Name = recipe.Name, Ingredients = ingredients });
+            await Save();
+
+            return recipe.Name;
         }
 
         public void DeleteRecipe(string name)
@@ -48,5 +69,8 @@ namespace CRUDRecipeEF.BL.DL.Services
         {
             throw new System.NotImplementedException();
         }
+
+    
+
     }
 }
