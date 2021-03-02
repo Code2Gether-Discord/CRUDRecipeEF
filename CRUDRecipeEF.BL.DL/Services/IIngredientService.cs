@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
+using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
 
 namespace CRUDRecipeEF.BL.DL.Services
 {
     public interface IIngredientService
     {
-        Ingredient GetIngredientByName(string name);
+        IngredientDetailDTO GetIngredientByName(string name);
 
-        IEnumerable<Ingredient> GetAllIngredients();
+        IEnumerable<IngredientDetailDTO> GetAllIngredients();
 
-        string AddIngredient(Ingredient ingredient);
+        string AddIngredient(IngredientAddDTO ingredient);
 
         void DeleteIngredient(string name);
     }
