@@ -1,18 +1,17 @@
-﻿using CRUDRecipeEF.BL.DL.Entities;
+﻿using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.PL.Menus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-
 namespace CRUDRecipeEF.PL
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var host = CreateHostBuilder().Build();
+            var host = CreateHostBuilder(args).Build();
             //App starting point
             host.Services.GetRequiredService<MainMenu>().Run();
         }
@@ -21,16 +20,18 @@ namespace CRUDRecipeEF.PL
         /// Register services and app configs here
         /// </summary>
         /// <returns>IHostBuilder</returns>
-        private static IHostBuilder CreateHostBuilder()
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return Host.CreateDefaultBuilder()
-              .ConfigureAppConfiguration(config =>
-             config.AddJsonFile("appsettings.json"))
+            //appsettings copy to output
+            //auto adds json file appsettings
+            return Host.CreateDefaultBuilder(args)
               .ConfigureServices((hostContext, services) =>
               {
                   services.AddSingleton<MainMenu>();
                   services.AddDbContext<RecipeContext>(options =>
-                  options.UseSqlite(hostContext.Configuration.GetConnectionString("Default")));
+                  {
+                      options.UseSqlite(hostContext.Configuration.GetConnectionString("Default"));
+                  });
               });
         }
     }

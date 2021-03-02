@@ -1,22 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CRUDRecipeEF.BL.DL.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace CRUDRecipeEF.BL.DL.Entities
+namespace CRUDRecipeEF.BL.DL.Data
 {
     public class RecipeContext : DbContext
     {
-
         public RecipeContext(DbContextOptions<RecipeContext> options) : base(options)
         {
-            
         }
 
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
-
     }
 }
