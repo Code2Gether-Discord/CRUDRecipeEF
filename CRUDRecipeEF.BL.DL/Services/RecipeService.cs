@@ -29,9 +29,19 @@ namespace CRUDRecipeEF.BL.DL.Services
         private async Task<bool> RecipeExists(string recipeName) =>
             await _context.Recipes.AnyAsync(r => r.Name.ToLower() == recipeName.ToLower());
 
-        public Task<string> AddIngredientToRecipe(IngredientAddDTO ingredient, string recipeName)
+        public async Task<string> AddIngredientToRecipe(IngredientAddDTO ingredientAddDTO, string recipeName)
         {
-            throw new System.NotImplementedException();
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Name.ToLower() == recipeName.ToLower());
+
+            if (recipe == null)
+            {
+                throw new ArgumentException("Recipe doesnt exist");
+            }
+
+            recipe.Ingredients.Add(_mapper.Map<Ingredient>(ingredientAddDTO));
+            await Save();
+
+            return ingredientAddDTO.Name;
         }
 
         public async Task<string> AddRecipe(RecipeAddDTO recipeAddDTO)
@@ -61,9 +71,10 @@ namespace CRUDRecipeEF.BL.DL.Services
             await Save();
         }
 
-        public Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes()
+        public async Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes()
         {
-            throw new System.NotImplementedException();
+            var recipes = await _context.Recipes.ToListAsync();
+            return _mapper.Map<List<RecipeDetailDTO>>(recipes);
         }
 
         public async Task<RecipeDetailDTO> GetRecipeByName(string name)
@@ -74,15 +85,29 @@ namespace CRUDRecipeEF.BL.DL.Services
             {
                 throw new ArgumentException("Recipe doesnt exist");
             }
+
             return _mapper.Map<RecipeDetailDTO>(recipe);
         }
 
-        public Task RemoveIngredientFromRecipe(string ingredientName, string recipeName)
+        public async Task RemoveIngredientFromRecipe(string ingredientName, string recipeName)
         {
-            throw new System.NotImplementedException();
+
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Name.ToLower() == recipeName.ToLower());
+
+            if (recipe == null)
+            {
+                throw new ArgumentException("Recipe doesnt exist");
+            }
+
+            var ingredient = recipe.Ingredients.FirstOrDefault(i => i.Name.ToLower() == ingredientName.ToLower());
+
+            if (ingredient == null)
+            {
+                throw new ArgumentException("Ingredient doesnt exist");
+            }
+
+            recipe.Ingredients.Remove(ingredient);
+            await Save();
         }
-
-
-
     }
 }

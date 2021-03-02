@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using CRUDRecipeEF.BL.DL.Data;
-using CRUDRecipeEF.BL.DL.DTOs;
+﻿using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Services;
 using static System.Console;
 
@@ -21,6 +18,8 @@ namespace CRUDRecipeEF.PL.Menus
             WriteLine("Hello there!");
             _recipeService.AddRecipe(new RecipeAddDTO() { Name = "brains" });
             WriteLine(_recipeService.GetRecipeByName("human brains"));
+            var recipes = _recipeService.GetAllRecipes();
+            ReadLine();
         }
     }
 }
