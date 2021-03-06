@@ -9,13 +9,13 @@ namespace CRUDRecipeEF.PL.Menus
 {
     public class IngredientMenu : IIngredientMenu
     {
-        private readonly IIngredientService ingredientService;
+        private readonly IIngredientService _ingredientService;
 
         private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngredient = 2, ShowIngredient = 3, DeleteIngredient = 4 };
 
         public IngredientMenu(IIngredientService ingredientService)
         {
-            this.ingredientService = ingredientService;
+            _ingredientService = ingredientService;
         }
 
         public async Task Show()
@@ -84,7 +84,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWrite("What ingredient would you like to lookup: ");
             var name = Console.ReadLine();
 
-            var ingredient = await ingredientService.GetIngredientByName(name);
+            var ingredient = await _ingredientService.GetIngredientByName(name);
             // TODO verify that this is handeled correctly once the service is implemented
 
             ConsoleHelper.ColorWriteLine($"'{name}' {(name == null ? "doesn't exist" : "exists")}");
@@ -96,7 +96,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWrite("What ingredient would you like to delete: ");
             var name = Console.ReadLine();
 
-            await ingredientService.DeleteIngredient(name);
+            await _ingredientService.DeleteIngredient(name);
         }
 
         private void NewIngredient()
@@ -107,13 +107,13 @@ namespace CRUDRecipeEF.PL.Menus
 
             IngredientAddDTO newIngreditent = new IngredientAddDTO { Name = name };
 
-            ingredientService.AddIngredient(newIngreditent);
+            _ingredientService.AddIngredient(newIngreditent);
         }
 
         private async Task ListIngredients()
         {
             //TODO error checking
-            var result = await ingredientService.GetAllIngredients();
+            var result = await _ingredientService.GetAllIngredients();
             List<IngredientDetailDTO> ingredientList = result.ToList();
 
             var currentIndex = 0;

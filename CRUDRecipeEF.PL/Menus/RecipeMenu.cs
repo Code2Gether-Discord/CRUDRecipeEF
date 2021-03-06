@@ -1,11 +1,19 @@
-﻿using System;
+﻿using CRUDRecipeEF.BL.DL.Services;
+using System;
 
 
 namespace CRUDRecipeEF.PL.Menus
 {
     public class RecipeMenu : IRecipeMenu
     {
+        private readonly IRecipeService _recipeService;
+
         private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4 };
+
+        public RecipeMenu(IRecipeService recipeService)
+        {
+            _recipeService = recipeService;
+        }
 
         public void Show()
         {

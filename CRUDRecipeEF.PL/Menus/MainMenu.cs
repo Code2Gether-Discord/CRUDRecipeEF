@@ -4,16 +4,16 @@ namespace CRUDRecipeEF.PL.Menus
 {
     public class MainMenu : IMainMenu
     {
-        private readonly IIngredientMenu ingredientMenu;
-        private readonly IRecipeMenu recipeMenu;
+        private readonly IIngredientMenu _ingredientMenu;
+        private readonly IRecipeMenu _recipeMenu;
 
         private enum MainMenuOption { InValid = 0, RecipeMenu = 1, IngredientMenu = 2, Quit = 3 };
 
         public MainMenu(IIngredientMenu ingredientMenu,
             IRecipeMenu recipeMenu)
         {
-            this.ingredientMenu = ingredientMenu;
-            this.recipeMenu = recipeMenu;
+            _ingredientMenu = ingredientMenu;
+            _recipeMenu = recipeMenu;
         }
 
         public void Show()
@@ -69,11 +69,11 @@ namespace CRUDRecipeEF.PL.Menus
                     break;
                 case MainMenuOption.RecipeMenu:
                     Console.WriteLine();
-                    recipeMenu.Show();
+                    _recipeMenu.Show();
                     break;
                 case MainMenuOption.IngredientMenu:
                     Console.WriteLine();
-                    ingredientMenu.Show();
+                    _ingredientMenu.Show();
                     break;
                 case MainMenuOption.Quit:
                     Environment.Exit(0);
