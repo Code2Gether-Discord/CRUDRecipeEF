@@ -5,6 +5,10 @@ namespace CRUDRecipeEF.BL.DL.Data
 {
     public class RecipeContext : DbContext
     {
+        public RecipeContext()
+        {
+        }
+
         public RecipeContext(DbContextOptions<RecipeContext> options) : base(options)
         {
         }
