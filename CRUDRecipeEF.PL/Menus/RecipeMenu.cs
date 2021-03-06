@@ -8,7 +8,7 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
 
-        private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4 };
+        private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4, GoBack = 5 };
 
         public RecipeMenu(IRecipeService recipeService)
         {
@@ -65,6 +65,9 @@ namespace CRUDRecipeEF.PL.Menus
                 case RecipeMenuOption.ShowRecipe:
                     break;
                 case RecipeMenuOption.DeleteRecipe:
+                    break;
+                case RecipeMenuOption.GoBack:
+                    Console.WriteLine();
                     break;
                 default:
                     break;
