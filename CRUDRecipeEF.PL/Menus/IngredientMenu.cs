@@ -1,12 +1,24 @@
-﻿using System;
+﻿using CRUDRecipeEF.BL.DL.DTOs;
+using CRUDRecipeEF.BL.DL.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CRUDRecipeEF.PL.Menus
 {
     public class IngredientMenu : IIngredientMenu
     {
-        private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngrediente = 2, ShowIngredient = 3, DeleteIngredient = 4 };
+        private readonly IIngredientService ingredientService;
 
-        public void Show()
+        private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngredient = 2, ShowIngredient = 3, DeleteIngredient = 4 };
+
+        public IngredientMenu(IIngredientService ingredientService)
+        {
+            this.ingredientService = ingredientService;
+        }
+
+        public async Task Show()
         {
             ConsoleHelper.DefaultColor = ConsoleColor.Blue;
             ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "RecipeMenu");
@@ -39,25 +51,55 @@ namespace CRUDRecipeEF.PL.Menus
             }
 
             IngredientMenuOption choice = (IngredientMenuOption)option;
-            ExecuteMenuSelection(choice);
+            await ExecuteMenuSelection(choice);
         }
 
-        private void ExecuteMenuSelection(IngredientMenuOption option)
+        private async Task ExecuteMenuSelection(IngredientMenuOption option)
         {
             switch (option)
             {
                 case IngredientMenuOption.InValid:
                     break;
                 case IngredientMenuOption.NewIngredient:
+                    NewIngredient();
                     break;
-                case IngredientMenuOption.LookUpIngrediente:
+                case IngredientMenuOption.LookUpIngredient:
                     break;
                 case IngredientMenuOption.ShowIngredient:
+                    await ListIngredients();
                     break;
                 case IngredientMenuOption.DeleteIngredient:
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void NewIngredient()
+        {
+            ConsoleHelper.ColorWrite("What ingredient would you like to add: ");
+            var name = Console.ReadLine();
+
+            IngredientAddDTO newIngreditent = new IngredientAddDTO { Name = name };
+
+            ingredientService.AddIngredient(newIngreditent);
+        }
+
+        private async Task ListIngredients()
+        {
+            var result = await ingredientService.GetAllIngredients();
+            List<IngredientDetailDTO> ingredientList = result.ToList();
+
+            var currentIndex = 0;
+            foreach(var ingredient in ingredientList)
+            {
+                if (currentIndex % 5 == 0 && currentIndex != 0)
+                {
+                    Console.WriteLine("Press enter for next page.");
+                    Console.ReadLine();
+                }
+
+                Console.WriteLine(ingredient.Name);
             }
         }
 
