@@ -14,7 +14,7 @@ namespace CRUDRecipeEF.PL
         {
             var host = CreateHostBuilder(args).Build();
             //App starting point
-            host.Services.GetRequiredService<MainMenu>().Run();
+            host.Services.GetRequiredService<IMainMenu>().Show();
         }
 
         /// <summary>
@@ -30,7 +30,9 @@ namespace CRUDRecipeEF.PL
               {
                   services.AddTransient<IRecipeService, RecipeService>();
                   services.AddAutoMapper(typeof(RecipeService).Assembly);
-                  services.AddTransient<MainMenu>();
+                  services.AddTransient<IMainMenu, MainMenu>();
+                  services.AddTransient<IIngredientMenu, IngredientMenu>();
+                  services.AddTransient<IRecipeMenu, RecipeMenu>();
 
                   services.AddDbContext<RecipeContext>(options =>
                   {
