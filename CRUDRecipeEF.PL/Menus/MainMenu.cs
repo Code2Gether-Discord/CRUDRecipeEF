@@ -1,21 +1,22 @@
-﻿using CRUDRecipeEF.BL.DL.DTOs;
-using CRUDRecipeEF.BL.DL.Services;
-using System;
+﻿using System;
 
 namespace CRUDRecipeEF.PL.Menus
 {
-    public class MainMenu
+    public class MainMenu : IMainMenu
     {
-        private readonly IRecipeService _recipeService;
+        private readonly IIngredientMenu ingredientMenu;
+        private readonly IRecipeMenu recipeMenu;
 
-        public MainMenu(IRecipeService recipeService)
+        private enum MainMenuOption { InValid = 0, RecipeMenu = 1, IngredientMenu = 2, Quit = 3 };
+
+        public MainMenu(IIngredientMenu ingredientMenu,
+            IRecipeMenu recipeMenu)
         {
-            _recipeService = recipeService;
+            this.ingredientMenu = ingredientMenu;
+            this.recipeMenu = recipeMenu;
         }
 
-        public enum MainMenuOption { InValid = 0, RecipeMenu = 1, IngredientMenu = 2, Quit = 3};
-
-        public void Run()
+        public void Show()
         {
             while (true)
             {
@@ -33,9 +34,9 @@ namespace CRUDRecipeEF.PL.Menus
                 int option = 0;
                 bool valid = false;
 
-                while(!valid)
+                while (!valid)
                 {
-                    ConsoleHelper.ColorWrite(ConsoleColor.Yellow,"Please select an option: ");
+                    ConsoleHelper.ColorWrite(ConsoleColor.Yellow, "Please select an option: ");
                     input = Console.ReadLine();
 
                     valid = validateInt(input, 1, 3, out option);
@@ -59,13 +60,15 @@ namespace CRUDRecipeEF.PL.Menus
             //ReadLine();
         }
 
-        private static void ExecuteMenuSelection(MainMenuOption option)
+        private void ExecuteMenuSelection(MainMenuOption option)
         {
             switch (option)
             {
                 case MainMenuOption.RecipeMenu:
+                    recipeMenu.Show();
                     break;
                 case MainMenuOption.IngredientMenu:
+                    ingredientMenu.Show();
                     break;
                 case MainMenuOption.Quit:
                     Environment.Exit(0);
@@ -75,15 +78,15 @@ namespace CRUDRecipeEF.PL.Menus
             }
         }
 
-        private static bool validateInt(string input, int min, int max, out int result)
+        private bool validateInt(string input, int min, int max, out int result)
         {
-            if(!int.TryParse(input, out result))
+            if (!int.TryParse(input, out result))
             {
                 // Not a valid int - log error here if desired
                 return false;
             }
 
-            if(result > max || result < min)
+            if (result > max || result < min)
             {
                 // Outside expected range - log error here if desired
                 return false;
