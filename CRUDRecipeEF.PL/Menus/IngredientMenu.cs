@@ -21,7 +21,7 @@ namespace CRUDRecipeEF.PL.Menus
         public async Task Show()
         {
             ConsoleHelper.DefaultColor = ConsoleColor.Blue;
-            ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "RecipeMenu");
+            ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "Ingredient Menu");
             Console.WriteLine();
             ConsoleHelper.ColorWriteLine("1.) New Ingredient");
             ConsoleHelper.ColorWriteLine("2.) Lookup Ingredient");

@@ -18,7 +18,7 @@ namespace CRUDRecipeEF.PL.Menus
         public void Show()
         {
             ConsoleHelper.DefaultColor = ConsoleColor.Blue;
-            ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "RecipeMenu");
+            ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "Recipe Menu");
             Console.WriteLine();
             ConsoleHelper.ColorWriteLine("1.) New Recipe");
             ConsoleHelper.ColorWriteLine("2.) Lookup Recipe");
