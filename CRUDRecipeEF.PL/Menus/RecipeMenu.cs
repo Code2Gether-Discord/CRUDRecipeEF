@@ -17,7 +17,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("3.) Show Recipe List");
             ConsoleHelper.ColorWriteLine("4.) Delete Recipe");
             Console.WriteLine();
-            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "3.) Back to Main Menu");
+            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "5.) Back to Main Menu");
             Console.WriteLine();
 
             string input = string.Empty;
@@ -29,7 +29,7 @@ namespace CRUDRecipeEF.PL.Menus
                 ConsoleHelper.ColorWrite(ConsoleColor.Yellow, "Please select an option: ");
                 input = Console.ReadLine();
 
-                valid = validateInt(input, 1, 3, out option);
+                valid = validateInt(input, 1, 5, out option);
 
                 if (!Enum.IsDefined(typeof(RecipeMenuOption), option))
                 {

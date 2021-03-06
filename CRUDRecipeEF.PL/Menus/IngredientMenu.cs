@@ -16,8 +16,30 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("3.) Show Ingredient List");
             ConsoleHelper.ColorWriteLine("4.) Delete Ingredient");
             Console.WriteLine();
-            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "3.) Back to Main Menu");
+            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "5.) Back to Main Menu");
             Console.WriteLine();
+
+            string input = string.Empty;
+            int option = 0;
+            bool valid = false;
+
+            while (!valid)
+            {
+                ConsoleHelper.ColorWrite(ConsoleColor.Yellow, "Please select an option: ");
+                input = Console.ReadLine();
+
+                valid = validateInt(input, 1, 5, out option);
+
+                if (!Enum.IsDefined(typeof(IngredientMenuOption), option))
+                {
+                    // Not in the enum - log here if desired
+                    valid = false;
+                }
+
+            }
+
+            IngredientMenuOption choice = (IngredientMenuOption)option;
+            ExecuteMenuSelection(choice);
         }
 
         private void ExecuteMenuSelection(IngredientMenuOption option)
