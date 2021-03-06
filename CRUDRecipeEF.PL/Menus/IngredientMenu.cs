@@ -11,7 +11,7 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IIngredientService _ingredientService;
 
-        private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngredient = 2, ShowIngredient = 3, DeleteIngredient = 4 };
+        private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngredient = 2, ShowIngredient = 3, DeleteIngredient = 4, GoBack = 5 };
 
         public IngredientMenu(IIngredientService ingredientService)
         {
@@ -62,7 +62,7 @@ namespace CRUDRecipeEF.PL.Menus
                     //TODO throw and exception or something
                     break;
                 case IngredientMenuOption.NewIngredient:
-                    NewIngredient();
+                    await NewIngredient();
                     break;
                 case IngredientMenuOption.LookUpIngredient:
                     await LookupIngredient();
@@ -72,6 +72,9 @@ namespace CRUDRecipeEF.PL.Menus
                     break;
                 case IngredientMenuOption.DeleteIngredient:
                     await DeleteIngredient();
+                    break;
+                case IngredientMenuOption.GoBack:
+                    Console.WriteLine();
                     break;
                 default:
                     break;
@@ -84,10 +87,20 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWrite("What ingredient would you like to lookup: ");
             var name = Console.ReadLine();
 
-            var ingredient = await _ingredientService.GetIngredientByName(name);
-            // TODO verify that this is handeled correctly once the service is implemented
+            Console.WriteLine();
 
-            ConsoleHelper.ColorWriteLine($"'{name}' {(name == null ? "doesn't exist" : "exists")}");
+            try
+            {
+                var ingredient = await _ingredientService.GetIngredientByName(name);
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} exists.");
+            }
+            catch(KeyNotFoundException)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow,$"{name} does not exist.");
+            }
+
+            Console.WriteLine();
+            await this.Show();
         }
 
         private async Task DeleteIngredient()
@@ -96,10 +109,20 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWrite("What ingredient would you like to delete: ");
             var name = Console.ReadLine();
 
-            await _ingredientService.DeleteIngredient(name);
+            try
+            {
+                await _ingredientService.DeleteIngredient(name);
+            }
+            catch (KeyNotFoundException)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} does not exist.");
+            }
+
+            Console.WriteLine();
+            await this.Show();
         }
 
-        private void NewIngredient()
+        private async Task NewIngredient()
         {
             //TODO error checking
             ConsoleHelper.ColorWrite("What ingredient would you like to add: ");
@@ -107,11 +130,24 @@ namespace CRUDRecipeEF.PL.Menus
 
             IngredientAddDTO newIngreditent = new IngredientAddDTO { Name = name };
 
-            _ingredientService.AddIngredient(newIngreditent);
+            try
+            {
+                await _ingredientService.AddIngredient(newIngreditent);
+            }
+            catch (KeyNotFoundException)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} already exists.");
+            }
+
+            Console.WriteLine();
+            await this.Show();
         }
 
         private async Task ListIngredients()
         {
+            Console.WriteLine();
+            ConsoleHelper.ColorWriteLine("Known Ingredients: ");
+
             //TODO error checking
             var result = await _ingredientService.GetAllIngredients();
             List<IngredientDetailDTO> ingredientList = result.ToList();
@@ -119,14 +155,17 @@ namespace CRUDRecipeEF.PL.Menus
             var currentIndex = 0;
             foreach(var ingredient in ingredientList)
             {
+                currentIndex++;
                 if (currentIndex % 5 == 0 && currentIndex != 0)
                 {
-                    Console.WriteLine("Press enter for next page.");
+                    Console.WriteLine();
+                    ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow,"Press enter for next page.");
                     Console.ReadLine();
                 }
 
                 Console.WriteLine(ingredient.Name);
             }
+            Console.WriteLine();
         }
 
         private bool validateInt(string input, int min, int max, out int result)
