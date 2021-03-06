@@ -65,9 +65,11 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case MainMenuOption.RecipeMenu:
+                    Console.WriteLine();
                     recipeMenu.Show();
                     break;
                 case MainMenuOption.IngredientMenu:
+                    Console.WriteLine();
                     ingredientMenu.Show();
                     break;
                 case MainMenuOption.Quit:
