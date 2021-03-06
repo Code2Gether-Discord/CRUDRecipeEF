@@ -29,6 +29,7 @@ namespace CRUDRecipeEF.PL
               .ConfigureServices((hostContext, services) =>
               {
                   services.AddTransient<IRecipeService, RecipeService>();
+                  services.AddTransient<IIngredientService, IngredientService>();
                   services.AddAutoMapper(typeof(RecipeService).Assembly);
                   services.AddTransient<IMainMenu, MainMenu>();
                   services.AddTransient<IIngredientMenu, IngredientMenu>();
