@@ -59,24 +59,49 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case IngredientMenuOption.InValid:
+                    //TODO throw and exception or something
                     break;
                 case IngredientMenuOption.NewIngredient:
                     NewIngredient();
                     break;
                 case IngredientMenuOption.LookUpIngredient:
+                    await LookupIngredient();
                     break;
                 case IngredientMenuOption.ShowIngredient:
                     await ListIngredients();
                     break;
                 case IngredientMenuOption.DeleteIngredient:
+                    await DeleteIngredient();
                     break;
                 default:
                     break;
             }
         }
 
+        private async Task LookupIngredient()
+        {
+            //TODO error checking
+            ConsoleHelper.ColorWrite("What ingredient would you like to lookup: ");
+            var name = Console.ReadLine();
+
+            var ingredient = await ingredientService.GetIngredientByName(name);
+            // TODO verify that this is handeled correctly once the service is implemented
+
+            ConsoleHelper.ColorWriteLine($"'{name}' {(name == null ? "doesn't exist" : "exists")}");
+        }
+
+        private async Task DeleteIngredient()
+        {
+            //TODO error checking
+            ConsoleHelper.ColorWrite("What ingredient would you like to delete: ");
+            var name = Console.ReadLine();
+
+            await ingredientService.DeleteIngredient(name);
+        }
+
         private void NewIngredient()
         {
+            //TODO error checking
             ConsoleHelper.ColorWrite("What ingredient would you like to add: ");
             var name = Console.ReadLine();
 
@@ -87,6 +112,7 @@ namespace CRUDRecipeEF.PL.Menus
 
         private async Task ListIngredients()
         {
+            //TODO error checking
             var result = await ingredientService.GetAllIngredients();
             List<IngredientDetailDTO> ingredientList = result.ToList();
 
