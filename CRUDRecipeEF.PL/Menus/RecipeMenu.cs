@@ -48,6 +48,7 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case RecipeMenuOption.InValid:
+                    //TODO throw and exception or something
                     break;
                 case RecipeMenuOption.NewRecipe:
                     break;
