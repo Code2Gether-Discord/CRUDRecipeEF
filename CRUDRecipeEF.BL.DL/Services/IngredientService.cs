@@ -58,6 +58,12 @@ namespace CRUDRecipeEF.BL.DL.Services
             return ingredientAddDTO.Name;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException"></exception>
         public async Task DeleteIngredient(string name)
         {
             var ingredient = await _context.Ingredients.FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower());
@@ -77,6 +83,13 @@ namespace CRUDRecipeEF.BL.DL.Services
             return _mapper.Map<List<IngredientDetailDTO>>(ingredients);
         }
 
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Ingredient</returns>
+        /// <exception cref="KeyNotFoundException"></exception>
         public async Task<IngredientDetailDTO> GetIngredientByName(string name)
         {
             var ingredient = await _context.Ingredients.FirstOrDefaultAsync(r => r.Name == name);
