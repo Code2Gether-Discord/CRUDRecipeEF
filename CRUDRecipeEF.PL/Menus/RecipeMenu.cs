@@ -4,6 +4,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using CRUDRecipeEF.BL.DL.Data;
 
 namespace CRUDRecipeEF.PL.Menus
 {
@@ -11,14 +13,17 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
+        private readonly RecipeContext _recipeContext;
 
         private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4, GoBack = 5 };
 
         public RecipeMenu(IRecipeService recipeService,
-            IIngredientService ingredientService)
+            IIngredientService ingredientService,
+            RecipeContext recipeContext)
         {
             _recipeService = recipeService;
             _ingredientService = ingredientService;
+            _recipeContext = recipeContext;
         }
 
         public async Task Show()
@@ -137,18 +142,9 @@ namespace CRUDRecipeEF.PL.Menus
 
             RecipeAddDTO recipe = new RecipeAddDTO { Name = name };
 
-            try
-            {
-                await _recipeService.AddRecipe(recipe);
-            }
-            catch (KeyNotFoundException)
-            {
-                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} already exists.");
-            }
-
             bool another = true;
-            IngredientDetailDTO ingredient;
-            IngredientAddDTO ingredientToAdd = null;
+            List<IngredientAddDTO> ingredients = new List<IngredientAddDTO>();
+
             while (another)
             {
                 ConsoleHelper.ColorWrite("What ingredeient would you like to add: ");
@@ -156,8 +152,9 @@ namespace CRUDRecipeEF.PL.Menus
 
                 try
                 {
-                    ingredient = await _ingredientService.GetIngredientByName(input);
-                    ingredientToAdd = new IngredientAddDTO { Name = ingredient.Name };
+                    var ingredient = await _ingredientService.GetIngredientByName(input);
+                    var ingredientToAdd = new IngredientAddDTO { Name = ingredient.Name };
+                    ingredients.Add(ingredientToAdd);
                 }
                 catch (KeyNotFoundException)
                 {
@@ -172,11 +169,7 @@ namespace CRUDRecipeEF.PL.Menus
                         return;
                     }
 
-                    ingredientToAdd = new IngredientAddDTO { Name = name };
-                }
-                finally
-                {
-                    await _recipeService.AddIngredientToRecipe(ingredientToAdd, recipe.Name);
+                    ingredients.Add(new IngredientAddDTO { Name = name });
                 }
 
                 ConsoleHelper.ColorWrite("Would you like to add another ingredient? (y/N): ");
@@ -185,6 +178,27 @@ namespace CRUDRecipeEF.PL.Menus
                 if (Char.ToUpperInvariant(addAnother[0]) != 'Y')
                 {
                     another = false;
+                }
+            }
+
+            try
+            {
+                await _recipeService.AddRecipe(recipe);
+            }
+            catch (KeyNotFoundException)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} already exists.");
+            }
+
+            foreach (var ingredient in ingredients)
+            {
+                try
+                {
+                    await _recipeService.AddIngredientToRecipe(ingredient, recipe.Name);
+                }
+                catch (KeyNotFoundException)
+                {
+                    ConsoleHelper.ColorWriteLine($"'{recipe.Name}' does not exist.");
                 }
             }
 
