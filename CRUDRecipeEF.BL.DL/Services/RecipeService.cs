@@ -36,7 +36,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="recipeName"></param>
         /// <returns>If the recipe exists or not</returns>
         private async Task<bool> RecipeExists(string recipeName) =>
-            await _context.Recipes.AnyAsync(r => r.Name.ToLower() == recipeName.ToLower());
+            await _context.Ingredients.AnyAsync(r => r.Name.ToLower() == recipeName.ToLower());
 
         /// <summary>
         /// 
