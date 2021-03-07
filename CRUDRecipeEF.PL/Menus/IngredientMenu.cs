@@ -155,14 +155,13 @@ namespace CRUDRecipeEF.PL.Menus
             var currentIndex = 0;
             foreach(var ingredient in ingredientList)
             {
-                currentIndex++;
                 if (currentIndex % 5 == 0 && currentIndex != 0)
                 {
                     Console.WriteLine();
                     ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow,"Press enter for next page.");
                     Console.ReadLine();
                 }
-
+                currentIndex++;
                 Console.WriteLine(ingredient.Name);
             }
             Console.WriteLine();
