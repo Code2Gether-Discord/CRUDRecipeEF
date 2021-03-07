@@ -166,6 +166,7 @@ namespace CRUDRecipeEF.PL.Menus
                 Console.WriteLine(ingredient.Name);
             }
             Console.WriteLine();
+            await this.Show();
         }
 
         private bool validateInt(string input, int min, int max, out int result)
