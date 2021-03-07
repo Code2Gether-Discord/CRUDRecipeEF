@@ -1,6 +1,7 @@
 ﻿using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Services;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -72,8 +73,12 @@ namespace CRUDRecipeEF.PL.Menus
                     await LookupRecipe();
                     break;
                 case RecipeMenuOption.ShowRecipe:
+                    Console.WriteLine();
+                    await ListRecipe();
                     break;
                 case RecipeMenuOption.DeleteRecipe:
+                    Console.WriteLine();
+                    await DeleteRecipe();
                     break;
                 case RecipeMenuOption.GoBack:
                     Console.WriteLine();
@@ -81,6 +86,48 @@ namespace CRUDRecipeEF.PL.Menus
                 default:
                     break;
             }
+        }
+
+        private async Task ListRecipe()
+        {
+            Console.WriteLine();
+            ConsoleHelper.ColorWriteLine("Known Ingredients: ");
+
+            var result = await _recipeService.GetAllRecipes();
+            List<RecipeDetailDTO> recipeList = result.ToList();
+
+            var currentIndex = 0;
+            foreach (var recipe in recipeList)
+            {
+                if (currentIndex % 5 == 0 && currentIndex != 0)
+                {
+                    Console.WriteLine();
+                    ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "Press enter for next page.");
+                    Console.ReadLine();
+                }
+                currentIndex++;
+                Console.WriteLine(recipe.Name);
+            }
+            Console.WriteLine();
+            await this.Show();
+        }
+
+        private async Task DeleteRecipe()
+        {
+            ConsoleHelper.ColorWrite("What recipe would you like to delete: ");
+            var name = Console.ReadLine();
+
+            try
+            {
+                await _recipeService.DeleteRecipe(name);
+            }
+            catch (KeyNotFoundException)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} does not exist.");
+            }
+
+            Console.WriteLine();
+            await this.Show();
         }
 
         private async Task NewRecipe()
