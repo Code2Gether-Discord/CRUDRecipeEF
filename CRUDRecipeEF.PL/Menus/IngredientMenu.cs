@@ -83,7 +83,6 @@ namespace CRUDRecipeEF.PL.Menus
 
         private async Task LookupIngredient()
         {
-            //TODO error checking
             ConsoleHelper.ColorWrite("What ingredient would you like to lookup: ");
             var name = Console.ReadLine();
 
@@ -105,7 +104,6 @@ namespace CRUDRecipeEF.PL.Menus
 
         private async Task DeleteIngredient()
         {
-            //TODO error checking
             ConsoleHelper.ColorWrite("What ingredient would you like to delete: ");
             var name = Console.ReadLine();
 
@@ -124,7 +122,6 @@ namespace CRUDRecipeEF.PL.Menus
 
         private async Task NewIngredient()
         {
-            //TODO error checking
             ConsoleHelper.ColorWrite("What ingredient would you like to add: ");
             var name = Console.ReadLine();
 
@@ -148,7 +145,6 @@ namespace CRUDRecipeEF.PL.Menus
             Console.WriteLine();
             ConsoleHelper.ColorWriteLine("Known Ingredients: ");
 
-            //TODO error checking
             var result = await _ingredientService.GetAllIngredients();
             List<IngredientDetailDTO> ingredientList = result.ToList();
 
