@@ -1,21 +1,26 @@
-﻿using CRUDRecipeEF.BL.DL.Services;
+﻿using CRUDRecipeEF.BL.DL.DTOs;
+using CRUDRecipeEF.BL.DL.Services;
 using System;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CRUDRecipeEF.PL.Menus
 {
     public class RecipeMenu : IRecipeMenu
     {
         private readonly IRecipeService _recipeService;
+        private readonly IIngredientService _ingredientService;
 
         private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4, GoBack = 5 };
 
-        public RecipeMenu(IRecipeService recipeService)
+        public RecipeMenu(IRecipeService recipeService,
+            IIngredientService ingredientService)
         {
             _recipeService = recipeService;
+            _ingredientService = ingredientService;
         }
 
-        public void Show()
+        public async Task Show()
         {
             ConsoleHelper.DefaultColor = ConsoleColor.Blue;
             ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "Recipe Menu");
@@ -48,10 +53,10 @@ namespace CRUDRecipeEF.PL.Menus
             }
 
             RecipeMenuOption choice = (RecipeMenuOption)option;
-            ExecuteMenuSelection(choice);
+            await ExecuteMenuSelection(choice);
         }
 
-        private void ExecuteMenuSelection(RecipeMenuOption option)
+        private async Task ExecuteMenuSelection(RecipeMenuOption option)
         {
             switch (option)
             {
@@ -59,8 +64,12 @@ namespace CRUDRecipeEF.PL.Menus
                     //TODO throw and exception or something
                     break;
                 case RecipeMenuOption.NewRecipe:
+                    Console.WriteLine();
+                    await NewRecipe();
                     break;
                 case RecipeMenuOption.LookUpRecipe:
+                    Console.WriteLine();
+                    await LookupRecipe();
                     break;
                 case RecipeMenuOption.ShowRecipe:
                     break;
@@ -72,6 +81,94 @@ namespace CRUDRecipeEF.PL.Menus
                 default:
                     break;
             }
+        }
+
+        private async Task NewRecipe()
+        {
+            ConsoleHelper.ColorWrite("What recipe would you like to add: ");
+            var name = Console.ReadLine();
+
+            RecipeAddDTO recipe = new RecipeAddDTO { Name = name };
+
+            bool another = true;
+            IngredientDetailDTO ingredient;
+            while (another)
+            {
+                ConsoleHelper.ColorWrite("What ingredeient would you like to add: ");
+                var input = Console.ReadLine();
+
+                try
+                {
+                    ingredient = await _ingredientService.GetIngredientByName(input);
+                }
+                catch (KeyNotFoundException)
+                {
+                    ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, "The ingredient does not exist!");
+                    ConsoleHelper.ColorWrite("Would you like to add it? (Y/n): ");
+                    var add = Console.ReadLine();
+
+                    if (Char.ToUpperInvariant(add[0]) == 'N')
+                    {
+                        ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "Recipe not added.");
+                        Console.WriteLine();
+                        return;
+                    }
+                    else
+                    {
+                        await _ingredientService.AddIngredient(new IngredientAddDTO { Name = input });
+                    }
+                }
+
+                recipe.Ingredients.Add(new IngredientAddDTO { Name = input });
+
+                ConsoleHelper.ColorWrite("Would you like to add another ingredient? (y/N): ");
+                var addAnother = Console.ReadLine();
+
+                if (Char.ToUpperInvariant(addAnother[0]) != 'Y')
+                {
+                    another = false;
+                }
+            }
+
+            try
+            {
+                await _recipeService.AddRecipe(recipe);
+            }
+            catch (KeyNotFoundException)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} already exists.");
+            }
+
+            Console.WriteLine();
+            await this.Show();
+        }
+
+        private async Task LookupRecipe()
+        {
+            ConsoleHelper.ColorWrite("What Recipe would you like to lookup: ");
+            var name = Console.ReadLine();
+
+            Console.WriteLine();
+
+            try
+            {
+                var recipe = await _recipeService.GetRecipeByName(name);
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} exists.");
+
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, "The Ingredients are: ");
+                foreach(var ingredient in recipe.Ingredients)
+                {
+                    ConsoleHelper.ColorWriteLine(ConsoleColor.White, ingredient.Name);
+                }
+
+            }
+            catch (KeyNotFoundException)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} does not exist.");
+            }
+
+            Console.WriteLine();
+            await this.Show();
         }
 
         private bool validateInt(string input, int min, int max, out int result)

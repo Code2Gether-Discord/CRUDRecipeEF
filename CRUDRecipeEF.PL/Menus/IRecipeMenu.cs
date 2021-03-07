@@ -1,7 +1,9 @@
-﻿namespace CRUDRecipeEF.PL.Menus
+﻿using System.Threading.Tasks;
+
+namespace CRUDRecipeEF.PL.Menus
 {
     public interface IRecipeMenu
     {
-        void Show();
+        Task Show();
     }
 }
