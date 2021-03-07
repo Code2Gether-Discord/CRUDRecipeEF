@@ -90,8 +90,18 @@ namespace CRUDRecipeEF.PL.Menus
 
             RecipeAddDTO recipe = new RecipeAddDTO { Name = name };
 
+            try
+            {
+                await _recipeService.AddRecipe(recipe);
+            }
+            catch (KeyNotFoundException)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} already exists.");
+            }
+
             bool another = true;
             IngredientDetailDTO ingredient;
+            IngredientAddDTO ingredientToAdd = null;
             while (another)
             {
                 ConsoleHelper.ColorWrite("What ingredeient would you like to add: ");
@@ -100,6 +110,7 @@ namespace CRUDRecipeEF.PL.Menus
                 try
                 {
                     ingredient = await _ingredientService.GetIngredientByName(input);
+                    ingredientToAdd = new IngredientAddDTO { Name = ingredient.Name };
                 }
                 catch (KeyNotFoundException)
                 {
@@ -113,13 +124,13 @@ namespace CRUDRecipeEF.PL.Menus
                         Console.WriteLine();
                         return;
                     }
-                    else
-                    {
-                        await _ingredientService.AddIngredient(new IngredientAddDTO { Name = input });
-                    }
-                }
 
-                recipe.Ingredients.Add(new IngredientAddDTO { Name = input });
+                    ingredientToAdd = new IngredientAddDTO { Name = name };
+                }
+                finally
+                {
+                    await _recipeService.AddIngredientToRecipe(ingredientToAdd, recipe.Name);
+                }
 
                 ConsoleHelper.ColorWrite("Would you like to add another ingredient? (y/N): ");
                 var addAnother = Console.ReadLine();
@@ -128,15 +139,6 @@ namespace CRUDRecipeEF.PL.Menus
                 {
                     another = false;
                 }
-            }
-
-            try
-            {
-                await _recipeService.AddRecipe(recipe);
-            }
-            catch (KeyNotFoundException)
-            {
-                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} already exists.");
             }
 
             Console.WriteLine();
