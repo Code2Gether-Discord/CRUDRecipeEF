@@ -101,17 +101,15 @@ namespace CRUDRecipeEF.PL.Menus
             var result = await _recipeService.GetAllRecipes();
             List<RecipeDetailDTO> recipeList = result.ToList();
 
-            var currentIndex = 0;
-            foreach (var recipe in recipeList)
+            for(int i = 0; i < recipeList.Count; i++)
             {
-                if (currentIndex % 5 == 0 && currentIndex != 0)
+                if (i % 5 == 0 && i != 0)
                 {
                     Console.WriteLine();
                     ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "Press enter for next page.");
                     Console.ReadLine();
                 }
-                currentIndex++;
-                Console.WriteLine(recipe.Name);
+                Console.WriteLine(recipeList[0].Name);
             }
             Console.WriteLine();
             await this.Show();

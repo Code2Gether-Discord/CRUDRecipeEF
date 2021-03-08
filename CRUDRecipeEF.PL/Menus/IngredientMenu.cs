@@ -148,17 +148,15 @@ namespace CRUDRecipeEF.PL.Menus
             var result = await _ingredientService.GetAllIngredients();
             List<IngredientDetailDTO> ingredientList = result.ToList();
 
-            var currentIndex = 0;
-            foreach(var ingredient in ingredientList)
+            for (int i = 0; i < ingredientList.Count; i++)
             {
-                if (currentIndex % 5 == 0 && currentIndex != 0)
+                if (i % 5 == 0 && i != 0)
                 {
                     Console.WriteLine();
                     ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow,"Press enter for next page.");
                     Console.ReadLine();
                 }
-                currentIndex++;
-                Console.WriteLine(ingredient.Name);
+                Console.WriteLine(ingredientList[i].Name);
             }
             Console.WriteLine();
             await this.Show();
