@@ -49,12 +49,22 @@ namespace CRUDRecipeEF.BL.DL.Services
         {
             var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Name.ToLower() == recipeName.ToLower());
 
+            var ingredient = await _context.Ingredients.FirstOrDefaultAsync(x => x.Name.ToLower() == ingredientAddDTO.Name.ToLower());
+            
             if (recipe == null)
             {
                 throw new KeyNotFoundException("Recipe doesnt exist");
             }
 
-            recipe.Ingredients.Add(_mapper.Map<Ingredient>(ingredientAddDTO));
+            if (ingredient == null)
+            {
+                recipe.Ingredients.Add(_mapper.Map<Ingredient>(ingredientAddDTO));
+            }
+            else
+            {
+                recipe.Ingredients.Add(ingredient);
+            }
+
             await Save();
 
             return recipeName;
