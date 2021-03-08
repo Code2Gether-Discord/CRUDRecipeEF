@@ -22,6 +22,18 @@ namespace CRUDRecipeEF.BL.DL.Services
         }
 
         /// <summary>
+        /// Tries to find a recipe with the specified name. Throws an exception if it doesnt exist
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>recipe</returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        private async Task<Recipe> GetRecipeByNameIfExists(string name)
+        {
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower());
+            return recipe ?? throw new KeyNotFoundException("Recipe doesnt exist");
+        }
+
+        /// <summary>
         /// Commits any changes to the db that are tracked by EF
         /// </summary>
         /// <returns></returns>
@@ -136,7 +148,7 @@ namespace CRUDRecipeEF.BL.DL.Services
             var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Name.ToLower() == recipeName.ToLower());
 
             if (recipe == null)
-            { 
+            {
                 throw new KeyNotFoundException("Recipe doesnt exist");
             }
 
