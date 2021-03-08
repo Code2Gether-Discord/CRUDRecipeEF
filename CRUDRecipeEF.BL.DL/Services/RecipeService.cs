@@ -60,8 +60,17 @@ namespace CRUDRecipeEF.BL.DL.Services
         public async Task<string> AddIngredientToRecipe(IngredientAddDTO ingredientAddDTO, string recipeName)
         {
             var recipe = await GetRecipeByNameIfExists(recipeName);
+            var ingredient = await _context.Ingredients.FirstOrDefaultAsync(x => x.Name.ToLower() == ingredientAddDTO.Name.ToLower());
 
-            recipe.Ingredients.Add(_mapper.Map<Ingredient>(ingredientAddDTO));
+            if (ingredient == null)
+            {
+                recipe.Ingredients.Add(_mapper.Map<Ingredient>(ingredientAddDTO));
+            }
+            else
+            {
+                recipe.Ingredients.Add(ingredient);
+            }
+
             await Save();
 
             return recipeName;
