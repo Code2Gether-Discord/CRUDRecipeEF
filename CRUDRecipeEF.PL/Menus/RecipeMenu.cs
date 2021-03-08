@@ -96,7 +96,7 @@ namespace CRUDRecipeEF.PL.Menus
         private async Task ListRecipe()
         {
             Console.WriteLine();
-            ConsoleHelper.ColorWriteLine("Known Ingredients: ");
+            ConsoleHelper.ColorWriteLine("Known Recipes: ");
 
             var result = await _recipeService.GetAllRecipes();
             List<RecipeDetailDTO> recipeList = result.ToList();
@@ -169,7 +169,7 @@ namespace CRUDRecipeEF.PL.Menus
                         return;
                     }
 
-                    ingredients.Add(new IngredientAddDTO { Name = name });
+                    ingredients.Add(new IngredientAddDTO { Name = input });
                 }
 
                 ConsoleHelper.ColorWrite("Would you like to add another ingredient? (y/N): ");
@@ -184,6 +184,7 @@ namespace CRUDRecipeEF.PL.Menus
             try
             {
                 await _recipeService.AddRecipe(recipe);
+                ConsoleHelper.ColorWriteLine(ConsoleColor.Green, $"'{recipe.Name}' has been added.");
             }
             catch (KeyNotFoundException)
             {
