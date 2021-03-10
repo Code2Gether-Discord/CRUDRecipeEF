@@ -106,7 +106,7 @@ namespace CRUDRecipeEF.PL.Menus
                     ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "Press enter for next page.");
                     Console.ReadLine();
                 }
-                Console.WriteLine(recipeList[0].Name);
+                Console.WriteLine(recipeList[i].Name);
             }
             Console.WriteLine();
             await this.Show();
