@@ -1,4 +1,6 @@
-﻿using CRUDRecipeEF.BL.DL.Data;
+﻿using System;
+using System.Linq;
+using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.Services;
 using CRUDRecipeEF.PL.Menus;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,25 @@ namespace CRUDRecipeEF.PL
         private static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
+
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+
+            try
+            {
+                var context = services.GetRequiredService<RecipeContext>();
+                if (!context.Recipes.Any() && !context.Ingredients.Any())
+                {
+                    DataSeed.Seed(context);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Retarded error while seeding data");
+                Console.WriteLine();
+                Console.WriteLine(ex.Message);
+            }
+           
             //App starting point
             host.Services.GetRequiredService<IMainMenu>().Show();
         }
@@ -29,7 +50,7 @@ namespace CRUDRecipeEF.PL
               .ConfigureServices((hostContext, services) =>
               {
                   services.AddTransient<IRecipeService, RecipeService>();
-                  services.AddTransient<IIngredientService, IngredientService>();
+                  //  services.AddTransient<IIngredientService, IngredientService>();
                   services.AddAutoMapper(typeof(RecipeService).Assembly);
                   services.AddTransient<IMainMenu, MainMenu>();
                   services.AddTransient<IIngredientMenu, IngredientMenu>();
