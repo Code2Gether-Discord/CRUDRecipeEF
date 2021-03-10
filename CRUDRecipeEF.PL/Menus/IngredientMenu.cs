@@ -40,7 +40,7 @@ namespace CRUDRecipeEF.PL.Menus
                 ConsoleHelper.ColorWrite(ConsoleColor.Yellow, "Please select an option: ");
                 input = Console.ReadLine();
 
-                valid = validateInt(input, 1, 5, out option);
+                valid = ValidateInt(input, 1, 5, out option);
 
                 if (!Enum.IsDefined(typeof(IngredientMenuOption), option))
                 {
@@ -162,7 +162,7 @@ namespace CRUDRecipeEF.PL.Menus
             await this.Show();
         }
 
-        private bool validateInt(string input, int min, int max, out int result)
+        private bool ValidateInt(string input, int min, int max, out int result)
         {
             if (!int.TryParse(input, out result))
             {

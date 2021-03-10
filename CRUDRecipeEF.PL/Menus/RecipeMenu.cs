@@ -13,17 +13,14 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
-        private readonly RecipeContext _recipeContext;
 
         private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4, GoBack = 5 };
 
         public RecipeMenu(IRecipeService recipeService,
-            IIngredientService ingredientService,
-            RecipeContext recipeContext)
+            IIngredientService ingredientService)
         {
             _recipeService = recipeService;
             _ingredientService = ingredientService;
-            _recipeContext = recipeContext;
         }
 
         public async Task Show()
@@ -48,7 +45,7 @@ namespace CRUDRecipeEF.PL.Menus
                 ConsoleHelper.ColorWrite(ConsoleColor.Yellow, "Please select an option: ");
                 input = Console.ReadLine();
 
-                valid = validateInt(input, 1, 5, out option);
+                valid = ValidateInt(input, 1, 5, out option);
 
                 if (!Enum.IsDefined(typeof(RecipeMenuOption), option))
                 {
@@ -101,7 +98,7 @@ namespace CRUDRecipeEF.PL.Menus
             var result = await _recipeService.GetAllRecipes();
             List<RecipeDetailDTO> recipeList = result.ToList();
 
-            for(int i = 0; i < recipeList.Count; i++)
+            for (int i = 0; i < recipeList.Count; i++)
             {
                 if (i % 5 == 0 && i != 0)
                 {
@@ -218,7 +215,7 @@ namespace CRUDRecipeEF.PL.Menus
                 ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} exists.");
 
                 ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, "The Ingredients are: ");
-                foreach(var ingredient in recipe.Ingredients)
+                foreach (var ingredient in recipe.Ingredients)
                 {
                     ConsoleHelper.ColorWriteLine(ConsoleColor.White, ingredient.Name);
                 }
@@ -233,7 +230,7 @@ namespace CRUDRecipeEF.PL.Menus
             await this.Show();
         }
 
-        private bool validateInt(string input, int min, int max, out int result)
+        private bool ValidateInt(string input, int min, int max, out int result)
         {
             if (!int.TryParse(input, out result))
             {
