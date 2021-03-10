@@ -83,7 +83,7 @@ namespace CRUDRecipeEF.PL.Menus
             }
         }
 
-        private bool validateInt(string input, int min, int max, out int result)
+        private bool ValidateInt(string input, int min, int max, out int result)
         {
             if (!int.TryParse(input, out result))
             {
