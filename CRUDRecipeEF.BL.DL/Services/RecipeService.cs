@@ -29,7 +29,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <exception cref="KeyNotFoundException"></exception>
         private async Task<Recipe> GetRecipeByNameIfExists(string name)
         {
-            var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower());
+            var recipe = await _context.Recipes.Include(i => i.Ingredients).FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower());
             return recipe ?? throw new KeyNotFoundException("Recipe doesnt exist");
         }
 
@@ -110,7 +110,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         }
 
         public async Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes() =>
-            _mapper.Map<List<RecipeDetailDTO>>(await _context.Recipes.ToListAsync());
+            _mapper.Map<List<RecipeDetailDTO>>(await _context.Recipes.Include(i => i.Ingredients).ToListAsync());
 
         /// <summary>
         ///
