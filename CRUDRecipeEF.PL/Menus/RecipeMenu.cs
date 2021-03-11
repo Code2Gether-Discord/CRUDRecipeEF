@@ -4,8 +4,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using CRUDRecipeEF.BL.DL.Data;
 
 namespace CRUDRecipeEF.PL.Menus
 {
@@ -13,6 +11,7 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
+        private readonly int _recipePerPage = 8;
 
         private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4, GoBack = 5 };
 
@@ -45,7 +44,7 @@ namespace CRUDRecipeEF.PL.Menus
                 ConsoleHelper.ColorWrite(ConsoleColor.Yellow, "Please select an option: ");
                 input = Console.ReadLine();
 
-                valid = ValidateInt(input, 1, 5, out option);
+                valid = ConsoleHelper.ValidateInt(input, (int)RecipeMenuOption.NewRecipe, (int)RecipeMenuOption.GoBack, out option);
 
                 if (!Enum.IsDefined(typeof(RecipeMenuOption), option))
                 {
@@ -64,7 +63,7 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case RecipeMenuOption.InValid:
-                    //TODO throw and exception or something
+                    //TODO throw an exception or something
                     break;
                 case RecipeMenuOption.NewRecipe:
                     Console.WriteLine();
@@ -100,13 +99,13 @@ namespace CRUDRecipeEF.PL.Menus
 
             for (int i = 0; i < recipeList.Count; i++)
             {
-                if (i % 5 == 0 && i != 0)
+                if (i % _recipePerPage == 0 && i != 0)
                 {
                     Console.WriteLine();
                     ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "Press enter for next page.");
                     Console.ReadLine();
                 }
-                Console.WriteLine(recipeList[0].Name);
+                Console.WriteLine(recipeList[i].Name);
             }
             Console.WriteLine();
             await this.Show();
@@ -228,23 +227,6 @@ namespace CRUDRecipeEF.PL.Menus
 
             Console.WriteLine();
             await this.Show();
-        }
-
-        private bool ValidateInt(string input, int min, int max, out int result)
-        {
-            if (!int.TryParse(input, out result))
-            {
-                // Not a valid int - log error here if desired
-                return false;
-            }
-
-            if (result > max || result < min)
-            {
-                // Outside expected range - log error here if desired
-                return false;
-            }
-
-            return true;
         }
     }
 }

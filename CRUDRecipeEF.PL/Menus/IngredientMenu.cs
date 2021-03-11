@@ -10,6 +10,7 @@ namespace CRUDRecipeEF.PL.Menus
     public class IngredientMenu : IIngredientMenu
     {
         private readonly IIngredientService _ingredientService;
+        private readonly int _ingredientsPerPage = 8;
 
         private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngredient = 2, ShowIngredient = 3, DeleteIngredient = 4, GoBack = 5 };
 
@@ -40,7 +41,7 @@ namespace CRUDRecipeEF.PL.Menus
                 ConsoleHelper.ColorWrite(ConsoleColor.Yellow, "Please select an option: ");
                 input = Console.ReadLine();
 
-                valid = ValidateInt(input, 1, 5, out option);
+                valid = ConsoleHelper.ValidateInt(input, (int)IngredientMenuOption.NewIngredient, (int)IngredientMenuOption.GoBack, out option);
 
                 if (!Enum.IsDefined(typeof(IngredientMenuOption), option))
                 {
@@ -59,7 +60,7 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case IngredientMenuOption.InValid:
-                    //TODO throw and exception or something
+                    //TODO throw an exception or something
                     break;
                 case IngredientMenuOption.NewIngredient:
                     await NewIngredient();
@@ -150,7 +151,7 @@ namespace CRUDRecipeEF.PL.Menus
 
             for (int i = 0; i < ingredientList.Count; i++)
             {
-                if (i % 5 == 0 && i != 0)
+                if (i % _ingredientsPerPage == 0 && i != 0)
                 {
                     Console.WriteLine();
                     ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow,"Press enter for next page.");
@@ -160,23 +161,6 @@ namespace CRUDRecipeEF.PL.Menus
             }
             Console.WriteLine();
             await this.Show();
-        }
-
-        private bool ValidateInt(string input, int min, int max, out int result)
-        {
-            if (!int.TryParse(input, out result))
-            {
-                // Not a valid int - log error here if desired
-                return false;
-            }
-
-            if (result > max || result < min)
-            {
-                // Outside expected range - log error here if desired
-                return false;
-            }
-
-            return true;
         }
     }
 }

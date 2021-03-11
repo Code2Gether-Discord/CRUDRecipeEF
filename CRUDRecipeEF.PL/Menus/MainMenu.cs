@@ -39,7 +39,7 @@ namespace CRUDRecipeEF.PL.Menus
                     ConsoleHelper.ColorWrite(ConsoleColor.Yellow, "Please select an option: ");
                     input = Console.ReadLine();
 
-                    valid = ValidateInt(input, 1, 3, out option);
+                    valid = ConsoleHelper.ValidateInt(input, (int)MainMenuOption.RecipeMenu, (int)MainMenuOption.Quit, out option);
 
                     if (!Enum.IsDefined(typeof(MainMenuOption), option))
                     {
@@ -52,12 +52,6 @@ namespace CRUDRecipeEF.PL.Menus
                 MainMenuOption choice = (MainMenuOption)option;
                 ExecuteMenuSelection(choice);
             }
-
-            //WriteLine("Hello there!");
-            //_recipeService.AddRecipe(new RecipeAddDTO() { Name = "brains" });
-            //WriteLine(_recipeService.GetRecipeByName("human brains"));
-            //var recipes = _recipeService.GetAllRecipes();
-            //ReadLine();
         }
 
         private void ExecuteMenuSelection(MainMenuOption option)
@@ -81,23 +75,6 @@ namespace CRUDRecipeEF.PL.Menus
                 default:
                     break;
             }
-        }
-
-        private bool ValidateInt(string input, int min, int max, out int result)
-        {
-            if (!int.TryParse(input, out result))
-            {
-                // Not a valid int - log error here if desired
-                return false;
-            }
-
-            if (result > max || result < min)
-            {
-                // Outside expected range - log error here if desired
-                return false;
-            }
-
-            return true;
         }
     }
 }
