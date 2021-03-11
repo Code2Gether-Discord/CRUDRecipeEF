@@ -24,7 +24,8 @@ namespace CRUDRecipeEF.PL
                 var context = services.GetRequiredService<RecipeContext>();
                 if (!context.Recipes.Any() && !context.Ingredients.Any())
                 {
-                    DataSeed.Seed(context);
+                    IDataSeed seeder = host.Services.GetRequiredService<IDataSeed>();
+                    seeder.Seed();
                 }
             }
             catch (Exception ex)
@@ -51,6 +52,7 @@ namespace CRUDRecipeEF.PL
               {
                   services.AddTransient<IRecipeService, RecipeService>();
                   services.AddTransient<IIngredientService, IngredientService>();
+                  services.AddTransient<IDataSeed, DataSeed>();
                   services.AddAutoMapper(typeof(RecipeService).Assembly);
                   services.AddTransient<IMainMenu, MainMenu>();
                   services.AddTransient<IIngredientMenu, IngredientMenu>();

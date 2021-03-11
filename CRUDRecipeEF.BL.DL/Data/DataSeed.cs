@@ -1,40 +1,54 @@
 ﻿using System.Collections.Generic;
-using CRUDRecipeEF.BL.DL.Entities;
+using CRUDRecipeEF.BL.DL.DTOs;
+using CRUDRecipeEF.BL.DL.Services;
+using System.Linq;
 
 namespace CRUDRecipeEF.BL.DL.Data
 {
-    public static class DataSeed
+    public class DataSeed : IDataSeed
     {
-        public static void Seed(RecipeContext context)
+        private readonly IIngredientService _ingredientService;
+        private readonly IRecipeService _recipeService;
+
+        public DataSeed(IIngredientService ingredientService,
+            IRecipeService recipeService)
         {
-            context.Recipes.AddRange(
-                new List<Recipe>
-                {
-                    new Recipe { Id = 1, Name = "Chocolate Cake", Ingredients =  new List<Ingredient>
-                    {
-                        new Ingredient { Name = "Chocolate"},
-                        new Ingredient { Name = "Flour"}
-                    }},
-                    new Recipe { Id = 2, Name = "Apple pie", Ingredients =  new List<Ingredient>
-                    {
-                        new Ingredient { Name = "Apple"}
-                    }},
-                    new Recipe { Name = "Taco", Ingredients = new List<Ingredient>
-                    {
-                        new Ingredient { Name = "Meat"},
-                        new Ingredient { Name = "Letus"}
-                    }},
-                });
-
-            var chocCake = context.Recipes.Find(1);
-            var applePie = context.Recipes.Find(2);
-            var sugar = new Ingredient { Name = "Sugar" };
-
-            chocCake.Ingredients.Add(sugar);
-            applePie.Ingredients.Add(sugar);
-
-            context.SaveChanges();
+            _ingredientService = ingredientService;
+            _recipeService = recipeService;
         }
 
+
+        public void Seed()
+        {
+            // This sucks we probably want an recipe factory
+            List<IngredientAddDTO> ingredients = new List<IngredientAddDTO>()
+            {
+                new IngredientAddDTO() { Name = "Chocolate" },
+                new IngredientAddDTO() { Name ="Flour" },
+                new IngredientAddDTO() { Name ="Apple" },
+                new IngredientAddDTO() { Name ="Meat" },
+                new IngredientAddDTO() { Name ="Lettuce" },
+                new IngredientAddDTO() { Name = "Sugar" }
+            };
+
+            foreach (var ingredient in ingredients)
+            {
+                _ingredientService.AddIngredient(ingredient);
+            }
+
+            _recipeService.AddRecipe(new RecipeAddDTO() { Name = "Chocolate Cake" });
+            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Flour").FirstOrDefault(), "Chocolate Cake");
+            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Chocolate").FirstOrDefault(), "Chocolate Cake");
+            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Sugar").FirstOrDefault(), "Chocolate Cake");
+
+            _recipeService.AddRecipe(new RecipeAddDTO() { Name = "Taco" });
+            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Meat").FirstOrDefault(), "Taco");
+            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Lettuce").FirstOrDefault(), "Taco");
+
+            _recipeService.AddRecipe(new RecipeAddDTO() { Name = "Apple Pie" });
+            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Apple").FirstOrDefault(), "Apple Pie");
+            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Flour").FirstOrDefault(), "Apple Pie");
+            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Sugar").FirstOrDefault(), "Apple Pie");
+        }
     }
 }
