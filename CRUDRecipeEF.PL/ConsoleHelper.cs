@@ -169,5 +169,30 @@ namespace CRUDRecipeEF.PL
         {
             return GetValidInt(prompt, Console.ForegroundColor);
         }
+
+        /// <summary>
+        /// Validate that the given string is an int that meets the given requirements
+        /// </summary>
+        /// <param name="input">input string</param>
+        /// <param name="min">min valid option</param>
+        /// <param name="max">max valid option</param>
+        /// <param name="result">The successfully parsed valid int</param>
+        /// <returns>true if input is valid, false otherwise</returns>
+        public static bool ValidateInt(string input, int min, int max, out int result)
+        {
+            if (!int.TryParse(input, out result))
+            {
+                // Not a valid int - log error here if desired
+                return false;
+            }
+
+            if (result > max || result < min)
+            {
+                // Outside expected range - log error here if desired
+                return false;
+            }
+
+            return true;
+        }
     }
 }
