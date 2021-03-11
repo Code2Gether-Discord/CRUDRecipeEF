@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace CRUDRecipeEF.PL
 {
@@ -14,6 +15,12 @@ namespace CRUDRecipeEF.PL
     {
         private static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .CreateLogger();
+
             var host = CreateHostBuilder(args).Build();
 
             using var scope = host.Services.CreateScope();
@@ -33,7 +40,7 @@ namespace CRUDRecipeEF.PL
                 Console.WriteLine();
                 Console.WriteLine(ex.Message);
             }
-           
+
             //App starting point
             host.Services.GetRequiredService<IMainMenu>().Show();
         }
@@ -51,6 +58,7 @@ namespace CRUDRecipeEF.PL
               {
                   services.AddTransient<IRecipeService, RecipeService>();
                   //  services.AddTransient<IIngredientService, IngredientService>();
+                  services.AddSingleton(Log.Logger);
                   services.AddAutoMapper(typeof(RecipeService).Assembly);
                   services.AddTransient<IMainMenu, MainMenu>();
                   services.AddTransient<IIngredientMenu, IngredientMenu>();
