@@ -12,6 +12,7 @@ namespace CRUDRecipeEF.BL.DL.Data
 
         public DataSeed(IIngredientService ingredientService,
             IRecipeService recipeService)
+            //,ILogger logger)
         {
             _ingredientService = ingredientService;
             _recipeService = recipeService;
@@ -20,7 +21,7 @@ namespace CRUDRecipeEF.BL.DL.Data
 
         public void Seed()
         {
-            // This sucks we probably want an recipe factory
+            // This sucks we probably want an recipe factory or something
             List<IngredientAddDTO> ingredients = new List<IngredientAddDTO>()
             {
                 new IngredientAddDTO() { Name = "Chocolate" },
@@ -33,22 +34,42 @@ namespace CRUDRecipeEF.BL.DL.Data
 
             foreach (var ingredient in ingredients)
             {
-                _ingredientService.AddIngredient(ingredient);
+                try
+                {
+                    _ingredientService.AddIngredient(ingredient);
+                }
+                catch (KeyNotFoundException)
+                {
+                    // Log with Serilog
+                    //logger.LogWarning("Ingredient already exists: '{ingredient}'", ingredient.Name);
+                }
             }
 
-            _recipeService.AddRecipe(new RecipeAddDTO() { Name = "Chocolate Cake" });
-            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Flour").FirstOrDefault(), "Chocolate Cake");
-            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Chocolate").FirstOrDefault(), "Chocolate Cake");
-            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Sugar").FirstOrDefault(), "Chocolate Cake");
+            string currentRecipe = string.Empty;
+            try
+            {
+                currentRecipe = "Chocolate Cake";
+                _recipeService.AddRecipe(new RecipeAddDTO() { Name = currentRecipe });
+                _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Flour").FirstOrDefault(), currentRecipe);
+                _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Chocolate").FirstOrDefault(), currentRecipe);
+                _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Sugar").FirstOrDefault(), currentRecipe);
 
-            _recipeService.AddRecipe(new RecipeAddDTO() { Name = "Taco" });
-            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Meat").FirstOrDefault(), "Taco");
-            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Lettuce").FirstOrDefault(), "Taco");
+                currentRecipe = "Taco";
+                _recipeService.AddRecipe(new RecipeAddDTO() { Name = currentRecipe });
+                _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Meat").FirstOrDefault(), currentRecipe);
+                _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Lettuce").FirstOrDefault(), currentRecipe);
 
-            _recipeService.AddRecipe(new RecipeAddDTO() { Name = "Apple Pie" });
-            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Apple").FirstOrDefault(), "Apple Pie");
-            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Flour").FirstOrDefault(), "Apple Pie");
-            _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Sugar").FirstOrDefault(), "Apple Pie");
+                currentRecipe = "Apple Pie";
+                _recipeService.AddRecipe(new RecipeAddDTO() { Name = currentRecipe });
+                _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Apple").FirstOrDefault(), currentRecipe);
+                _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Flour").FirstOrDefault(), currentRecipe);
+                _recipeService.AddIngredientToRecipe(ingredients.Where(x => x.Name == "Sugar").FirstOrDefault(), currentRecipe);
+            }
+            catch (KeyNotFoundException)
+            {
+                // Log with Serilog
+                //logger.LogWarning("Recipe already exists: '{recipe}'", currentRecipe);
+            }
         }
     }
 }
