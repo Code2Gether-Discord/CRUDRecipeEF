@@ -13,6 +13,6 @@ namespace CRUDRecipeEF.BL.DL.Entities
         public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
 
         //for example salad, cakes
-        public Category Category { get; set; }
+        public RecipeCategory Category { get; set; }
     }
 }

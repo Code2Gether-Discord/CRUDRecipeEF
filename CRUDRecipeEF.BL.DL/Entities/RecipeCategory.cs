@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CRUDRecipeEF.BL.DL.Entities
 {
-    public class Category
+    public class RecipeCategory
     {
         public int Id { get; set; }
 
