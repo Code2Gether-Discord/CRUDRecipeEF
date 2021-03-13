@@ -121,6 +121,14 @@ namespace CRUDRecipeTests.Services
             using (var context = new RecipeContext(ContextOptions))
             {
                 var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+
+                await recipeService.RemoveIngredientFromRecipe("Crust", "Apple Pie");
+                var recipe = await recipeService.GetRecipeByName("Apple Pie");
+                Assert.NotNull(recipe);
+                Assert.Equal("Apple Pie", recipe.Name);
+
+                Assert.Collection(recipe.Ingredients, item => Assert.Equal("Apple", item.Name),
+                    item => Assert.Equal("Sugar", item.Name));
             }
         }
 
@@ -130,6 +138,9 @@ namespace CRUDRecipeTests.Services
             using (var context = new RecipeContext(ContextOptions))
             {
                 var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+                await recipeService.DeleteRecipe("Apple Pie");
+
+                await Assert.ThrowsAsync<KeyNotFoundException>(async () => await recipeService.GetRecipeByName("Apple Pie"));
             }
         }
     }
