@@ -50,5 +50,25 @@ namespace CRUDRecipeTests.Services
                 Assert.Equal("Apple Pie", recipe.Name);
             }
         }
+
+        [Fact]
+        public async Task Test_GetAllRecipe()
+        {
+            using (var context = new RecipeContext(ContextOptions))
+            {
+                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+
+                var allRecipes = await recipeService.GetAllRecipes();
+
+                Assert.NotNull(allRecipes);
+                Assert.Equal(2, allRecipes.Count());
+                Assert.Collection(allRecipes, item => Assert.Equal("Fruit Salad", item.Name),
+                    item => Assert.Equal("Apple Pie", item.Name));
+
+                Assert.Collection(allRecipes.FirstOrDefault().Ingredients, item => Assert.Equal("Apple", item.Name),
+                    item => Assert.Equal("Orange", item.Name),
+                    item => Assert.Equal("Peach", item.Name));
+            }
+        }
     }
 }
