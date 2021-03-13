@@ -14,7 +14,7 @@ namespace CRUDRecipeEF.BL.DL.Data
                     {
                         new Ingredient { Name = "Chocolate"},
                         new Ingredient { Name = "Flour"}
-                    }},
+                    }, Category = new RecipeCategory { Name = "Cakes" } },
                     new Recipe { Id = 2, Name = "Apple pie", Ingredients =  new List<Ingredient>
                     {
                         new Ingredient { Name = "Apple"}
@@ -23,7 +23,7 @@ namespace CRUDRecipeEF.BL.DL.Data
                     {
                         new Ingredient { Name = "Meat"},
                         new Ingredient { Name = "Letus"}
-                    }},
+                    }, Category = new RecipeCategory { Name = "Main dishes" }},
                 });
 
             var chocCake = context.Recipes.Find(1);
