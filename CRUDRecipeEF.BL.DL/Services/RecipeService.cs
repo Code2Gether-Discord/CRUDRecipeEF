@@ -7,6 +7,7 @@ using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CRUDRecipeEF.BL.DL.Services
 {
@@ -14,11 +15,15 @@ namespace CRUDRecipeEF.BL.DL.Services
     {
         private readonly RecipeContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<RecipeService> _logger;
 
-        public RecipeService(RecipeContext context, IMapper mapper)
+        public RecipeService(RecipeContext context, 
+            IMapper mapper,
+            ILogger<RecipeService> logger)
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
 
         /// <summary>
@@ -75,6 +80,8 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             await Save();
 
+            _logger.LogDebug("Ingredient {ingredient} added to recipe {recipe}", ingredientAddDTO.Name, recipeName);
+
             return recipeName;
         }
 
@@ -94,6 +101,8 @@ namespace CRUDRecipeEF.BL.DL.Services
             await _context.AddAsync(_mapper.Map<Recipe>(recipeAddDTO));
             await Save();
 
+            _logger.LogDebug("Recipe {recipe} added", recipeAddDTO.Name);
+
             return recipeAddDTO.Name;
         }
 
@@ -107,8 +116,15 @@ namespace CRUDRecipeEF.BL.DL.Services
         {
             var recipe = await GetRecipeByNameIfExists(name);
 
+            if(recipe == null)
+            {
+                throw new KeyNotFoundException("Recipe does not exist");
+            }
+
             _context.Remove(recipe);
             await Save();
+
+            _logger.LogDebug("Recipe {recipe} deleted", name);
         }
 
         public async Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes() =>
@@ -145,6 +161,8 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             recipe.Ingredients.Remove(ingredient);
             await Save();
+
+            _logger.LogDebug("Ingredient {ingredient} removed from recipe {recipe}", ingredientName, recipeName);
         }
     }
 }
