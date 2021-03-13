@@ -93,6 +93,9 @@ namespace CRUDRecipeTests.Services
 
                 Assert.NotNull(isItInDb);
                 Assert.Equal("Chips", isItInDb.Name);
+
+                Assert.Collection(isItInDb.Ingredients, item => Assert.Equal("Potato", item.Name),
+                    item => Assert.Equal("Oil", item.Name));
             }
         }
 
