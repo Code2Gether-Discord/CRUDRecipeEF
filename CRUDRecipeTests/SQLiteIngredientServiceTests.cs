@@ -30,12 +30,27 @@ namespace CRUDRecipeTests
             using (var context = new RecipeContext(ContextOptions))
             {
                 var ingredientService = new IngredientService(context, new Mapper(autoMapperConfig));
-
-                var test = await ingredientService.GetAllIngredients();
                 var ingredient = await ingredientService.GetIngredientByName("Apple");
-
+    
                 Assert.NotNull(ingredient);
                 Assert.Equal("Apple", ingredient.Name);
+            }
+        }
+
+        [Fact]
+        public async Task Test_GetAllIngredients()
+        {
+            using (var context = new RecipeContext(ContextOptions))
+            {
+                var ingredientService = new IngredientService(context, new Mapper(autoMapperConfig));
+
+                var allIngredients = await ingredientService.GetAllIngredients();
+
+                Assert.NotNull(allIngredients);
+                Assert.Equal(3, allIngredients.Count());
+                Assert.Collection(allIngredients, item => Assert.Equal("Apple", item.Name),
+                    item => Assert.Equal("Orange", item.Name),
+                    item => Assert.Equal("Peach", item.Name));
             }
         }
     }
