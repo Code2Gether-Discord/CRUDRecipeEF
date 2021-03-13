@@ -92,5 +92,45 @@ namespace CRUDRecipeTests.Services
                 Assert.Equal("Chips", isItInDb.Name);
             }
         }
+
+        [Fact]
+        public async Task Test_AddIngredientToRecipe()
+        {
+            using (var context = new RecipeContext(ContextOptions))
+            {
+                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+                var addResult = await recipeService.AddIngredientToRecipe(new IngredientAddDTO { Name = "Cherry" }, "Fruit Salad");
+
+                Assert.NotNull(addResult);
+                Assert.Equal("Fruit Salad", addResult);
+
+                var isItInDb = await recipeService.GetRecipeByName("Fruit Salad");
+                Assert.NotNull(isItInDb);
+                Assert.Equal("Fruit Salad", isItInDb.Name);
+
+                Assert.Collection(isItInDb.Ingredients, item => Assert.Equal("Apple", item.Name),
+                    item => Assert.Equal("Orange", item.Name),
+                    item => Assert.Equal("Peach", item.Name),
+                    item => Assert.Equal("Cherry", item.Name));
+            }
+        }
+
+        [Fact]
+        public async Task Test_RemoveIngredientFromRecipe()
+        {
+            using (var context = new RecipeContext(ContextOptions))
+            {
+                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+            }
+        }
+
+        [Fact]
+        public async Task Test_DeleteRecipe()
+        {
+            using (var context = new RecipeContext(ContextOptions))
+            {
+                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+            }
+        }
     }
 }
