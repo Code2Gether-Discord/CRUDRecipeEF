@@ -32,8 +32,10 @@ namespace CRUDRecipeTests
                 var ingredientService = new IngredientService(context, new Mapper(autoMapperConfig));
 
                 var test = await ingredientService.GetAllIngredients();
-                var ing = await ingredientService.GetIngredientByName("Apple");
-                Assert.NotNull(ing);
+                var ingredient = await ingredientService.GetIngredientByName("Apple");
+
+                Assert.NotNull(ingredient);
+                Assert.Equal("Apple", ingredient.Name);
             }
         }
     }
