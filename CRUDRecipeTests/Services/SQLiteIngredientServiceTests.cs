@@ -20,11 +20,6 @@ namespace CRUDRecipeTests.Services
             base(new DbContextOptionsBuilder<RecipeContext>().UseSqlite("Filename=TestIng.db")
                 .Options)
         {
-            //autoMapperConfig = new MapperConfiguration(cfg => {
-            //    cfg.CreateMap<Ingredient, IngredientDetailDTO>();
-            //    cfg.CreateMap<IngredientAddDTO, Ingredient>();
-            //});
-
             autoMapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfiles>());
             // TODO the configuration is not valid
             //autoMapperConfig.AssertConfigurationIsValid();
