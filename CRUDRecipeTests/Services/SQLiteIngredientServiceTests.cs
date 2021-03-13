@@ -14,13 +14,16 @@ namespace CRUDRecipeTests.Services
 {
     public class SQLiteIngredientServiceTests : IngredientServiceTests, IDisposable
     {
-        private MapperConfiguration autoMapperConfig;
+        private readonly MapperConfiguration _autoMapperConfig;
+        private readonly Mapper _mapper;
 
         public SQLiteIngredientServiceTests() : 
             base(new DbContextOptionsBuilder<RecipeContext>().UseSqlite("Filename=TestIng.db")
                 .Options)
         {
-            autoMapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfiles>());
+            _autoMapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfiles>());
+            _mapper = new Mapper(_autoMapperConfig);
+
             // TODO the configuration is not valid
             //autoMapperConfig.AssertConfigurationIsValid();
         }
@@ -38,7 +41,7 @@ namespace CRUDRecipeTests.Services
         {
             using (var context = new RecipeContext(ContextOptions))
             {
-                var ingredientService = new IngredientService(context, new Mapper(autoMapperConfig));
+                var ingredientService = new IngredientService(context, _mapper);
                 var ingredient = await ingredientService.GetIngredientByName("Apple");
     
                 Assert.NotNull(ingredient);
@@ -51,7 +54,7 @@ namespace CRUDRecipeTests.Services
         {
             using (var context = new RecipeContext(ContextOptions))
             {
-                var ingredientService = new IngredientService(context, new Mapper(autoMapperConfig));
+                var ingredientService = new IngredientService(context, _mapper);
 
                 var allIngredients = await ingredientService.GetAllIngredients();
 
@@ -68,7 +71,7 @@ namespace CRUDRecipeTests.Services
         {
             using (var context = new RecipeContext(ContextOptions))
             {
-                var ingredientService = new IngredientService(context, new Mapper(autoMapperConfig));
+                var ingredientService = new IngredientService(context, _mapper);
                 var ingredient = await ingredientService.AddIngredient(new IngredientAddDTO { Name = "Carrot" });
 
                 Assert.NotNull(ingredient);
@@ -86,7 +89,7 @@ namespace CRUDRecipeTests.Services
         {
             using (var context = new RecipeContext(ContextOptions))
             {
-                var ingredientService = new IngredientService(context, new Mapper(autoMapperConfig));
+                var ingredientService = new IngredientService(context, _mapper);
                 await ingredientService.DeleteIngredient("Apple");
 
 

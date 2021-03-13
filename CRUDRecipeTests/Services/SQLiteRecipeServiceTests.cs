@@ -14,13 +14,16 @@ namespace CRUDRecipeTests.Services
 {
     public class SQLiteRecipeServiceTests : RecipeServiceTests, IDisposable
     {
-        private MapperConfiguration autoMapperConfig;
+        private MapperConfiguration _autoMapperConfig;
+        private readonly Mapper _mapper;
 
         public SQLiteRecipeServiceTests() :
             base(new DbContextOptionsBuilder<RecipeContext>().UseSqlite("Filename=TestRec.db")
                 .Options)
         {
-            autoMapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfiles>());
+            _autoMapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfiles>());
+            _mapper = new Mapper(_autoMapperConfig);
+
             // TODO the configuration is not valid
             //autoMapperConfig.AssertConfigurationIsValid();
         }
@@ -38,7 +41,7 @@ namespace CRUDRecipeTests.Services
         {
             using (var context = new RecipeContext(ContextOptions))
             {
-                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+                var recipeService = new RecipeService(context, _mapper);
                 var recipe = await recipeService.GetRecipeByName("Apple Pie");
 
                 Assert.NotNull(recipe);
@@ -51,7 +54,7 @@ namespace CRUDRecipeTests.Services
         {
             using (var context = new RecipeContext(ContextOptions))
             {
-                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+                var recipeService = new RecipeService(context, _mapper);
 
                 var allRecipes = await recipeService.GetAllRecipes();
 
@@ -71,7 +74,7 @@ namespace CRUDRecipeTests.Services
         {
             using (var context = new RecipeContext(ContextOptions))
             {
-                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+                var recipeService = new RecipeService(context, _mapper);
 
                 RecipeAddDTO recipe = new RecipeAddDTO
                 {
@@ -98,7 +101,7 @@ namespace CRUDRecipeTests.Services
         {
             using (var context = new RecipeContext(ContextOptions))
             {
-                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+                var recipeService = new RecipeService(context, _mapper);
                 var addResult = await recipeService.AddIngredientToRecipe(new IngredientAddDTO { Name = "Cherry" }, "Fruit Salad");
 
                 Assert.NotNull(addResult);
@@ -120,7 +123,7 @@ namespace CRUDRecipeTests.Services
         {
             using (var context = new RecipeContext(ContextOptions))
             {
-                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+                var recipeService = new RecipeService(context, _mapper);
 
                 await recipeService.RemoveIngredientFromRecipe("Crust", "Apple Pie");
                 var recipe = await recipeService.GetRecipeByName("Apple Pie");
@@ -137,7 +140,7 @@ namespace CRUDRecipeTests.Services
         {
             using (var context = new RecipeContext(ContextOptions))
             {
-                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+                var recipeService = new RecipeService(context, _mapper);
                 await recipeService.DeleteRecipe("Apple Pie");
 
                 await Assert.ThrowsAsync<KeyNotFoundException>(async () => await recipeService.GetRecipeByName("Apple Pie"));
