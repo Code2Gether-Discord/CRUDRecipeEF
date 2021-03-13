@@ -3,18 +3,35 @@ using System;
 using CRUDRecipeEF.BL.DL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CRUDRecipeEF.BL.DL.Migrations
 {
     [DbContext(typeof(RecipeContext))]
-    partial class RecipeContextModelSnapshot : ModelSnapshot
+    [Migration("20210312150905_Create-Category")]
+    partial class CreateCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.3");
+
+            modelBuilder.Entity("CRUDRecipeEF.BL.DL.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+                });
 
             modelBuilder.Entity("CRUDRecipeEF.BL.DL.Entities.Ingredient", b =>
                 {
@@ -51,21 +68,6 @@ namespace CRUDRecipeEF.BL.DL.Migrations
                     b.ToTable("Recipes");
                 });
 
-            modelBuilder.Entity("CRUDRecipeEF.BL.DL.Entities.RecipeCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RecipeCategories");
-                });
-
             modelBuilder.Entity("IngredientRecipe", b =>
                 {
                     b.Property<int>("IngredientsId")
@@ -83,7 +85,7 @@ namespace CRUDRecipeEF.BL.DL.Migrations
 
             modelBuilder.Entity("CRUDRecipeEF.BL.DL.Entities.Recipe", b =>
                 {
-                    b.HasOne("CRUDRecipeEF.BL.DL.Entities.RecipeCategory", "Category")
+                    b.HasOne("CRUDRecipeEF.BL.DL.Entities.Category", "Category")
                         .WithMany("Recipes")
                         .HasForeignKey("CategoryId");
 
@@ -105,7 +107,7 @@ namespace CRUDRecipeEF.BL.DL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CRUDRecipeEF.BL.DL.Entities.RecipeCategory", b =>
+            modelBuilder.Entity("CRUDRecipeEF.BL.DL.Entities.Category", b =>
                 {
                     b.Navigation("Recipes");
                 });

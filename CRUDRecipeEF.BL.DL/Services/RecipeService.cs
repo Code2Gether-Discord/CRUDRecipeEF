@@ -110,7 +110,8 @@ namespace CRUDRecipeEF.BL.DL.Services
         }
 
         public async Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes() =>
-            _mapper.Map<List<RecipeDetailDTO>>(await _context.Recipes.Include(i => i.Ingredients).ToListAsync());
+            _mapper.Map<List<RecipeDetailDTO>>(await _context.Recipes.OrderBy(r => r.Category.Name)
+                .Include(i => i.Ingredients).ToListAsync());
 
         /// <summary>
         ///

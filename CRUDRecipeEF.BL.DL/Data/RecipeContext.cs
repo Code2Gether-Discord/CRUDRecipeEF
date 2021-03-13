@@ -9,6 +9,7 @@ namespace CRUDRecipeEF.BL.DL.Data
         {
         }
 
+        public DbSet<RecipeCategory> RecipeCategories { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
     }
