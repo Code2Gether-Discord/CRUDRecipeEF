@@ -35,7 +35,7 @@ namespace CRUDRecipeEF.BL.DL.Data
                     new Recipe { Name = "Taco", Ingredients = new List<Ingredient>
                     {
                         new Ingredient { Name = "Meat"},
-                        new Ingredient { Name = "Letus"}
+                        new Ingredient { Name = "Lettuce"}
                     }, Category = new RecipeCategory { Name = "Main dishes" }},
                 });
 
