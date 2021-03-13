@@ -20,11 +20,6 @@ namespace CRUDRecipeTests.Services
             base(new DbContextOptionsBuilder<RecipeContext>().UseSqlite("Filename=TestRec.db")
                 .Options)
         {
-            //autoMapperConfig = new MapperConfiguration(cfg => {
-            //    cfg.CreateMap<Ingredient, IngredientDetailDTO>();
-            //    cfg.CreateMap<IngredientAddDTO, Ingredient>();
-            //});
-
             autoMapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfiles>());
             // TODO the configuration is not valid
             //autoMapperConfig.AssertConfigurationIsValid();
@@ -68,6 +63,33 @@ namespace CRUDRecipeTests.Services
                 Assert.Collection(allRecipes.FirstOrDefault().Ingredients, item => Assert.Equal("Apple", item.Name),
                     item => Assert.Equal("Orange", item.Name),
                     item => Assert.Equal("Peach", item.Name));
+            }
+        }
+
+        [Fact]
+        public async Task Test_AddRecipe()
+        {
+            using (var context = new RecipeContext(ContextOptions))
+            {
+                var recipeService = new RecipeService(context, new Mapper(autoMapperConfig));
+
+                RecipeAddDTO recipe = new RecipeAddDTO
+                {
+                    Name = "Chips",
+                    Ingredients = new List<IngredientAddDTO> { new IngredientAddDTO { Name = "Potato" },
+                        new IngredientAddDTO { Name = "Oil" }
+                    }
+                };
+
+                var recipeResult = await recipeService.AddRecipe(recipe);
+
+                Assert.NotNull(recipeResult);
+                Assert.Equal("Chips", recipeResult);
+
+                var isItInDb = await recipeService.GetRecipeByName("Chips");
+
+                Assert.NotNull(isItInDb);
+                Assert.Equal("Chips", isItInDb.Name);
             }
         }
     }
