@@ -21,7 +21,7 @@ namespace CRUDRecipeEF.BL.DL.Services
 
         private async Task<Ingredient> GetIngredientByNameIfExists(string name)
         {
-            var ingredient = await _context.Ingredients.FirstOrDefaultAsync(i => i.Name.ToLower() == name.ToLower());
+            var ingredient = await _context.Ingredients.FirstOrDefaultAsync(i => i.Name.ToLower() == name.ToLower().Trim());
             if (ingredient == null)
             {
                 throw new KeyNotFoundException("Ingredient doesnt exist");
@@ -46,7 +46,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <returns>If the ingredient exists or not</returns>
         private async Task<bool> IngredientExists(string ingredientName)
         {
-            bool exists = await _context.Ingredients.AnyAsync(i => i.Name.ToLower() == ingredientName.ToLower());
+            bool exists = await _context.Ingredients.AnyAsync(i => i.Name.ToLower() == ingredientName.ToLower().Trim());
             return exists; 
             // Not using => makes this easier to debug. For some reason .ToLowerInvariant() does not work in the predicate.
             // Possibly not compatiable with async? May look into this later.
@@ -93,7 +93,6 @@ namespace CRUDRecipeEF.BL.DL.Services
             var ingredients = await _context.Ingredients.ToListAsync();
             return _mapper.Map<List<IngredientDetailDTO>>(ingredients);
         }
-
 
         /// <summary>
         /// Gets an ingredient by name

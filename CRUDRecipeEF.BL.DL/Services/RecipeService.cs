@@ -29,7 +29,8 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <exception cref="KeyNotFoundException"></exception>
         private async Task<Recipe> GetRecipeByNameIfExists(string name)
         {
-            var recipe = await _context.Recipes.Include(i => i.Ingredients).FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower());
+            var recipe = await _context.Recipes.Include(i => i.Ingredients)
+                .FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower().Trim());
             return recipe ?? throw new KeyNotFoundException("Recipe doesnt exist");
         }
 
@@ -48,7 +49,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="recipeName"></param>
         /// <returns>If the recipe exists or not</returns>
         private async Task<bool> RecipeExists(string recipeName) =>
-            await _context.Recipes.AnyAsync(r => r.Name.ToLower() == recipeName.ToLower());
+            await _context.Recipes.AnyAsync(r => r.Name.ToLower() == recipeName.ToLower().Trim());
 
         /// <summary>
         /// 
@@ -60,7 +61,8 @@ namespace CRUDRecipeEF.BL.DL.Services
         public async Task<string> AddIngredientToRecipe(IngredientAddDTO ingredientAddDTO, string recipeName)
         {
             var recipe = await GetRecipeByNameIfExists(recipeName);
-            var ingredient = await _context.Ingredients.FirstOrDefaultAsync(x => x.Name.ToLower() == ingredientAddDTO.Name.ToLower());
+            var ingredient = await _context.Ingredients
+                .FirstOrDefaultAsync(x => x.Name.ToLower() == ingredientAddDTO.Name.ToLower().Trim());
 
             if (ingredient == null)
             {
@@ -110,7 +112,8 @@ namespace CRUDRecipeEF.BL.DL.Services
         }
 
         public async Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes() =>
-            _mapper.Map<List<RecipeDetailDTO>>(await _context.Recipes.Include(i => i.Ingredients).ToListAsync());
+            _mapper.Map<List<RecipeDetailDTO>>(await _context.Recipes.OrderBy(r => r.Category.Name)
+                .Include(i => i.Ingredients).ToListAsync());
 
         /// <summary>
         ///
@@ -132,7 +135,8 @@ namespace CRUDRecipeEF.BL.DL.Services
         {
             var recipe = await GetRecipeByNameIfExists(recipeName);
 
-            var ingredient = recipe.Ingredients.FirstOrDefault(i => i.Name.ToLower() == ingredientName.ToLower());
+            var ingredient = recipe.Ingredients
+                .FirstOrDefault(i => i.Name.ToLower() == ingredientName.ToLower().Trim());
 
             if (ingredient == null)
             {

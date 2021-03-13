@@ -3,16 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CRUDRecipeEF.BL.DL.Entities
 {
-    public class Recipe
+    public class RecipeCategory
     {
         public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }
-
-        public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
-
-        //for example salad, cakes
-        public RecipeCategory Category { get; set; }
+        public List<Recipe> Recipes { get; set; } = new List<Recipe>();
     }
 }
