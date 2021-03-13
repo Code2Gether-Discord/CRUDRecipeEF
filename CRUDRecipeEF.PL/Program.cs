@@ -3,6 +3,7 @@ using System.Linq;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.PL.Menus;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace CRUDRecipeEF.PL
 {
@@ -11,6 +12,9 @@ namespace CRUDRecipeEF.PL
         private static void Main(string[] args)
         {
             Bootstrap.SetupLogging();
+
+            var contextLog = Log.ForContext("SourceContext", "CRUDRecipeEF");
+            contextLog.Debug("CRUDRecipeEF Starting");
 
             var host = Bootstrap.CreateHostBuilder(args).Build();
 

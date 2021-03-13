@@ -62,16 +62,14 @@ namespace CRUDRecipeEF.PL
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
                 .AddEnvironmentVariables();
 
-            var levelSwitch = new LoggingLevelSwitch();
-            levelSwitch.MinimumLevel = LogEventLevel.Warning;
-
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Warning()
+                .MinimumLevel.Debug()
                 .ReadFrom.Configuration(configBuilder.Build())
                 .Enrich.FromLogContext()
                 .CreateLogger();
 
-            Log.Logger.Information("CRUDRecipeEF Starting");
+            var contextLog = Log.ForContext("SourceContext", "CRUDRecipeEF");
+            contextLog.Verbose("Logging setup successfully");
         }
     }
 }
