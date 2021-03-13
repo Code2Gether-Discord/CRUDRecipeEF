@@ -6,14 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Core;
-using Serilog.Events;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CRUDRecipeEF.PL
 {
@@ -38,7 +32,9 @@ namespace CRUDRecipeEF.PL
                 .UseSerilog()
               .ConfigureServices((hostContext, services) =>
               {
+                  services.AddLogging(configure => configure.AddSerilog());
                   services.AddSingleton<IConfiguration>(config);
+                  services.AddTransient<IDataSeed, DataSeed>();
                   services.AddTransient<IRecipeService, RecipeService>();
                   services.AddTransient<IIngredientService, IngredientService>();
                   services.AddAutoMapper(typeof(RecipeService).Assembly);

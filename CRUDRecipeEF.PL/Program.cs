@@ -26,14 +26,18 @@ namespace CRUDRecipeEF.PL
                 var context = services.GetRequiredService<RecipeContext>();
                 if (!context.Recipes.Any() && !context.Ingredients.Any())
                 {
-                    DataSeed.Seed(context);
+                    var seeder = host.Services.GetRequiredService<IDataSeed>();
+                    seeder.Seed();
                 }
             }
             catch (Exception ex)
             {
+                contextLog.Fatal("Unable to seed database: {exception}", ex.Message);
                 Console.WriteLine("Exception occured error while seeding data");
                 Console.WriteLine();
                 Console.WriteLine(ex.Message);
+
+                Environment.Exit(1);
             }
            
             //App starting point
