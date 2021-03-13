@@ -4,6 +4,7 @@ using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Helpers;
 using CRUDRecipeEF.BL.DL.Services;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,12 +12,12 @@ using Xunit;
 
 namespace CRUDRecipeTests.Services
 {
-    public class SQLiteRecipeServiceTests : RecipeServiceTests
+    public class SQLiteRecipeServiceTests : RecipeServiceTests, IDisposable
     {
         private MapperConfiguration autoMapperConfig;
 
         public SQLiteRecipeServiceTests() :
-            base(new DbContextOptionsBuilder<RecipeContext>().UseSqlite("Filename=Test.db")
+            base(new DbContextOptionsBuilder<RecipeContext>().UseSqlite("Filename=TestRec.db")
                 .Options)
         {
             //autoMapperConfig = new MapperConfiguration(cfg => {
@@ -27,6 +28,14 @@ namespace CRUDRecipeTests.Services
             autoMapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfiles>());
             // TODO the configuration is not valid
             //autoMapperConfig.AssertConfigurationIsValid();
+        }
+
+        public void Dispose()
+        {
+            using (var context = new RecipeContext(ContextOptions))
+            {
+                context.Database.EnsureDeleted();
+            }
         }
 
         [Fact]
