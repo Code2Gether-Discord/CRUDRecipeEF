@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,11 +25,20 @@ namespace CRUDRecipeEF.PL
         /// <returns>IHostBuilder</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
+            IConfigurationBuilder configBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+                .AddEnvironmentVariables();
+            IConfiguration config = configBuilder.Build();
+
             //appsettings copy to output
             //auto adds json file appsettings
             return Host.CreateDefaultBuilder(args)
+                .UseSerilog()
               .ConfigureServices((hostContext, services) =>
               {
+                  services.AddSingleton<IConfiguration>(config);
                   services.AddTransient<IRecipeService, RecipeService>();
                   services.AddTransient<IIngredientService, IngredientService>();
                   services.AddAutoMapper(typeof(RecipeService).Assembly);
@@ -45,22 +56,22 @@ namespace CRUDRecipeEF.PL
         public static void SetupLogging()
         {
             var configBuilder = new ConfigurationBuilder();
-            Bootstrap.BuildConfig(configBuilder);
+
+            configBuilder.SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+                .AddEnvironmentVariables();
+
+            var levelSwitch = new LoggingLevelSwitch();
+            levelSwitch.MinimumLevel = LogEventLevel.Warning;
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Warning()
                 .ReadFrom.Configuration(configBuilder.Build())
                 .Enrich.FromLogContext()
                 .CreateLogger();
-            Log.Logger.Information("CRUDRecipeEF Starting");
-        }
 
-        public static void BuildConfig(IConfigurationBuilder builder)
-        {
-            builder.SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-                .AddEnvironmentVariables();
+            Log.Logger.Information("CRUDRecipeEF Starting");
         }
     }
 }

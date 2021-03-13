@@ -2,9 +2,7 @@
 using System.Linq;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.PL.Menus;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 
 namespace CRUDRecipeEF.PL
 {
@@ -29,7 +27,7 @@ namespace CRUDRecipeEF.PL
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception Occured error while seeding data");
+                Console.WriteLine("Exception occured error while seeding data");
                 Console.WriteLine();
                 Console.WriteLine(ex.Message);
             }
