@@ -79,5 +79,18 @@ namespace CRUDRecipeTests
                 Assert.Equal("Carrot", isItInDb.Name);
             }
         }
+
+        [Fact]
+        public async Task Test_DeleteIngredient()
+        {
+            using (var context = new RecipeContext(ContextOptions))
+            {
+                var ingredientService = new IngredientService(context, new Mapper(autoMapperConfig));
+                await ingredientService.DeleteIngredient("Apple");
+
+
+                await Assert.ThrowsAsync<KeyNotFoundException>(async () => await ingredientService.GetIngredientByName("Apple"));
+            }
+        }
     }
 }
