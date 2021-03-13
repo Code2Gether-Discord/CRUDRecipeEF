@@ -1,10 +1,8 @@
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using Xunit;
 
-namespace CRUDRecipeTests
+namespace CRUDRecipeTests.Services
 {
     public abstract class IngredientServiceTests
     {

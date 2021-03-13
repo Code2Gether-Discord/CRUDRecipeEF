@@ -1,18 +1,15 @@
 ﻿using AutoMapper;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
-using CRUDRecipeEF.BL.DL.Entities;
 using CRUDRecipeEF.BL.DL.Helpers;
 using CRUDRecipeEF.BL.DL.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CRUDRecipeTests
+namespace CRUDRecipeTests.Services
 {
     public class SQLiteIngredientServiceTests : IngredientServiceTests
     {
