@@ -3,6 +3,7 @@ using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,11 +13,15 @@ namespace CRUDRecipeEF.BL.DL.Services
     {
         private readonly RecipeContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<IngredientService> _logger;
 
-        public IngredientService(RecipeContext context, IMapper mapper)
+        public IngredientService(RecipeContext context, 
+            IMapper mapper,
+            ILogger<IngredientService> logger )
         {
             this._context = context;
             this._mapper = mapper;
+            _logger = logger;
         }
 
         private async Task<Ingredient> GetIngredientByNameIfExists(string name)
@@ -43,9 +48,8 @@ namespace CRUDRecipeEF.BL.DL.Services
         {
             bool exists = await _context.Ingredients.AnyAsync(i => i.Name.ToLower() == ingredientName.ToLower().Trim());
             return exists; 
-            // Not using => makes this easier to debug. For some reason .ToLowerInvariant() does not work in the predicate.
-            // Possibly not compatiable with async? May look into this later.
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -62,6 +66,8 @@ namespace CRUDRecipeEF.BL.DL.Services
             await _context.AddAsync(_mapper.Map<Ingredient>(ingredientAddDTO));
             await Save();
 
+            _logger.LogDebug("Ingredient added: {ingredient}", ingredientAddDTO.Name);
+
             return ingredientAddDTO.Name;
         }
 
@@ -77,6 +83,8 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             _context.Remove(ingredient);
             await Save();
+
+            _logger.LogDebug("Ingredient Deleted: {ingredient}", name);
         }
 
         /// <summary>
