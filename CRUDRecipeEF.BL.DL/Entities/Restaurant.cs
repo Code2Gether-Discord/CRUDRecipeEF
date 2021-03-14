@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CRUDRecipeEF.BL.DL.Entities
 {
-    public class Restaurant 
+    public class Restaurant
     {
         public int Id { get; set; }
         [Required]
