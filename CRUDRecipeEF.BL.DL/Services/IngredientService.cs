@@ -3,6 +3,7 @@ using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,11 +13,15 @@ namespace CRUDRecipeEF.BL.DL.Services
     {
         private readonly RecipeContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<IngredientService> _logger;
 
-        public IngredientService(RecipeContext context, IMapper mapper)
+        public IngredientService(RecipeContext context, 
+            IMapper mapper,
+            ILogger<IngredientService> logger)
         {
-            this._context = context;
-            this._mapper = mapper;
+            _context = context;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         private async Task<Ingredient> GetIngredientByNameIfExists(string name)
@@ -24,6 +29,7 @@ namespace CRUDRecipeEF.BL.DL.Services
             var ingredient = await _context.Ingredients.FirstOrDefaultAsync(i => i.Name.ToLower() == name.ToLower().Trim());
             if (ingredient == null)
             {
+                _logger.LogDebug($"Attempted to get ingredient that does not exist: {name}");
                 throw new KeyNotFoundException("Ingredient doesnt exist");
             }
 
@@ -61,11 +67,14 @@ namespace CRUDRecipeEF.BL.DL.Services
         {
             if (await IngredientExists(ingredientAddDTO.Name))
             {
+                _logger.LogWarning($"Attempted to add existing ingredient {ingredientAddDTO.Name}");
                 throw new KeyNotFoundException("Ingredient exists");
             }
 
             await _context.AddAsync(_mapper.Map<Ingredient>(ingredientAddDTO));
             await Save();
+
+            _logger.LogInformation($"Added {ingredientAddDTO.Name}");
 
             return ingredientAddDTO.Name;
         }
@@ -82,6 +91,8 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             _context.Remove(ingredient);
             await Save();
+
+            _logger.LogInformation($"Deleted {name}");
         }
 
         /// <summary>

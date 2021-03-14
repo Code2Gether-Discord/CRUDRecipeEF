@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,6 +6,7 @@ using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CRUDRecipeEF.BL.DL.Services
 {
@@ -14,11 +14,15 @@ namespace CRUDRecipeEF.BL.DL.Services
     {
         private readonly RecipeContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<RecipeService> _logger;
 
-        public RecipeService(RecipeContext context, IMapper mapper)
+        public RecipeService(RecipeContext context, 
+            IMapper mapper,
+            ILogger<RecipeService> logger)
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
 
         /// <summary>
@@ -31,7 +35,14 @@ namespace CRUDRecipeEF.BL.DL.Services
         {
             var recipe = await _context.Recipes.Include(i => i.Ingredients)
                 .FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower().Trim());
-            return recipe ?? throw new KeyNotFoundException("Recipe doesnt exist");
+
+            if(recipe == null)
+            {
+                _logger.LogDebug($"Attempted to get recipe that does not exist: {name}");
+                throw new KeyNotFoundException("Recipe doesnt exist");
+            }
+
+            return recipe;
         }
 
         /// <summary>
@@ -75,6 +86,8 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             await Save();
 
+            _logger.LogInformation($"Added ingredient {ingredientAddDTO.Name} to recipe {recipeName}");
+
             return recipeName;
         }
 
@@ -94,6 +107,8 @@ namespace CRUDRecipeEF.BL.DL.Services
             await _context.AddAsync(_mapper.Map<Recipe>(recipeAddDTO));
             await Save();
 
+            _logger.LogInformation($"Added recipe {recipeAddDTO.Name}");
+
             return recipeAddDTO.Name;
         }
 
@@ -109,6 +124,8 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             _context.Remove(recipe);
             await Save();
+
+            _logger.LogInformation($"Deleted recipe {name}");
         }
 
         public async Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes() =>
@@ -144,6 +161,9 @@ namespace CRUDRecipeEF.BL.DL.Services
             }
 
             recipe.Ingredients.Remove(ingredient);
+
+            _logger.LogInformation($"Removed {ingredientName} from recipe {recipeName}");
+
             await Save();
         }
     }
