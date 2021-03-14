@@ -1,17 +1,26 @@
 ﻿using System.Collections.Generic;
 using CRUDRecipeEF.BL.DL.Entities;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace CRUDRecipeEF.BL.DL.Data
 {
-    public static class DataSeed
+    public class DataSeed : IDataSeed
     {
-        public static void Seed(RecipeContext context)
-        {
-            ILogger logger = Log.ForContext(typeof(DataSeed));
-            logger.Information("Seeding database");
+        private readonly RecipeContext _context;
+        private readonly ILogger _logger;
 
-            context.Recipes.AddRange(
+        public DataSeed(RecipeContext context,
+            ILogger<DataSeed> logger)
+        {
+            _context = context;
+            _logger = logger;
+        }
+
+        public void Seed()
+        {
+            _logger.LogInformation("Seeding database");
+
+            _context.Recipes.AddRange(
                 new List<Recipe>
                 {
                     new Recipe { Id = 1, Name = "Chocolate Cake", Ingredients =  new List<Ingredient>
@@ -30,14 +39,14 @@ namespace CRUDRecipeEF.BL.DL.Data
                     }, Category = new RecipeCategory { Name = "Main dishes" }},
                 });
 
-            var chocCake = context.Recipes.Find(1);
-            var applePie = context.Recipes.Find(2);
+            var chocCake = _context.Recipes.Find(1);
+            var applePie = _context.Recipes.Find(2);
             var sugar = new Ingredient { Name = "Sugar" };
 
             chocCake.Ingredients.Add(sugar);
             applePie.Ingredients.Add(sugar);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
     }
