@@ -10,7 +10,7 @@ using System.IO;
 
 namespace CRUDRecipeEF.PL
 {
-    internal class Bootstarp
+    internal class Bootstrap
     {
         internal static void SetupLogging()
         {
@@ -20,7 +20,7 @@ namespace CRUDRecipeEF.PL
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configBuilder.Build())
+                .ReadFrom.Configuration(configBuilder.Build()) // Load Serilogs settings from appsettings.json
                 .Enrich.FromLogContext()
                 .CreateLogger();
             Log.Logger.Verbose("Setting up logging");
@@ -39,6 +39,7 @@ namespace CRUDRecipeEF.PL
               .ConfigureServices((hostContext, services) =>
               {
                   services
+                    .AddTransient<IDataSeed, DataSeed>()
                     .AddTransient<IRecipeService, RecipeService>()
                     .AddTransient<IIngredientService, IngredientService>()
                     .AddAutoMapper(typeof(RecipeService).Assembly)
