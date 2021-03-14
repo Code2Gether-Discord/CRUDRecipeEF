@@ -26,8 +26,7 @@ namespace CRUDRecipeEF.PL
                 var context = services.GetRequiredService<RecipeContext>();
                 if (!context.Recipes.Any() && !context.Ingredients.Any())
                 {
-                    var seeder = host.Services.GetRequiredService<IDataSeed>();
-                    seeder.Seed();
+                    DataSeed.Seed(context);
                 }
             }
             catch (Exception ex)

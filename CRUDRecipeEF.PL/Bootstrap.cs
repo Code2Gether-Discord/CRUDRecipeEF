@@ -34,7 +34,6 @@ namespace CRUDRecipeEF.PL
               {
                   services.AddLogging(configure => configure.AddSerilog());
                   services.AddSingleton<IConfiguration>(config);
-                  services.AddTransient<IDataSeed, DataSeed>();
                   services.AddTransient<IRecipeService, RecipeService>();
                   services.AddTransient<IIngredientService, IngredientService>();
                   services.AddAutoMapper(typeof(RecipeService).Assembly);
