@@ -15,6 +15,10 @@ namespace CRUDRecipeEF.BL.DL.Helpers
             CreateMap<Ingredient, IngredientDetailDTO>();
             CreateMap<IngredientAddDTO, Ingredient>()
                 .ForMember(i => i.Name, opt => opt.MapFrom(i => i.Name.Trim()));
+
+            CreateMap<Restaurant, RestaurantDetailDTO>();
+            CreateMap<RestaurantAddDTO, Restaurant>()
+                .ForMember(i => i.Name, opt => opt.MapFrom(i => i.Name.Trim()));
         }
     }
 }
