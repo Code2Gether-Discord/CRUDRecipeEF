@@ -47,7 +47,7 @@ namespace CRUDRecipeEF.PL.Menus
 
                     if (!Enum.IsDefined(typeof(MainMenuOption), option))
                     {
-                        // Not in the enum - log here if desired
+                        _logger.LogWarning("Option is not in enum");
                         valid = false;
                     }
 
@@ -63,7 +63,7 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case MainMenuOption.InValid:
-                    //TODO throw and exception or something
+                    _logger.LogWarning("Invalid option selected");
                     break;
                 case MainMenuOption.RecipeMenu:
                     Console.WriteLine();
