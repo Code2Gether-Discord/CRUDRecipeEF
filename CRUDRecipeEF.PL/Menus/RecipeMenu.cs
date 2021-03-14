@@ -12,18 +12,15 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
-        private readonly IMapper _mapper;
         private readonly int _recipePerPage = 8;
 
         private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, EditRecipe = 4, DeleteRecipe = 5, GoBack = 6 };
 
         public RecipeMenu(IRecipeService recipeService,
-            IIngredientService ingredientService,
-            IMapper mapper)
+            IIngredientService ingredientService)
         {
             _recipeService = recipeService;
             _ingredientService = ingredientService;
-            _mapper = mapper;
         }
 
         public async Task Show()
@@ -104,8 +101,16 @@ namespace CRUDRecipeEF.PL.Menus
 
             try
             {
+                // this is super shit code, sorry
+                //TODO: Fix this mess
                 var recipe = await _recipeService.GetRecipeByName(name);
-                var recipeAdd = _mapper.Map<RecipeAddDTO>(recipe);
+                RecipeAddDTO recipeAdd = new RecipeAddDTO() { Name = recipe.Name };
+
+                foreach(var i in recipe.Ingredients)
+                {
+                    recipeAdd.Ingredients.Add(new IngredientAddDTO { Name = i.Name });
+                }
+                
 
                 ConsoleHelper.ColorWrite("What would you like to edit (N)ame or reset (I)ngredients: ");
                 var editWhat = Console.ReadLine();
