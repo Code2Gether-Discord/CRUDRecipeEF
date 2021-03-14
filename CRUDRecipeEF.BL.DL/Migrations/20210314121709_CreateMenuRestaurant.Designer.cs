@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUDRecipeEF.BL.DL.Migrations
 {
     [DbContext(typeof(RecipeContext))]
-    [Migration("20210314114807_CreateMenuRestaurant")]
+    [Migration("20210314121709_CreateMenuRestaurant")]
     partial class CreateMenuRestaurant
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,10 @@ namespace CRUDRecipeEF.BL.DL.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("RestaurantId")
                         .HasColumnType("INTEGER");

@@ -2,7 +2,7 @@
 
 namespace CRUDRecipeEF.BL.DL.Migrations
 {
-    public partial class CreateRestaurantMenu : Migration
+    public partial class CreateMenuRestaurant : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,7 +18,7 @@ namespace CRUDRecipeEF.BL.DL.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,6 +31,7 @@ namespace CRUDRecipeEF.BL.DL.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     RestaurantId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>

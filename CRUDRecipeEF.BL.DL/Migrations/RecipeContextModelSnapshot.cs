@@ -37,6 +37,10 @@ namespace CRUDRecipeEF.BL.DL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("RestaurantId")
                         .HasColumnType("INTEGER");
 
