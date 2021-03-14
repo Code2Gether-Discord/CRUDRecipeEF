@@ -33,10 +33,10 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <summary>
         /// Checks if a restaurant with the specified name already exists
         /// </summary>
-        /// <param name="recipeName"></param>
-        /// <returns>If the recipe exists or not</returns>
+        /// <param name="name"></param>
+        /// <returns>If the restaurant exists or not</returns>
         private async Task<bool> RestaurantExists(string name) =>
-            await _context.Recipes.AnyAsync(r => r.Name.ToLower() == name.ToLower().Trim());
+            await _context.Restaurants.AnyAsync(r => r.Name.ToLower() == name.ToLower().Trim());
 
         /// <summary>
         /// Finds a restaurant with the specified name. Throws an exception if it doesnt exist
