@@ -14,6 +14,7 @@ namespace CRUDRecipeEF.PL
     {
         internal static void SetupLogging()
         {
+            // Logging is setup before the DI container, so we need to read the appsettings file here
             var configBuilder = new ConfigurationBuilder();
             configBuilder.SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
