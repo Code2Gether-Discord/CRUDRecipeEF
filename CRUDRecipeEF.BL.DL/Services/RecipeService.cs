@@ -78,6 +78,19 @@ namespace CRUDRecipeEF.BL.DL.Services
             return recipeName;
         }
 
+        public async Task UpdateRecipe(string name, RecipeAddDTO recipeAddDTO)
+        {
+            var recipe = await _context.Recipes.SingleOrDefaultAsync(i => i.Name == name);
+
+            if (recipe == null)
+            {
+                throw new KeyNotFoundException($"{recipeAddDTO.Name} does not exist");
+            }
+
+            recipe.Name = recipeAddDTO.Name;
+            await Save();
+        }
+
         /// <summary>
         /// 
         /// </summary>
