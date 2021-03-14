@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 
 namespace CRUDRecipeEF.PL.Menus
 {
@@ -6,14 +7,17 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IIngredientMenu _ingredientMenu;
         private readonly IRecipeMenu _recipeMenu;
+        private readonly ILogger _logger;
 
         private enum MainMenuOption { InValid = 0, RecipeMenu = 1, IngredientMenu = 2, Quit = 3 };
 
         public MainMenu(IIngredientMenu ingredientMenu,
-            IRecipeMenu recipeMenu)
+            IRecipeMenu recipeMenu,
+            ILogger<MainMenu> logger)
         {
             _ingredientMenu = ingredientMenu;
             _recipeMenu = recipeMenu;
+            _logger = logger;
         }
 
         public void Show()
