@@ -70,6 +70,19 @@ namespace CRUDRecipeEF.BL.DL.Services
             return ingredientAddDTO.Name;
         }
 
+        public async Task UpdateIngredient(IngredientAddDTO ingredientAddDTO)
+        {
+            var ing = await _context.Ingredients.SingleOrDefaultAsync(i => i.Name == ingredientAddDTO.Name);
+
+            if(ing == null)
+            {
+                throw new KeyNotFoundException($"{ingredientAddDTO.Name} does not exist");
+            }
+
+            ing.Name = ingredientAddDTO.Name;
+            await Save();
+        }
+
         /// <summary>
         /// Delete an Ingredient from the database
         /// </summary>
