@@ -63,7 +63,7 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case MainMenuOption.InValid:
-                    _logger.LogWarning("Invalid option selected");
+                    _logger.LogWarning("Attempted to execute invalid menu selection");
                     break;
                 case MainMenuOption.RecipeMenu:
                     Console.WriteLine();

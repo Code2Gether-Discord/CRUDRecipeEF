@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CRUDRecipeEF.BL.DL.Entities;
+using Serilog;
 
 namespace CRUDRecipeEF.BL.DL.Data
 {
@@ -7,6 +8,9 @@ namespace CRUDRecipeEF.BL.DL.Data
     {
         public static void Seed(RecipeContext context)
         {
+            ILogger logger = Log.ForContext(typeof(DataSeed));
+            logger.Information("Seeding database");
+
             context.Recipes.AddRange(
                 new List<Recipe>
                 {
