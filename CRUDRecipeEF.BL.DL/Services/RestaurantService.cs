@@ -31,6 +31,14 @@ namespace CRUDRecipeEF.BL.DL.Services
         }
 
         /// <summary>
+        /// Checks if a restaurant with the specified name already exists
+        /// </summary>
+        /// <param name="recipeName"></param>
+        /// <returns>If the recipe exists or not</returns>
+        private async Task<bool> RestaurantExists(string name) =>
+            await _context.Recipes.AnyAsync(r => r.Name.ToLower() == name.ToLower().Trim());
+
+        /// <summary>
         /// Finds a restaurant with the specified name. Throws an exception if it doesnt exist
         /// </summary>
         /// <param name="name"></param>
@@ -43,29 +51,92 @@ namespace CRUDRecipeEF.BL.DL.Services
             return restaurant ?? throw new KeyNotFoundException("Restaurant doesnt exist");
         }
 
-        public Task<string> AddMenuToRestaurant(Menu menu, string restaurantName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Name of the restaurant</returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        public async Task<string> AddMenuToRestaurant(Menu menuAdd, string restaurantName)
         {
-            throw new NotImplementedException();
+            var restaurant = await GetRestaurantByNameIfExists(restaurantName);
+            var menu = await _context.Menus
+                .FirstOrDefaultAsync(m => m.Name.ToLower() == menuAdd.Name.ToLower().Trim());
+
+            if (menu == null)
+            {
+                restaurant.Menus.Add(menuAdd);
+            }
+            else
+            {
+                restaurant.Menus.Add(menu);
+            }
+
+            await Save();
+            return restaurantName;
         }
 
-        public Task AddRestaurant(Restaurant restaurant)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="restaurant"></param>
+        /// <returns>name of the restaurant</returns>
+        ///  /// <exception cref="ArgumentException"></exception>
+        public async Task<string> AddRestaurant(Restaurant restaurant)
         {
-            throw new NotImplementedException();
+            if (await RestaurantExists(restaurant.Name))
+            {
+                throw new ArgumentException("Restaurant exists");
+            }
+            await _context.AddAsync(restaurant);
+            await Save();
+
+            return restaurant.Name;
         }
 
-        public Task RemoveMenuFromRestaurant(string menuName, string restaurantName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="menuName"></param>
+        /// <param name="restaurantName"></param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        public async Task RemoveMenuFromRestaurant(string menuName, string restaurantName)
         {
-            throw new NotImplementedException();
+            var restaurant = await GetRestaurantByNameIfExists(restaurantName);
+            var menu = restaurant.Menus
+                .FirstOrDefault(m => m.Name.ToLower() == menuName.ToLower().Trim());
+
+            if (menu == null)
+            {
+                throw new KeyNotFoundException("Restaurant doesnt exist");
+            }
+
+            restaurant.Menus.Remove(menu);
+            await Save();
         }
 
-        public Task DeleteRestaurant(string restaurantName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        public async Task DeleteRestaurant(string name)
         {
-            throw new NotImplementedException();
+            var restaurant = await GetRestaurantByNameIfExists(name);
+
+            _context.Remove(restaurant);
+            await Save();
         }
 
-        public Task<Restaurant> GetRestaurantByName(string name)
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        public async Task<Restaurant> GetRestaurantByName(string name) =>
+            await GetRestaurantByNameIfExists(name);
     }
 }
