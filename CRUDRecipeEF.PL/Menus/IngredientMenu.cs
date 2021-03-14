@@ -93,12 +93,20 @@ namespace CRUDRecipeEF.PL.Menus
 
             try
             {
+                var ingredient = await _ingredientService.GetIngredientByName(name);
 
+                ConsoleHelper.ColorWrite("What would you like to re-name the ingredient: ");
+                var newName = Console.ReadLine();
+
+                await _ingredientService.UpdateIngredient(name, new IngredientAddDTO { Name = newName });
             }
             catch (KeyNotFoundException)
             {
                 ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} does not exist.");
             }
+
+            Console.WriteLine();
+            await this.Show();
         }
 
         private async Task LookupIngredient()

@@ -70,9 +70,9 @@ namespace CRUDRecipeEF.BL.DL.Services
             return ingredientAddDTO.Name;
         }
 
-        public async Task UpdateIngredient(IngredientAddDTO ingredientAddDTO)
+        public async Task UpdateIngredient(string name, IngredientAddDTO ingredientAddDTO)
         {
-            var ing = await _context.Ingredients.SingleOrDefaultAsync(i => i.Name == ingredientAddDTO.Name);
+            var ing = await _context.Ingredients.SingleOrDefaultAsync(i => i.Name == name);
 
             if(ing == null)
             {
