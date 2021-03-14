@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace CRUDRecipeEF.PL.Menus
 {
@@ -11,15 +12,18 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
+        private readonly ILogger _logger;
         private readonly int _recipePerPage = 8;
 
         private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4, GoBack = 5 };
 
         public RecipeMenu(IRecipeService recipeService,
-            IIngredientService ingredientService)
+            IIngredientService ingredientService,
+            ILogger<RecipeMenu> logger)
         {
             _recipeService = recipeService;
             _ingredientService = ingredientService;
+            _logger = logger;
         }
 
         public async Task Show()
@@ -48,7 +52,7 @@ namespace CRUDRecipeEF.PL.Menus
 
                 if (!Enum.IsDefined(typeof(RecipeMenuOption), option))
                 {
-                    // Not in the enum - log here if desired
+                    _logger.LogWarning("Option is not in enum");
                     valid = false;
                 }
 
@@ -63,7 +67,7 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case RecipeMenuOption.InValid:
-                    //TODO throw an exception or something
+                    _logger.LogWarning("Attempted to execute invalid menu selection");
                     break;
                 case RecipeMenuOption.NewRecipe:
                     Console.WriteLine();

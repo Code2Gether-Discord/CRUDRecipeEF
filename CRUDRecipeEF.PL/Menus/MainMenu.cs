@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 
 namespace CRUDRecipeEF.PL.Menus
 {
@@ -6,14 +7,17 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IIngredientMenu _ingredientMenu;
         private readonly IRecipeMenu _recipeMenu;
+        private readonly ILogger _logger;
 
         private enum MainMenuOption { InValid = 0, RecipeMenu = 1, IngredientMenu = 2, Quit = 3 };
 
         public MainMenu(IIngredientMenu ingredientMenu,
-            IRecipeMenu recipeMenu)
+            IRecipeMenu recipeMenu,
+            ILogger<MainMenu> logger)
         {
             _ingredientMenu = ingredientMenu;
             _recipeMenu = recipeMenu;
+            _logger = logger;
         }
 
         public void Show()
@@ -43,7 +47,7 @@ namespace CRUDRecipeEF.PL.Menus
 
                     if (!Enum.IsDefined(typeof(MainMenuOption), option))
                     {
-                        // Not in the enum - log here if desired
+                        _logger.LogWarning("Option is not in enum");
                         valid = false;
                     }
 
@@ -59,7 +63,7 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case MainMenuOption.InValid:
-                    //TODO throw and exception or something
+                    _logger.LogWarning("Attempted to execute invalid menu selection");
                     break;
                 case MainMenuOption.RecipeMenu:
                     Console.WriteLine();
