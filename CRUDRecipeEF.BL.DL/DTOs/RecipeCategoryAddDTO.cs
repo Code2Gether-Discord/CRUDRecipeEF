@@ -11,6 +11,6 @@ namespace CRUDRecipeEF.BL.DL.DTOs
     {
         [StringLength(200, MinimumLength = 3)]
         public string Name { get; set; }
-        public List<RecipeCategoryAddDTO> RecipeCategories { get; set; } = new List<RecipeCategoryAddDTO>();
+        public List<RecipeCategoryAddDTO> Recipes { get; set; } = new List<RecipeCategoryAddDTO>();
     }
 }
