@@ -18,10 +18,11 @@ namespace CRUDRecipeEF.BL.DL.Helpers
 
             CreateMap<RecipeCategory, RecipeCategoryDetailDTO>();
             CreateMap<RecipeCategoryAddDTO, RecipeCategory>()
-            CreateMap<RecipeAddDTO, RecipeCategory>()
-            
+                .ForMember(i => i.Name, opt => opt.MapFrom(i => i.Name.Trim()));
+
             CreateMap<Restaurant, RestaurantDetailDTO>();
             CreateMap<RestaurantAddDTO, Restaurant>()
+                .ForMember(i => i.Name, opt => opt.MapFrom(i => i.Name.Trim()));
 
             CreateMap<Menu, MenuDetailDTO>();
             CreateMap<MenuAddDTO, Menu>()
