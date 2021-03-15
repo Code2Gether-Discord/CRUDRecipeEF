@@ -9,6 +9,6 @@ namespace CRUDRecipeEF.BL.DL.DTOs
     public class RestaurantDetailDTO
     {
         public string Name { get; set; }
-        public List<RestaurantDetailDTO> Restaurants { get; set; } = new List<RestaurantDetailDTO>();
+        public List<RestaurantDetailDTO> Menus { get; set; } = new List<RestaurantDetailDTO>();
     }
 }
