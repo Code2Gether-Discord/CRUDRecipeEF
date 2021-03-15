@@ -17,7 +17,7 @@ namespace CRUDRecipeEF.BL.DL.Helpers
                 .ForMember(i => i.Name, opt => opt.MapFrom(i => i.Name.Trim()));
 
             CreateMap<RecipeCategory, RecipeCategoryDetailDTO>();
-            CreateMap<RecipeAddDTO, RecipeCategory>()
+            CreateMap<RecipeCategoryAddDTO, RecipeCategory>()
                 .ForMember(i => i.Name, opt => opt.MapFrom(i => i.Name.Trim()));
         }
     }
