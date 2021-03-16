@@ -4,6 +4,7 @@ using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -61,14 +62,14 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// 
         /// </summary>
         /// <param name="IngredientAddDTO"></param>
-        /// <returns>Name of the Ingredient</returns>
-        /// <exception cref="KeyNotFoundException"></exception>
+        /// <returns>Name of the Ingredient unless a ingredient with the same name already exists</returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<string> AddIngredient(IngredientAddDTO ingredientAddDTO)
         {
             if (await IngredientExists(ingredientAddDTO.Name))
             {
                 _logger.LogWarning($"Attempted to add existing ingredient {ingredientAddDTO.Name}");
-                throw new KeyNotFoundException("Ingredient exists");
+                throw new ArgumentException("Ingredient exists");
             }
 
             await _context.AddAsync(_mapper.Map<Ingredient>(ingredientAddDTO));

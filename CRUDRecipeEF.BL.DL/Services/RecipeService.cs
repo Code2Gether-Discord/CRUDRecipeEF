@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -95,13 +96,13 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// 
         /// </summary>
         /// <param name="recipeAddDTO"></param>
-        /// <returns>Name of the recipe</returns>
+        /// <returns>Name of the recipe unless a recipe with this name already exists</returns>
         /// <exception cref="KeyNotFoundException"></exception>
         public async Task<string> AddRecipe(RecipeAddDTO recipeAddDTO)
         {
             if (await RecipeExists(recipeAddDTO.Name))
             {
-                throw new KeyNotFoundException("Recipe exists");
+                throw new ArgumentException("Recipe exists");
             }
 
             await _context.AddAsync(_mapper.Map<Recipe>(recipeAddDTO));
