@@ -16,18 +16,16 @@ namespace CRUDRecipeTests.Services
 
         private void Seed()
         {
-            using (var context = new RecipeContext(ContextOptions))
-            {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
+            using var context = new RecipeContext(ContextOptions);
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
 
-                var apple = new Ingredient { Name = "Apple" };
-                var orange = new Ingredient { Name = "Orange" };
-                var peach = new Ingredient { Name = "Peach" };
+            var apple = new Ingredient { Name = "Apple" };
+            var orange = new Ingredient { Name = "Orange" };
+            var peach = new Ingredient { Name = "Peach" };
 
-                context.AddRange(apple, orange, peach);
-                context.SaveChanges();
-            }
+            context.AddRange(apple, orange, peach);
+            context.SaveChanges();
         }
     }
 }
