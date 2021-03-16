@@ -15,7 +15,7 @@ using Xunit;
 
 namespace CRUDRecipeTests.Services
 {
-    public class SQLiteIngredientServiceTests : IngredientServiceTests, IDisposable
+    public class SQLiteIngredientServiceTests : IngredientServiceTestsDb, IDisposable
     {
         private readonly MapperConfiguration _autoMapperConfig;
         private readonly Mapper _mapper;
@@ -31,12 +31,6 @@ namespace CRUDRecipeTests.Services
 
             // TODO the configuration is not valid
             //autoMapperConfig.AssertConfigurationIsValid();
-        }
-
-        public void Dispose()
-        {
-            using var context = new RecipeContext(ContextOptions);
-            context.Database.EnsureDeleted();
         }
 
         [Fact]

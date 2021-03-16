@@ -1,14 +1,15 @@
+using System;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRUDRecipeTests.Services
 {
-    public abstract class IngredientServiceTests
+    public abstract class IngredientServiceTestsDb : IDisposable
     {
         protected DbContextOptions<RecipeContext> ContextOptions { get; }
 
-        protected IngredientServiceTests(DbContextOptions<RecipeContext> contextOptions)
+        protected IngredientServiceTestsDb(DbContextOptions<RecipeContext> contextOptions)
         {
             ContextOptions = contextOptions;
             Seed();
@@ -26,6 +27,12 @@ namespace CRUDRecipeTests.Services
 
             context.AddRange(apple, orange, peach);
             context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            using var context = new RecipeContext(ContextOptions);
+            context.Database.EnsureDeleted();
         }
     }
 }
