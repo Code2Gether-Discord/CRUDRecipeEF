@@ -110,7 +110,7 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             if (menu == null)
             {
-                throw new KeyNotFoundException("Restaurant doesnt exist");
+                throw new KeyNotFoundException("Restaurant doesn't exist");
             }
 
             restaurant.Menus.Remove(menu);
