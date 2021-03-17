@@ -30,16 +30,16 @@ namespace CRUDRecipeEF.BL.DL.Services
 
         private async Task<Category> GetCategoryByNameIfExists(string name)
         {
-            var category = await _context.Ingredients.FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower().Trim());
+            var category = await _context.Category.FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower().Trim());
             if (category == null)
             {
-                throw new KeyNotFoundException("Category doesnt exist");
+                throw new KeyNotFoundException("Category doesn't exist");
             }
 
             return category;
         }
 
-        //Add a category
+        
 
         public async Task<string> AddCategory(CategoryAddDTO categoryAddDTO)
         {
@@ -62,7 +62,7 @@ namespace CRUDRecipeEF.BL.DL.Services
             // Possibly not compatiable with async? May look into this later.
         }
 
-        //View a category and all of its recipes
+        
 
         public async Task<CategoryDetailDTO> GetCategoryByName(string name)
         {
@@ -71,7 +71,7 @@ namespace CRUDRecipeEF.BL.DL.Services
             return _mapper.Map<CategoryDetailDTO>(category);
         }
 
-        //Delete a category
+       
         public async Task DeleteCategory(string name)
         {
             var category = await GetCategoryByNameIfExists(name);
@@ -80,7 +80,7 @@ namespace CRUDRecipeEF.BL.DL.Services
             await Save();
         }
 
-        // Add a recipe to the category
+       
 
         public async Task<string> AddRecipeToCategory(RecipeAddDTO recipeAddDTO, string categoryName)
         {
