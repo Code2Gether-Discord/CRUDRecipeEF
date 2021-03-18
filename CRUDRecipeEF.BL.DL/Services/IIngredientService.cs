@@ -7,9 +7,9 @@ namespace CRUDRecipeEF.BL.DL.Services
 {
     public interface IIngredientService
     {
-        Task<IngredientDetailDTO> GetIngredientByName(string name);
+        Task<IngredientDTO> GetIngredientByName(string name);
 
-        Task<IEnumerable<IngredientDetailDTO>> GetAllIngredients();
+        Task<IEnumerable<IngredientDTO>> GetAllIngredients();
 
         Task<string> AddIngredient(IngredientDTO ingredient);
 

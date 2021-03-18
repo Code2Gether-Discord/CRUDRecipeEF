@@ -99,7 +99,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("Known Recipes: ");
 
             var result = await _recipeService.GetAllRecipes();
-            List<RecipeDetailDTO> recipeList = result.ToList();
+            List<RecipeDTO> recipeList = result.ToList();
 
             for (int i = 0; i < recipeList.Count; i++)
             {

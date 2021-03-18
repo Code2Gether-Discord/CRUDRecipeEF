@@ -137,7 +137,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="name"></param>
         /// <returns></returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<RestaurantDetailDTO> GetRestaurantByName(string name) =>
-             _mapper.Map<RestaurantDetailDTO>(await GetRestaurantByNameIfExists(name));
+        public async Task<RestaurantDTO> GetRestaurantByName(string name) =>
+             _mapper.Map<RestaurantDTO>(await GetRestaurantByNameIfExists(name));
     }
 }

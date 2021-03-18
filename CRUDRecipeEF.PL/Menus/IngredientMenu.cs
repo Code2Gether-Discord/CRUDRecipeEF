@@ -151,7 +151,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("Known Ingredients: ");
 
             var result = await _ingredientService.GetAllIngredients();
-            List<IngredientDetailDTO> ingredientList = result.ToList();
+            List<IngredientDTO> ingredientList = result.ToList();
 
             for (int i = 0; i < ingredientList.Count; i++)
             {

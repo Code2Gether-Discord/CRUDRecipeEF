@@ -64,20 +64,20 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="IngredientAddDTO"></param>
         /// <returns>Name of the Ingredient unless a ingredient with the same name already exists</returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<string> AddIngredient(IngredientDTO ingredientAddDTO)
+        public async Task<string> AddIngredient(IngredientDTO ingredientDTO)
         {
-            if (await IngredientExists(ingredientAddDTO.Name))
+            if (await IngredientExists(ingredientDTO.Name))
             {
-                _logger.LogWarning($"Attempted to add existing ingredient {ingredientAddDTO.Name}");
+                _logger.LogWarning($"Attempted to add existing ingredient {ingredientDTO.Name}");
                 throw new ArgumentException("Ingredient exists");
             }
 
-            await _context.AddAsync(_mapper.Map<Ingredient>(ingredientAddDTO));
+            await _context.AddAsync(_mapper.Map<Ingredient>(ingredientDTO));
             await Save();
 
-            _logger.LogInformation($"Added {ingredientAddDTO.Name}");
+            _logger.LogInformation($"Added {ingredientDTO.Name}");
 
-            return ingredientAddDTO.Name;
+            return ingredientDTO.Name;
         }
 
         /// <summary>
@@ -100,10 +100,10 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// Get all of the ingredients from the database
         /// </summary>
         /// <returns>IEnumerable of all Ingredients</returns>
-        public async Task<IEnumerable<IngredientDetailDTO>> GetAllIngredients()
+        public async Task<IEnumerable<IngredientDTO>> GetAllIngredients()
         {
             var ingredients = await _context.Ingredients.ToListAsync();
-            return _mapper.Map<List<IngredientDetailDTO>>(ingredients);
+            return _mapper.Map<List<IngredientDTO>>(ingredients);
         }
 
         /// <summary>
@@ -112,11 +112,11 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="name"></param>
         /// <returns>Ingredient</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<IngredientDetailDTO> GetIngredientByName(string name)
+        public async Task<IngredientDTO> GetIngredientByName(string name)
         {
             var ingredient = await GetIngredientByNameIfExists(name);
 
-            return _mapper.Map<IngredientDetailDTO>(ingredient);
+            return _mapper.Map<IngredientDTO>(ingredient);
         }
     }
 }

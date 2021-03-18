@@ -7,9 +7,9 @@ namespace CRUDRecipeEF.BL.DL.Services
 
     public interface IRecipeService
     {
-        Task<RecipeDetailDTO> GetRecipeByName(string name);
+        Task<RecipeDTO> GetRecipeByName(string name);
 
-        Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes();
+        Task<IEnumerable<RecipeDTO>> GetAllRecipes();
 
         Task<string> AddRecipe(RecipeDTO recipe);
 
