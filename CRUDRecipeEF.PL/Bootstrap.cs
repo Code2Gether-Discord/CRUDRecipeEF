@@ -10,9 +10,9 @@ using System.IO;
 
 namespace CRUDRecipeEF.PL
 {
-    internal class Bootstrap
+    public class Bootstrap
     {
-        internal static void SetupLogging()
+        public static void SetupLogging()
         {
             // Logging is setup before the DI container, so we need to read the appsettings file here
             var configBuilder = new ConfigurationBuilder();
@@ -24,34 +24,6 @@ namespace CRUDRecipeEF.PL
                 .Enrich.FromLogContext()
                 .CreateLogger();
             Log.Logger.Verbose("Setting up logging");
-        }
-
-        /// <summary>
-        /// Register services and app configs here
-        /// </summary>
-        /// <returns>IHostBuilder</returns>
-        internal static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            //appsettings copy to output
-            //auto adds json file appsettings
-            return Host.CreateDefaultBuilder(args)
-              .UseSerilog()
-              .ConfigureServices((hostContext, services) =>
-              {
-                  services
-                    .AddTransient<IDataSeed, DataSeed>()
-                    .AddTransient<IRecipeService, RecipeService>()
-                    .AddTransient<IIngredientService, IngredientService>()
-                    .AddAutoMapper(typeof(RecipeService).Assembly)
-                    .AddTransient<IMainMenu, MainMenu>()
-                    .AddTransient<IIngredientMenu, IngredientMenu>()
-                    .AddTransient<IRecipeMenu, RecipeMenu>();
-
-                  services.AddDbContext<RecipeContext>(options =>
-                  {
-                      options.UseSqlite(hostContext.Configuration.GetConnectionString("Default"));
-                  });
-              });
-        }
+        }   
     }
 }

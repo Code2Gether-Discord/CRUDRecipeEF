@@ -28,9 +28,9 @@ namespace CRUDRecipeEF.BL.DL.Services
             await _context.SaveChangesAsync();
         }
 
-        private async Task<Category> GetCategoryByNameIfExists(string name)
+        private async Task<RecipeCategory> GetCategoryByNameIfExists(string name)
         {
-            var category = await _context.Category.FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower().Trim());
+            var category = await _context.RecipeCategories.FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower().Trim());
             if (category == null)
             {
                 throw new KeyNotFoundException("Category doesn't exist");
@@ -39,16 +39,16 @@ namespace CRUDRecipeEF.BL.DL.Services
             return category;
         }
 
-        
 
-        public async Task<string> AddCategory(CategoryAddDTO categoryAddDTO)
+
+        public async Task<string> AddCategory(RecipeCategoryAddDTO categoryAddDTO)
         {
             if (await CategoryExists(categoryAddDTO.Name))
             {
                 throw new ArgumentException("Category exists");
             }
 
-            await _context.AddAsync(_mapper.Map<Categories>(categoryAddDTO));
+            await _context.AddAsync(_mapper.Map<RecipeCategory>(categoryAddDTO));
             await Save();
 
             return categoryAddDTO.Name;
@@ -56,22 +56,22 @@ namespace CRUDRecipeEF.BL.DL.Services
 
         private async Task<bool> CategoryExists(string categoryName)
         {
-            bool exists = await _context.Categories.AnyAsync(c => c.Name.ToLower() == categoryName.ToLower().Trim());
+            bool exists = await _context.RecipeCategories.AnyAsync(c => c.Name.ToLower() == categoryName.ToLower().Trim());
             return exists;
             // Not using => makes this easier to debug. For some reason .ToLowerInvariant() does not work in the predicate.
             // Possibly not compatiable with async? May look into this later.
         }
 
-        
 
-        public async Task<CategoryDetailDTO> GetCategoryByName(string name)
+
+        public async Task<RecipeCategoryDetailDTO> GetCategoryByName(string name)
         {
             var category = await GetCategoryByNameIfExists(name);
 
-            return _mapper.Map<CategoryDetailDTO>(category);
+            return _mapper.Map<RecipeCategoryDetailDTO>(category);
         }
 
-       
+
         public async Task DeleteCategory(string name)
         {
             var category = await GetCategoryByNameIfExists(name);
@@ -80,7 +80,7 @@ namespace CRUDRecipeEF.BL.DL.Services
             await Save();
         }
 
-       
+
 
         public async Task<string> AddRecipeToCategory(RecipeAddDTO recipeAddDTO, string categoryName)
         {

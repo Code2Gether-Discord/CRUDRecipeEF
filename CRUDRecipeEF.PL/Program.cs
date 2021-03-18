@@ -1,23 +1,27 @@
 ﻿using System;
 using System.Linq;
 using CRUDRecipeEF.BL.DL.Data;
+using CRUDRecipeEF.BL.DL.Services;
 using CRUDRecipeEF.PL.Menus;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace CRUDRecipeEF.PL
 {
-    internal class Program
+    public class Program
     {
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            // Moving setup code to Bootstrap class makes Main() cleaner
             Bootstrap.SetupLogging(); // Setup Serilog
-            var host = Bootstrap.CreateHostBuilder(args).Build(); // Setup Dependency Injection container
+
+            var host = CreateHostBuilder(args).Build(); // Setup Dependency Injection container
 
             // Global logger can be used in classes that aren't having services injected
-            ILogger logger = Log.ForContext<Program>(); 
-            logger.Debug("CRUDRecipeEF starting");
+            // ILogger logger = Log.ForContext<Program>();
+            // logger.Debug("CRUDRecipeEF starting");
 
             using var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
@@ -38,12 +42,40 @@ namespace CRUDRecipeEF.PL
                 Console.WriteLine();
                 Console.WriteLine(ex.Message);
 
-                Log.Logger.Fatal($"Exception while seeding data: {ex.Message}");
+                //   Log.Logger.Fatal($"Exception while seeding data: {ex.Message}");
                 Environment.Exit(1);
             }
-           
+
             //App starting point
             host.Services.GetRequiredService<IMainMenu>().Show();
+        }
+
+        /// <summary>
+        /// Register services and app configs here
+        /// </summary>
+        /// <returns>IHostBuilder</returns>
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            //appsettings copy to output
+            //auto adds json file appsettings
+            return Host.CreateDefaultBuilder(args)
+              .UseSerilog()
+              .ConfigureServices((hostContext, services) =>
+              {
+                  services
+                    .AddTransient<IDataSeed, DataSeed>()
+                    .AddTransient<IRecipeService, RecipeService>()
+                    .AddTransient<IIngredientService, IngredientService>()
+                    .AddAutoMapper(typeof(RecipeService).Assembly)
+                    .AddTransient<IMainMenu, MainMenu>()
+                    .AddTransient<IIngredientMenu, IngredientMenu>()
+                    .AddTransient<IRecipeMenu, RecipeMenu>();
+
+                  services.AddDbContext<RecipeContext>(options =>
+                  {
+                      options.UseSqlite(hostContext.Configuration.GetConnectionString("Default"));
+                  });
+              });
         }
     }
 }
