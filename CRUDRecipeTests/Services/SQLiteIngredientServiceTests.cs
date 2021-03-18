@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Helpers;
@@ -6,11 +10,6 @@ using CRUDRecipeEF.BL.DL.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace CRUDRecipeTests.Services
@@ -64,7 +63,7 @@ namespace CRUDRecipeTests.Services
         {
             using var context = new RecipeContext(ContextOptions);
             var ingredientService = new IngredientService(context, _mapper, _logger);
-            var ingredient = await ingredientService.AddIngredient(new IngredientAddDTO { Name = "Carrot" });
+            var ingredient = await ingredientService.AddIngredient(new IngredientDTO { Name = "Carrot" });
 
             Assert.NotNull(ingredient);
             Assert.Equal("Carrot", ingredient);

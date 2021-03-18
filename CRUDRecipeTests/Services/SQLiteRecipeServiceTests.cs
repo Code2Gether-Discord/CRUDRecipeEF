@@ -66,11 +66,11 @@ namespace CRUDRecipeTests.Services
             using var context = new RecipeContext(ContextOptions);
             var recipeService = new RecipeService(context, _mapper, _logger);
 
-            RecipeAddDTO recipe = new RecipeAddDTO
+            RecipeDTO recipe = new RecipeDTO
             {
                 Name = "Chips",
-                Ingredients = new List<IngredientAddDTO> { new IngredientAddDTO { Name = "Potato" },
-                        new IngredientAddDTO { Name = "Oil" }
+                Ingredients = new List<IngredientDTO> { new IngredientDTO { Name = "Potato" },
+                        new IngredientDTO { Name = "Oil" }
                     }
             };
 
@@ -93,7 +93,7 @@ namespace CRUDRecipeTests.Services
         {
             using var context = new RecipeContext(ContextOptions);
             var recipeService = new RecipeService(context, _mapper, _logger);
-            var addResult = await recipeService.AddIngredientToRecipe(new IngredientAddDTO { Name = "Cherry" }, "Fruit Salad");
+            var addResult = await recipeService.AddIngredientToRecipe(new IngredientDTO { Name = "Cherry" }, "Fruit Salad");
 
             Assert.NotNull(addResult);
             Assert.Equal("Fruit Salad", addResult);
