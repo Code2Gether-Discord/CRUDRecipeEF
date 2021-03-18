@@ -70,7 +70,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="recipeName"></param>
         /// <returns>Name of the recipe</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<string> AddIngredientToRecipe(IngredientAddDTO ingredientAddDTO, string recipeName)
+        public async Task<string> AddIngredientToRecipe(IngredientDTO ingredientAddDTO, string recipeName)
         {
             var recipe = await GetRecipeByNameIfExists(recipeName);
             var ingredient = await _context.Ingredients
@@ -98,7 +98,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="recipeAddDTO"></param>
         /// <returns>Name of the recipe unless a recipe with this name already exists</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<string> AddRecipe(RecipeAddDTO recipeAddDTO)
+        public async Task<string> AddRecipe(RecipeDTO recipeAddDTO)
         {
             if (await RecipeExists(recipeAddDTO.Name))
             {

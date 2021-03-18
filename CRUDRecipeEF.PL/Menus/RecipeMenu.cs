@@ -138,10 +138,10 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWrite("What recipe would you like to add: ");
             var name = Console.ReadLine();
 
-            RecipeAddDTO recipe = new RecipeAddDTO { Name = name };
+            RecipeDTO recipe = new RecipeDTO { Name = name };
 
             bool another = true;
-            List<IngredientAddDTO> ingredients = new List<IngredientAddDTO>();
+            List<IngredientDTO> ingredients = new List<IngredientDTO>();
 
             while (another)
             {
@@ -151,7 +151,7 @@ namespace CRUDRecipeEF.PL.Menus
                 try
                 {
                     var ingredient = await _ingredientService.GetIngredientByName(input);
-                    var ingredientToAdd = new IngredientAddDTO { Name = ingredient.Name };
+                    var ingredientToAdd = new IngredientDTO { Name = ingredient.Name };
                     ingredients.Add(ingredientToAdd);
                 }
                 catch (KeyNotFoundException)
@@ -167,7 +167,7 @@ namespace CRUDRecipeEF.PL.Menus
                         return;
                     }
 
-                    ingredients.Add(new IngredientAddDTO { Name = input });
+                    ingredients.Add(new IngredientDTO { Name = input });
                 }
 
                 ConsoleHelper.ColorWrite("Would you like to add another ingredient? (y/N): ");

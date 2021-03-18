@@ -11,7 +11,7 @@ namespace CRUDRecipeEF.BL.DL.Services
 
         Task<IEnumerable<IngredientDetailDTO>> GetAllIngredients();
 
-        Task<string> AddIngredient(IngredientAddDTO ingredient);
+        Task<string> AddIngredient(IngredientDTO ingredient);
 
         Task DeleteIngredient(string name);
     }

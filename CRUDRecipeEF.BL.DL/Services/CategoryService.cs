@@ -82,7 +82,7 @@ namespace CRUDRecipeEF.BL.DL.Services
 
        
 
-        public async Task<string> AddRecipeToCategory(RecipeAddDTO recipeAddDTO, string categoryName)
+        public async Task<string> AddRecipeToCategory(RecipeDTO recipeAddDTO, string categoryName)
         {
             var category = await GetCategoryByNameIfExists(categoryName);
             var recipe = await _context.Recipes

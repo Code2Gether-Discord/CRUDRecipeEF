@@ -64,7 +64,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="IngredientAddDTO"></param>
         /// <returns>Name of the Ingredient unless a ingredient with the same name already exists</returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<string> AddIngredient(IngredientAddDTO ingredientAddDTO)
+        public async Task<string> AddIngredient(IngredientDTO ingredientAddDTO)
         {
             if (await IngredientExists(ingredientAddDTO.Name))
             {

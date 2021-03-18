@@ -130,7 +130,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWrite("What ingredient would you like to add: ");
             var name = Console.ReadLine();
 
-            IngredientAddDTO newIngreditent = new IngredientAddDTO { Name = name };
+            IngredientDTO newIngreditent = new IngredientDTO { Name = name };
 
             try
             {
