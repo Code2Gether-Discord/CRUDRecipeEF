@@ -7,11 +7,11 @@ namespace CRUDRecipeEF.BL.DL.Services
 {
     public interface IIngredientService
     {
-        Task<IngredientDTO> GetIngredientByName(string name);
+        Task<IngredientDetailDTO> GetIngredientByName(string name);
 
-        Task<IEnumerable<IngredientDTO>> GetAllIngredients();
+        Task<IEnumerable<IngredientDetailDTO>> GetAllIngredients();
 
-        Task<string> AddIngredient(IngredientDTO ingredient);
+        Task<string> AddIngredient(IngredientAddDTO ingredient);
 
         Task DeleteIngredient(string name);
     }

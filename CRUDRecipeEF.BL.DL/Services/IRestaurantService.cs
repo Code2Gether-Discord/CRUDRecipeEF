@@ -6,10 +6,10 @@ namespace CRUDRecipeEF.BL.DL.Services
 {
     public interface IRestaurantService
     {
-        Task<string> AddRestaurant(RestaurantDTO restaurant);
+        Task<string> AddRestaurant(RestaurantAddDTO restaurant);
         Task DeleteRestaurant(string name);
         Task RemoveMenuFromRestaurant(string menuName, string restaurantName);
-        Task<RestaurantDTO> GetRestaurantByName(string name);
-        Task<string> AddMenuToRestaurant(MenuDTO menuAdd, string restaurantName);
+        Task<RestaurantDetailDTO> GetRestaurantByName(string name);
+        Task<string> AddMenuToRestaurant(MenuAddDTO menuAdd, string restaurantName);
     }
 }

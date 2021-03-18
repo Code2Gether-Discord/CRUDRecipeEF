@@ -7,13 +7,13 @@ namespace CRUDRecipeEF.BL.DL.Services
 
     public interface IRecipeService
     {
-        Task<RecipeDTO> GetRecipeByName(string name);
+        Task<RecipeDetailDTO> GetRecipeByName(string name);
 
-        Task<IEnumerable<RecipeDTO>> GetAllRecipes();
+        Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes();
 
-        Task<string> AddRecipe(RecipeDTO recipe);
+        Task<string> AddRecipe(RecipeAddDTO recipe);
 
-        Task<string> AddIngredientToRecipe(IngredientDTO ingredient, string recipeName);
+        Task<string> AddIngredientToRecipe(IngredientAddDTO ingredient, string recipeName);
 
         Task RemoveIngredientFromRecipe(string ingredientName, string recipeName);
 

@@ -41,7 +41,7 @@ namespace CRUDRecipeEF.BL.DL.Services
 
         
 
-        public async Task<string> AddCategory(CategoryDTO categoryAddDTO)
+        public async Task<string> AddCategory(CategoryAddDTO categoryAddDTO)
         {
             if (await CategoryExists(categoryAddDTO.Name))
             {
@@ -64,11 +64,11 @@ namespace CRUDRecipeEF.BL.DL.Services
 
         
 
-        public async Task<CategoryDTO> GetCategoryByName(string name)
+        public async Task<CategoryDetailDTO> GetCategoryByName(string name)
         {
             var category = await GetCategoryByNameIfExists(name);
 
-            return _mapper.Map<CategoryDTO>(category);
+            return _mapper.Map<CategoryDetailDTO>(category);
         }
 
        
@@ -82,7 +82,7 @@ namespace CRUDRecipeEF.BL.DL.Services
 
        
 
-        public async Task<string> AddRecipeToCategory(RecipeDTO recipeAddDTO, string categoryName)
+        public async Task<string> AddRecipeToCategory(RecipeAddDTO recipeAddDTO, string categoryName)
         {
             var category = await GetCategoryByNameIfExists(categoryName);
             var recipe = await _context.Recipes

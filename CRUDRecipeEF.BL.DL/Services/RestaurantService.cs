@@ -58,7 +58,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="name"></param>
         /// <returns>Name of the restaurant</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<string> AddMenuToRestaurant(MenuDTO menuAddDTO, string restaurantName)
+        public async Task<string> AddMenuToRestaurant(MenuAddDTO menuAddDTO, string restaurantName)
         {
             var restaurant = await GetRestaurantByNameIfExists(restaurantName);
             var menu = await _context.Menus
@@ -83,7 +83,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="restaurantDTO"></param>
         /// <returns>name of the restaurant</returns>
         ///  /// <exception cref="ArgumentException"></exception>
-        public async Task<string> AddRestaurant(RestaurantDTO restaurantDTO)
+        public async Task<string> AddRestaurant(RestaurantAddDTO restaurantDTO)
         {
             if (await RestaurantExists(restaurantDTO.Name))
             {
@@ -137,7 +137,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="name"></param>
         /// <returns></returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<RestaurantDTO> GetRestaurantByName(string name) =>
-             _mapper.Map<RestaurantDTO>(await GetRestaurantByNameIfExists(name));
+        public async Task<RestaurantDetailDTO> GetRestaurantByName(string name) =>
+             _mapper.Map<RestaurantDetailDTO>(await GetRestaurantByNameIfExists(name));
     }
 }

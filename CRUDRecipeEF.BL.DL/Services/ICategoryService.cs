@@ -8,10 +8,10 @@ namespace CRUDRecipeEF.BL.DL.Services
 {
     public interface ICategoryService
     {
-        Task<string> AddCategory(CategoryDTO categoryAddDTO);
-        Task<CategoryDTO> GetCategoryByName(string name);
+        Task<string> AddCategory(CategoryAddDTO categoryAddDTO);
+        Task<CategoryDetailDTO> GetCategoryByName(string name);
         Task DeleteCategory(string name);
-        Task<string> AddRecipeToCategory(RecipeDTO recipeAddDTO, string categoryName);
+        Task<string> AddRecipeToCategory(RecipeAddDTO recipeAddDTO, string categoryName);
 
     }
 }

@@ -3,10 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CRUDRecipeEF.BL.DL.DTOs
 {
-    public class RecipeCategoryDTO
+    public class RecipeAddDTO
     {
         [StringLength(200, MinimumLength = 3)]
         public string Name { get; set; }
-        public List<RecipeDTO> Recipes { get; set; } = new List<RecipeDTO>();
+
+        public List<IngredientAddDTO> Ingredients { get; set; } = new List<IngredientAddDTO>();
     }
 }

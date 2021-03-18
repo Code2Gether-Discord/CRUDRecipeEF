@@ -130,7 +130,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWrite("What ingredient would you like to add: ");
             var name = Console.ReadLine();
 
-            IngredientDTO newIngreditent = new IngredientDTO { Name = name };
+            IngredientAddDTO newIngreditent = new IngredientAddDTO { Name = name };
 
             try
             {
@@ -151,7 +151,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("Known Ingredients: ");
 
             var result = await _ingredientService.GetAllIngredients();
-            List<IngredientDTO> ingredientList = result.ToList();
+            List<IngredientDetailDTO> ingredientList = result.ToList();
 
             for (int i = 0; i < ingredientList.Count; i++)
             {

@@ -64,7 +64,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="IngredientAddDTO"></param>
         /// <returns>Name of the Ingredient unless a ingredient with the same name already exists</returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<string> AddIngredient(IngredientDTO ingredientAddDTO)
+        public async Task<string> AddIngredient(IngredientAddDTO ingredientAddDTO)
         {
             if (await IngredientExists(ingredientAddDTO.Name))
             {
@@ -100,10 +100,10 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// Get all of the ingredients from the database
         /// </summary>
         /// <returns>IEnumerable of all Ingredients</returns>
-        public async Task<IEnumerable<IngredientDTO>> GetAllIngredients()
+        public async Task<IEnumerable<IngredientDetailDTO>> GetAllIngredients()
         {
             var ingredients = await _context.Ingredients.ToListAsync();
-            return _mapper.Map<List<IngredientDTO>>(ingredients);
+            return _mapper.Map<List<IngredientDetailDTO>>(ingredients);
         }
 
         /// <summary>
@@ -112,11 +112,11 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="name"></param>
         /// <returns>Ingredient</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<IngredientDTO> GetIngredientByName(string name)
+        public async Task<IngredientDetailDTO> GetIngredientByName(string name)
         {
             var ingredient = await GetIngredientByNameIfExists(name);
 
-            return _mapper.Map<IngredientDTO>(ingredient);
+            return _mapper.Map<IngredientDetailDTO>(ingredient);
         }
     }
 }
