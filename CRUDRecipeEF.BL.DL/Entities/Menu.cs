@@ -14,5 +14,8 @@ namespace CRUDRecipeEF.BL.DL.Entities
         [Required]
         public string Name { get; set; }
         public List<Recipe> Recipes { get; set; } = new List<Recipe>();
+
+        public int RestaurantId { get; set; }
+        public Restaurant Restaurant { get; set; }
     }
 }
