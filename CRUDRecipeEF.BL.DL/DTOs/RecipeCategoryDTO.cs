@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace CRUDRecipeEF.BL.DL.DTOs
 {
-    public class RestaurantAddDTO
+    public class RecipeCategoryDTO
     {
         [StringLength(200, MinimumLength = 3)]
         public string Name { get; set; }
-        public List<MenuAddDTO> Menus { get; set; } = new List<MenuAddDTO>();
+        public List<RecipeDTO> Recipes { get; set; } = new List<RecipeDTO>();
     }
 }

@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace CRUDRecipeEF.BL.DL.Services
 {
-    public class CategoryService : ICategoryService
+    public class RecipeCategoryService : IRecipeCategoryService
     {
 
         private readonly RecipeContext _context;
         private readonly IMapper _mapper;
 
-        public CategoryService(RecipeContext context, IMapper mapper)
+        public RecipeCategoryService(RecipeContext context, IMapper mapper)
         {
             this._context = context;
             this._mapper = mapper;
@@ -41,7 +41,7 @@ namespace CRUDRecipeEF.BL.DL.Services
 
 
 
-        public async Task<string> AddCategory(RecipeCategoryAddDTO categoryAddDTO)
+        public async Task<string> AddCategory(RecipeCategoryDTO categoryAddDTO)
         {
             if (await CategoryExists(categoryAddDTO.Name))
             {
@@ -82,7 +82,7 @@ namespace CRUDRecipeEF.BL.DL.Services
 
 
 
-        public async Task<string> AddRecipeToCategory(RecipeAddDTO recipeAddDTO, string categoryName)
+        public async Task<string> AddRecipeToCategory(RecipeDTO recipeAddDTO, string categoryName)
         {
             var category = await GetCategoryByNameIfExists(categoryName);
             var recipe = await _context.Recipes
