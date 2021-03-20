@@ -70,7 +70,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="recipeName"></param>
         /// <returns>Name of the recipe</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<string> AddIngredientToRecipe(IngredientAddDTO ingredientAddDTO, string recipeName)
+        public async Task<string> AddIngredientToRecipe(IngredientDTO ingredientAddDTO, string recipeName)
         {
             var recipe = await GetRecipeByNameIfExists(recipeName);
             var ingredient = await _context.Ingredients
@@ -98,7 +98,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="recipeAddDTO"></param>
         /// <returns>Name of the recipe unless a recipe with this name already exists</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<string> AddRecipe(RecipeAddDTO recipeAddDTO)
+        public async Task<string> AddRecipe(RecipeDTO recipeAddDTO)
         {
             if (await RecipeExists(recipeAddDTO.Name))
             {
@@ -129,8 +129,8 @@ namespace CRUDRecipeEF.BL.DL.Services
             _logger.LogInformation($"Deleted recipe {name}");
         }
 
-        public async Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes() =>
-            _mapper.Map<List<RecipeDetailDTO>>(await _context.Recipes.OrderBy(r => r.Category.Name)
+        public async Task<IEnumerable<RecipeDTO>> GetAllRecipes() =>
+            _mapper.Map<List<RecipeDTO>>(await _context.Recipes.OrderBy(r => r.Category.Name)
                 .Include(i => i.Ingredients).ToListAsync());
 
         /// <summary>
@@ -139,8 +139,8 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="name"></param>
         /// <returns>Recipe</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<RecipeDetailDTO> GetRecipeByName(string name) =>
-            _mapper.Map<RecipeDetailDTO>(await GetRecipeByNameIfExists(name));
+        public async Task<RecipeDTO> GetRecipeByName(string name) =>
+            _mapper.Map<RecipeDTO>(await GetRecipeByNameIfExists(name));
 
         /// <summary>
         /// 

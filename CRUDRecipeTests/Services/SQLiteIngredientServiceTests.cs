@@ -64,7 +64,7 @@ namespace CRUDRecipeTests.Services
         {
             using var context = new RecipeContext(ContextOptions);
             var ingredientService = new IngredientService(context, _mapper, _logger);
-            var ingredient = await ingredientService.AddIngredient(new IngredientAddDTO { Name = "Carrot" });
+            var ingredient = await ingredientService.AddIngredient(new IngredientDTO { Name = "Carrot" });
 
             Assert.NotNull(ingredient);
             Assert.Equal("Carrot", ingredient);
