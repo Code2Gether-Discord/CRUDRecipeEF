@@ -64,11 +64,11 @@ namespace CRUDRecipeEF.BL.DL.Services
 
 
 
-        public async Task<RecipeCategoryDetailDTO> GetCategoryByName(string name)
+        public async Task<RecipeCategoryDTO> GetCategoryByName(string name)
         {
             var category = await GetCategoryByNameIfExists(name);
 
-            return _mapper.Map<RecipeCategoryDetailDTO>(category);
+            return _mapper.Map<RecipeCategoryDTO>(category);
         }
 
 
