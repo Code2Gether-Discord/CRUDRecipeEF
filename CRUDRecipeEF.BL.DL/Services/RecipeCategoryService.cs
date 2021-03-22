@@ -1,19 +1,16 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CRUDRecipeEF.BL.DL.Services
 {
     public class RecipeCategoryService : IRecipeCategoryService
     {
-
         private readonly RecipeContext _context;
         private readonly IMapper _mapper;
 
@@ -39,8 +36,6 @@ namespace CRUDRecipeEF.BL.DL.Services
             return category;
         }
 
-
-
         public async Task<string> AddCategory(RecipeCategoryDTO categoryAddDTO)
         {
             if (await CategoryExists(categoryAddDTO.Name))
@@ -62,15 +57,12 @@ namespace CRUDRecipeEF.BL.DL.Services
             // Possibly not compatiable with async? May look into this later.
         }
 
-
-
         public async Task<RecipeCategoryDTO> GetCategoryByName(string name)
         {
             var category = await GetCategoryByNameIfExists(name);
 
             return _mapper.Map<RecipeCategoryDTO>(category);
         }
-
 
         public async Task DeleteCategory(string name)
         {
@@ -80,8 +72,6 @@ namespace CRUDRecipeEF.BL.DL.Services
             await Save();
         }
 
-
-
         public async Task<string> AddRecipeToCategory(RecipeDTO recipeAddDTO, string categoryName)
         {
             var category = await GetCategoryByNameIfExists(categoryName);
@@ -90,7 +80,7 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             if (recipe == null)
             {
-                recipe.Category = category; // need to solve 
+                recipe.Category = category; // need to solve
             }
             else
             {
