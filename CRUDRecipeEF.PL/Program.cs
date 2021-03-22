@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace CRUDRecipeEF.PL
@@ -69,7 +70,9 @@ namespace CRUDRecipeEF.PL
                     .AddAutoMapper(typeof(RecipeService).Assembly)
                     .AddTransient<IMainMenu, MainMenu>()
                     .AddTransient<IIngredientMenu, IngredientMenu>()
+                    .AddTransient<IRestaurantService, RestaurantService>()
                     .AddTransient<IRecipeMenu, RecipeMenu>();
+
 
                   services.AddDbContext<RecipeContext>(options =>
                   {
