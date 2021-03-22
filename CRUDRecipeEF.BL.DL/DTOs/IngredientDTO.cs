@@ -5,6 +5,8 @@ namespace CRUDRecipeEF.BL.DL.DTOs
 {
     public class IngredientDTO
     {
+        public int Id { get; set; }
+
         [StringLength(200, MinimumLength = 3)]
         public string Name { get; set; }
 
