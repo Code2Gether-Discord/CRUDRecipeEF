@@ -28,7 +28,7 @@ namespace CRUDRecipeEF.BL.DL.Services
 
         private async Task<Ingredient> GetIngredientByNameIfExists(string name)
         {
-            var ingredient = await _context.Ingredients.FirstOrDefaultAsync(i => i.Name.ToLower() == name.ToLower().Trim());
+            var ingredient = await _context.Ingredients.SingleOrDefaultAsync(i => i.Name.ToLower() == name.ToLower().Trim());
             if (ingredient == null)
             {
                 _logger.LogDebug($"Attempted to get ingredient that does not exist: {name}");
