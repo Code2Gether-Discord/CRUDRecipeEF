@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace CRUDRecipeEF.PL.Menus
 {
@@ -11,15 +12,18 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
+        private readonly ILogger _logger;
         private readonly int _recipePerPage = 8;
 
         private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4, GoBack = 5 };
 
         public RecipeMenu(IRecipeService recipeService,
-            IIngredientService ingredientService)
+            IIngredientService ingredientService,
+            ILogger<RecipeMenu> logger)
         {
             _recipeService = recipeService;
             _ingredientService = ingredientService;
+            _logger = logger;
         }
 
         public async Task Show()
@@ -48,7 +52,7 @@ namespace CRUDRecipeEF.PL.Menus
 
                 if (!Enum.IsDefined(typeof(RecipeMenuOption), option))
                 {
-                    // Not in the enum - log here if desired
+                    _logger.LogWarning("Option is not in enum");
                     valid = false;
                 }
 
@@ -63,7 +67,7 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case RecipeMenuOption.InValid:
-                    //TODO throw an exception or something
+                    _logger.LogWarning("Attempted to execute invalid menu selection");
                     break;
                 case RecipeMenuOption.NewRecipe:
                     Console.WriteLine();
@@ -95,7 +99,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("Known Recipes: ");
 
             var result = await _recipeService.GetAllRecipes();
-            List<RecipeDetailDTO> recipeList = result.ToList();
+            List<RecipeDTO> recipeList = result.ToList();
 
             for (int i = 0; i < recipeList.Count; i++)
             {
@@ -134,10 +138,10 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWrite("What recipe would you like to add: ");
             var name = Console.ReadLine();
 
-            RecipeAddDTO recipe = new RecipeAddDTO { Name = name };
+            RecipeDTO recipe = new RecipeDTO { Name = name };
 
             bool another = true;
-            List<IngredientAddDTO> ingredients = new List<IngredientAddDTO>();
+            List<IngredientDTO> ingredients = new List<IngredientDTO>();
 
             while (another)
             {
@@ -147,7 +151,7 @@ namespace CRUDRecipeEF.PL.Menus
                 try
                 {
                     var ingredient = await _ingredientService.GetIngredientByName(input);
-                    var ingredientToAdd = new IngredientAddDTO { Name = ingredient.Name };
+                    var ingredientToAdd = new IngredientDTO { Name = ingredient.Name };
                     ingredients.Add(ingredientToAdd);
                 }
                 catch (KeyNotFoundException)
@@ -163,7 +167,7 @@ namespace CRUDRecipeEF.PL.Menus
                         return;
                     }
 
-                    ingredients.Add(new IngredientAddDTO { Name = input });
+                    ingredients.Add(new IngredientDTO { Name = input });
                 }
 
                 ConsoleHelper.ColorWrite("Would you like to add another ingredient? (y/N): ");

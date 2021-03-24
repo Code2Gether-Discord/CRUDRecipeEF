@@ -8,13 +8,20 @@ namespace CRUDRecipeEF.BL.DL.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<Recipe, RecipeDetailDTO>();
-            CreateMap<RecipeAddDTO, Recipe>()
-              .ForMember(r => r.Name, opt => opt.MapFrom(r => r.Name.Trim()));
+            CreateMap<Recipe, RecipeDTO>();
+            CreateMap<RecipeDTO, Recipe>();
 
-            CreateMap<Ingredient, IngredientDetailDTO>();
-            CreateMap<IngredientAddDTO, Ingredient>()
-                .ForMember(i => i.Name, opt => opt.MapFrom(i => i.Name.Trim()));
+            CreateMap<Ingredient, IngredientDTO>();
+            CreateMap<IngredientDTO, Ingredient>();
+
+            CreateMap<RecipeCategory, RecipeCategoryDTO>();
+            CreateMap<RecipeCategoryDTO, RecipeCategory>();
+
+            CreateMap<Restaurant, RestaurantDTO>();
+            CreateMap<RestaurantDTO, Restaurant>();
+
+            CreateMap<Menu, MenuDTO>();
+            CreateMap<MenuDTO, Menu>();
         }
     }
 }

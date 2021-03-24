@@ -1,5 +1,6 @@
 ﻿using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,16 @@ namespace CRUDRecipeEF.PL.Menus
     public class IngredientMenu : IIngredientMenu
     {
         private readonly IIngredientService _ingredientService;
+        private readonly ILogger _logger;
         private readonly int _ingredientsPerPage = 8;
 
         private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngredient = 2, ShowIngredient = 3, DeleteIngredient = 4, GoBack = 5 };
 
-        public IngredientMenu(IIngredientService ingredientService)
+        public IngredientMenu(IIngredientService ingredientService,
+            ILogger<IngredientMenu> logger)
         {
             _ingredientService = ingredientService;
+            _logger = logger;
         }
 
         public async Task Show()
@@ -45,7 +49,7 @@ namespace CRUDRecipeEF.PL.Menus
 
                 if (!Enum.IsDefined(typeof(IngredientMenuOption), option))
                 {
-                    // Not in the enum - log here if desired
+                    _logger.LogWarning("Option is not in enum");
                     valid = false;
                 }
 
@@ -60,7 +64,7 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case IngredientMenuOption.InValid:
-                    //TODO throw an exception or something
+                    _logger.LogWarning("Attempted to execute invalid menu selection");
                     break;
                 case IngredientMenuOption.NewIngredient:
                     await NewIngredient();
@@ -126,7 +130,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWrite("What ingredient would you like to add: ");
             var name = Console.ReadLine();
 
-            IngredientAddDTO newIngreditent = new IngredientAddDTO { Name = name };
+            IngredientDTO newIngreditent = new IngredientDTO { Name = name };
 
             try
             {
@@ -147,7 +151,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("Known Ingredients: ");
 
             var result = await _ingredientService.GetAllIngredients();
-            List<IngredientDetailDTO> ingredientList = result.ToList();
+            List<IngredientDTO> ingredientList = result.ToList();
 
             for (int i = 0; i < ingredientList.Count; i++)
             {

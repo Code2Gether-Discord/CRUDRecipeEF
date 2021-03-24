@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CRUDRecipeEF.BL.DL.Services
 {
@@ -14,11 +16,15 @@ namespace CRUDRecipeEF.BL.DL.Services
     {
         private readonly RecipeContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<RecipeService> _logger;
 
-        public RecipeService(RecipeContext context, IMapper mapper)
+        public RecipeService(RecipeContext context, 
+            IMapper mapper,
+            ILogger<RecipeService> logger)
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
 
         /// <summary>
@@ -31,7 +37,14 @@ namespace CRUDRecipeEF.BL.DL.Services
         {
             var recipe = await _context.Recipes.Include(i => i.Ingredients)
                 .SingleOrDefaultAsync(r => r.Name.ToLower() == name.ToLower().Trim());
-            return recipe ?? throw new KeyNotFoundException("Recipe doesnt exist");
+
+            if(recipe == null)
+            {
+                _logger.LogDebug($"Attempted to get recipe that does not exist: {name}");
+                throw new KeyNotFoundException("Recipe doesnt exist");
+            }
+
+            return recipe;
         }
 
         /// <summary>
@@ -58,7 +71,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="recipeName"></param>
         /// <returns>Name of the recipe</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<string> AddIngredientToRecipe(IngredientAddDTO ingredientAddDTO, string recipeName)
+        public async Task<string> AddIngredientToRecipe(IngredientDTO ingredientAddDTO, string recipeName)
         {
             var recipe = await GetRecipeByNameIfExists(recipeName);
             var ingredient = await _context.Ingredients
@@ -75,6 +88,8 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             await Save();
 
+            _logger.LogInformation($"Added ingredient {ingredientAddDTO.Name} to recipe {recipeName}");
+
             return recipeName;
         }
 
@@ -82,17 +97,19 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// 
         /// </summary>
         /// <param name="recipeAddDTO"></param>
-        /// <returns>Name of the recipe</returns>
+        /// <returns>Name of the recipe unless a recipe with this name already exists</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<string> AddRecipe(RecipeAddDTO recipeAddDTO)
+        public async Task<string> AddRecipe(RecipeDTO recipeAddDTO)
         {
             if (await RecipeExists(recipeAddDTO.Name))
             {
-                throw new KeyNotFoundException("Recipe exists");
+                throw new ArgumentException("Recipe exists");
             }
 
             await _context.AddAsync(_mapper.Map<Recipe>(recipeAddDTO));
             await Save();
+
+            _logger.LogInformation($"Added recipe {recipeAddDTO.Name}");
 
             return recipeAddDTO.Name;
         }
@@ -109,11 +126,19 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             _context.Remove(recipe);
             await Save();
+
+            _logger.LogInformation($"Deleted recipe {name}");
         }
 
-        public async Task<IEnumerable<RecipeDetailDTO>> GetAllRecipes() =>
-            _mapper.Map<List<RecipeDetailDTO>>(await _context.Recipes.OrderBy(r => r.Category.Name)
-                .Include(i => i.Ingredients).ToListAsync());
+        public async Task<IEnumerable<RecipeDTO>> GetAllRecipes()
+        {
+            var recipes = await _context.Recipes
+                .OrderBy(r => r.Category.Name)
+                .Include(i => i.Ingredients)
+                .ProjectTo<RecipeDTO>(_mapper.ConfigurationProvider).ToListAsync();
+            return recipes;
+        }
+            
 
         /// <summary>
         ///
@@ -121,8 +146,8 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="name"></param>
         /// <returns>Recipe</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<RecipeDetailDTO> GetRecipeByName(string name) =>
-            _mapper.Map<RecipeDetailDTO>(await GetRecipeByNameIfExists(name));
+        public async Task<RecipeDTO> GetRecipeByName(string name) =>
+            _mapper.Map<RecipeDTO>(await GetRecipeByNameIfExists(name));
 
         /// <summary>
         /// 
@@ -144,6 +169,9 @@ namespace CRUDRecipeEF.BL.DL.Services
             }
 
             recipe.Ingredients.Remove(ingredient);
+
+            _logger.LogInformation($"Removed {ingredientName} from recipe {recipeName}");
+
             await Save();
         }
     }

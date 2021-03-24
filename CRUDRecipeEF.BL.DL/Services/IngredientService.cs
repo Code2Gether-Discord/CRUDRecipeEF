@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,11 +15,15 @@ namespace CRUDRecipeEF.BL.DL.Services
     {
         private readonly RecipeContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<IngredientService> _logger;
 
-        public IngredientService(RecipeContext context, IMapper mapper)
+        public IngredientService(RecipeContext context,
+            IMapper mapper,
+            ILogger<IngredientService> logger)
         {
-            this._context = context;
-            this._mapper = mapper;
+            _context = context;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         private async Task<Ingredient> GetIngredientByNameIfExists(string name)
@@ -24,6 +31,7 @@ namespace CRUDRecipeEF.BL.DL.Services
             var ingredient = await _context.Ingredients.SingleOrDefaultAsync(i => i.Name.ToLower() == name.ToLower().Trim());
             if (ingredient == null)
             {
+                _logger.LogDebug($"Attempted to get ingredient that does not exist: {name}");
                 throw new KeyNotFoundException("Ingredient doesnt exist");
             }
 
@@ -47,7 +55,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         private async Task<bool> IngredientExists(string ingredientName)
         {
             bool exists = await _context.Ingredients.AnyAsync(i => i.Name.ToLower() == ingredientName.ToLower().Trim());
-            return exists; 
+            return exists;
             // Not using => makes this easier to debug. For some reason .ToLowerInvariant() does not work in the predicate.
             // Possibly not compatiable with async? May look into this later.
         }
@@ -55,17 +63,20 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// 
         /// </summary>
         /// <param name="IngredientAddDTO"></param>
-        /// <returns>Name of the Ingredient</returns>
-        /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<string> AddIngredient(IngredientAddDTO ingredientAddDTO)
+        /// <returns>Name of the Ingredient unless a ingredient with the same name already exists</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task<string> AddIngredient(IngredientDTO ingredientAddDTO)
         {
             if (await IngredientExists(ingredientAddDTO.Name))
             {
-                throw new KeyNotFoundException("Ingredient exists");
+                _logger.LogWarning($"Attempted to add existing ingredient {ingredientAddDTO.Name}");
+                throw new ArgumentException("Ingredient exists");
             }
 
             await _context.AddAsync(_mapper.Map<Ingredient>(ingredientAddDTO));
             await Save();
+
+            _logger.LogInformation($"Added {ingredientAddDTO.Name}");
 
             return ingredientAddDTO.Name;
         }
@@ -82,17 +93,21 @@ namespace CRUDRecipeEF.BL.DL.Services
 
             _context.Remove(ingredient);
             await Save();
+
+            _logger.LogInformation($"Deleted {name}");
         }
 
         /// <summary>
         /// Get all of the ingredients from the database
         /// </summary>
         /// <returns>IEnumerable of all Ingredients</returns>
-        public async Task<IEnumerable<IngredientDetailDTO>> GetAllIngredients()
+        public async Task<IEnumerable<IngredientDTO>> GetAllIngredients()
         {
-            var ingredients = await _context.Ingredients.ToListAsync();
-            return _mapper.Map<List<IngredientDetailDTO>>(ingredients);
+            var ingredients = await _context.Ingredients
+                .ProjectTo<IngredientDTO>(_mapper.ConfigurationProvider).ToListAsync();
+            return ingredients;
         }
+
 
         /// <summary>
         /// Gets an ingredient by name
@@ -100,11 +115,10 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <param name="name"></param>
         /// <returns>Ingredient</returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<IngredientDetailDTO> GetIngredientByName(string name)
+        public async Task<IngredientDTO> GetIngredientByName(string name)
         {
             var ingredient = await GetIngredientByNameIfExists(name);
-
-            return _mapper.Map<IngredientDetailDTO>(ingredient);
+            return _mapper.Map<IngredientDTO>(ingredient);
         }
     }
 }
