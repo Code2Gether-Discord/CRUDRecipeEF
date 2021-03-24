@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
@@ -129,9 +130,15 @@ namespace CRUDRecipeEF.BL.DL.Services
             _logger.LogInformation($"Deleted recipe {name}");
         }
 
-        public async Task<IEnumerable<RecipeDTO>> GetAllRecipes() =>
-            _mapper.Map<List<RecipeDTO>>(await _context.Recipes.OrderBy(r => r.Category.Name)
-                .Include(i => i.Ingredients).ToListAsync());
+        public async Task<IEnumerable<RecipeDTO>> GetAllRecipes()
+        {
+            var recipes = await _context.Recipes
+                .OrderBy(r => r.Category.Name)
+                .Include(i => i.Ingredients)
+                .ProjectTo<RecipeDTO>(_mapper.ConfigurationProvider).ToListAsync();
+            return recipes;
+        }
+            
 
         /// <summary>
         ///

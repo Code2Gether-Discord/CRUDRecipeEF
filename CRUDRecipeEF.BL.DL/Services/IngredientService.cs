@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CRUDRecipeEF.BL.DL.Data;
 using CRUDRecipeEF.BL.DL.DTOs;
 using CRUDRecipeEF.BL.DL.Entities;
@@ -16,7 +17,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         private readonly IMapper _mapper;
         private readonly ILogger<IngredientService> _logger;
 
-        public IngredientService(RecipeContext context, 
+        public IngredientService(RecipeContext context,
             IMapper mapper,
             ILogger<IngredientService> logger)
         {
@@ -54,7 +55,7 @@ namespace CRUDRecipeEF.BL.DL.Services
         private async Task<bool> IngredientExists(string ingredientName)
         {
             bool exists = await _context.Ingredients.AnyAsync(i => i.Name.ToLower() == ingredientName.ToLower().Trim());
-            return exists; 
+            return exists;
             // Not using => makes this easier to debug. For some reason .ToLowerInvariant() does not work in the predicate.
             // Possibly not compatiable with async? May look into this later.
         }
@@ -102,9 +103,11 @@ namespace CRUDRecipeEF.BL.DL.Services
         /// <returns>IEnumerable of all Ingredients</returns>
         public async Task<IEnumerable<IngredientDTO>> GetAllIngredients()
         {
-            var ingredients = await _context.Ingredients.ToListAsync();
-            return _mapper.Map<List<IngredientDTO>>(ingredients);
+            var ingredients = await _context.Ingredients
+                .ProjectTo<IngredientDTO>(_mapper.ConfigurationProvider).ToListAsync();
+            return ingredients;
         }
+
 
         /// <summary>
         /// Gets an ingredient by name
@@ -115,7 +118,6 @@ namespace CRUDRecipeEF.BL.DL.Services
         public async Task<IngredientDTO> GetIngredientByName(string name)
         {
             var ingredient = await GetIngredientByNameIfExists(name);
-
             return _mapper.Map<IngredientDTO>(ingredient);
         }
     }
