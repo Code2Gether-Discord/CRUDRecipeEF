@@ -14,5 +14,6 @@ namespace CRUDRecipeEF.BL.DL.Services
         Task<string> AddIngredient(IngredientDTO ingredient);
 
         Task DeleteIngredient(string name);
+        Task UpdateIngredient(IngredientDTO ingredientDTO, string ingredientName);
     }
 }
