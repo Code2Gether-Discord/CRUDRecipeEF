@@ -21,14 +21,13 @@ namespace CRUDRecipeTests.Services
         private readonly Mapper _mapper;
         private readonly ILogger<IngredientService> _logger;
 
-        public SQLiteIngredientServiceTests() : 
+        public SQLiteIngredientServiceTests() :
             base(new DbContextOptionsBuilder<RecipeContext>().UseSqlite("Filename=TestIng.db")
                 .Options)
         {
             _autoMapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfiles>());
             _mapper = new Mapper(_autoMapperConfig);
             _logger = new Mock<ILogger<IngredientService>>().Object;
-
             // TODO the configuration is not valid
             //autoMapperConfig.AssertConfigurationIsValid();
         }
@@ -84,6 +83,20 @@ namespace CRUDRecipeTests.Services
 
 
             await Assert.ThrowsAsync<KeyNotFoundException>(async () => await ingredientService.GetIngredientByName("Apple"));
+        }
+
+        [Fact]
+        public async Task UpdateIngredient_Updates_Ingredient()
+        {
+            using var context = new RecipeContext(ContextOptions);
+            var ingredientService = new IngredientService(context, _mapper, _logger);
+
+            var ingredientToUpdate = await ingredientService.GetIngredientByName("Apple");
+            
+            var ingredientDTO = new IngredientDTO { Name = "Monkey", Id = ingredientToUpdate.Id};
+            await ingredientService.UpdateIngredient(ingredientDTO,"Apple");
+            var ingredient = await ingredientService.GetIngredientByName("Monkey");
+            Assert.True(ingredient.Name == ingredientDTO.Name);
         }
     }
 }

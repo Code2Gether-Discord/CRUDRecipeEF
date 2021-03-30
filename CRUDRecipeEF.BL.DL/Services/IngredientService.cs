@@ -120,5 +120,13 @@ namespace CRUDRecipeEF.BL.DL.Services
             var ingredient = await GetIngredientByNameIfExists(name);
             return _mapper.Map<IngredientDTO>(ingredient);
         }
+
+        public async Task UpdateIngredient(IngredientDTO ingredientDTO, string ingredientName)
+        {
+            var ingredient = await GetIngredientByNameIfExists(ingredientName);
+
+            _mapper.Map(ingredientDTO, ingredient);
+            await Save();
+        }
     }
 }
