@@ -1,19 +1,25 @@
-﻿using CRUDRecipeEF.BL.DL.Data;
-using CRUDRecipeEF.BL.DL.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CRUDRecipeEF.DAL.Data;
+using CRUDRecipeEF.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRUDRecipeTests.Services
 {
     public abstract class RecipeServiceTestsDb : IDisposable
     {
-        protected DbContextOptions<RecipeContext> ContextOptions { get; }
-
         protected RecipeServiceTestsDb(DbContextOptions<RecipeContext> contextOptions)
         {
             ContextOptions = contextOptions;
             Seed();
+        }
+
+        protected DbContextOptions<RecipeContext> ContextOptions { get; }
+
+        public void Dispose()
+        {
+            using var context = new RecipeContext(ContextOptions);
+            context.Database.EnsureDeleted();
         }
 
         private void Seed()
@@ -22,30 +28,52 @@ namespace CRUDRecipeTests.Services
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            List<Ingredient> fruitSaladIngredients = new List<Ingredient>() {
-                    new Ingredient { Name = "Apple" },
-                    new Ingredient { Name = "Orange" },
-                    new Ingredient { Name = "Peach" },
-                };
+            List<Ingredient> fruitSaladIngredients = new()
+            {
+                new Ingredient
+                {
+                    Name = "Apple"
+                },
+                new Ingredient
+                {
+                    Name = "Orange"
+                },
+                new Ingredient
+                {
+                    Name = "Peach"
+                }
+            };
 
-            var fruitSalad = new Recipe { Name = "Fruit Salad", Ingredients = fruitSaladIngredients };
+            var fruitSalad = new Recipe
+            {
+                Name = "Fruit Salad",
+                Ingredients = fruitSaladIngredients
+            };
 
-            List<Ingredient> applePieIngredients = new List<Ingredient>() {
-                    new Ingredient { Name = "Apple" },
-                    new Ingredient { Name = "Crust" },
-                    new Ingredient { Name = "Sugar" },
-                };
+            List<Ingredient> applePieIngredients = new()
+            {
+                new Ingredient
+                {
+                    Name = "Apple"
+                },
+                new Ingredient
+                {
+                    Name = "Crust"
+                },
+                new Ingredient
+                {
+                    Name = "Sugar"
+                }
+            };
 
-            var applePie = new Recipe { Name = "Apple Pie", Ingredients = applePieIngredients };
+            var applePie = new Recipe
+            {
+                Name = "Apple Pie",
+                Ingredients = applePieIngredients
+            };
 
             context.AddRange(fruitSalad, applePie);
             context.SaveChanges();
-        }
-
-        public void Dispose()
-        {
-            using var context = new RecipeContext(ContextOptions);
-            context.Database.EnsureDeleted();
         }
     }
 }

@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CRUDRecipeEF.BL.DL\CRUDRecipeEF.BL.DL.csproj" />
+    <ProjectReference Include="..\CRUDRecipeEF.BL\CRUDRecipeEF.BL.csproj" />
   </ItemGroup>
 
 </Project>

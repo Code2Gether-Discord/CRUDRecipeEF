@@ -1,16 +1,15 @@
-﻿using AutoMapper;
-using CRUDRecipeEF.BL.DL.Data;
-using CRUDRecipeEF.BL.DL.DTOs;
-using CRUDRecipeEF.BL.DL.Helpers;
-using CRUDRecipeEF.BL.DL.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using CRUDRecipeEF.BL.DTOs;
+using CRUDRecipeEF.BL.Helpers;
+using CRUDRecipeEF.BL.Services;
+using CRUDRecipeEF.DAL.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace CRUDRecipeTests.Services
@@ -18,8 +17,8 @@ namespace CRUDRecipeTests.Services
     public class SQLiteIngredientServiceTests : IngredientServiceTestsDb, IDisposable
     {
         private readonly MapperConfiguration _autoMapperConfig;
-        private readonly Mapper _mapper;
         private readonly ILogger<IngredientService> _logger;
+        private readonly Mapper _mapper;
 
         public SQLiteIngredientServiceTests() :
             base(new DbContextOptionsBuilder<RecipeContext>().UseSqlite("Filename=TestIng.db")
@@ -63,7 +62,10 @@ namespace CRUDRecipeTests.Services
         {
             using var context = new RecipeContext(ContextOptions);
             var ingredientService = new IngredientService(context, _mapper, _logger);
-            var ingredient = await ingredientService.AddIngredient(new IngredientDTO { Name = "Carrot" });
+            var ingredient = await ingredientService.AddIngredient(new IngredientDTO
+            {
+                Name = "Carrot"
+            });
 
             Assert.NotNull(ingredient);
             Assert.Equal("Carrot", ingredient);
@@ -92,9 +94,13 @@ namespace CRUDRecipeTests.Services
             var ingredientService = new IngredientService(context, _mapper, _logger);
 
             var ingredientToUpdate = await ingredientService.GetIngredientByName("Apple");
-            
-            var ingredientDTO = new IngredientDTO { Name = "Monkey", Id = ingredientToUpdate.Id};
-            await ingredientService.UpdateIngredient(ingredientDTO,"Apple");
+
+            var ingredientDTO = new IngredientDTO
+            {
+                Name = "Monkey",
+                Id = ingredientToUpdate.Id
+            };
+            await ingredientService.UpdateIngredient(ingredientDTO, "Apple");
             var ingredient = await ingredientService.GetIngredientByName("Monkey");
             Assert.True(ingredient.Name == ingredientDTO.Name);
         }

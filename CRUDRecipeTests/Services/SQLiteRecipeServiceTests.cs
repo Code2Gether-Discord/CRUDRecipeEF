@@ -1,15 +1,15 @@
-﻿using AutoMapper;
-using CRUDRecipeEF.BL.DL.Data;
-using CRUDRecipeEF.BL.DL.DTOs;
-using CRUDRecipeEF.BL.DL.Helpers;
-using CRUDRecipeEF.BL.DL.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using CRUDRecipeEF.BL.DTOs;
+using CRUDRecipeEF.BL.Helpers;
+using CRUDRecipeEF.BL.Services;
+using CRUDRecipeEF.DAL.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace CRUDRecipeTests.Services
@@ -17,8 +17,9 @@ namespace CRUDRecipeTests.Services
     public class SQLiteRecipeServiceTests : RecipeServiceTestsDb, IDisposable
     {
         private readonly MapperConfiguration _autoMapperConfig;
-        private readonly Mapper _mapper;
         private readonly ILogger<RecipeService> _logger;
+        private readonly Mapper _mapper;
+
         public SQLiteRecipeServiceTests() :
             base(new DbContextOptionsBuilder<RecipeContext>().UseSqlite("Filename=TestRec.db")
                 .Options)
@@ -45,7 +46,7 @@ namespace CRUDRecipeTests.Services
         [Fact]
         public async Task Test_GetAllRecipe()
         {
-            using RecipeContext context = new RecipeContext(ContextOptions);
+            using var context = new RecipeContext(ContextOptions);
             var recipeService = new RecipeService(context, _mapper, _logger);
 
             var allRecipes = await recipeService.GetAllRecipes();
@@ -66,12 +67,20 @@ namespace CRUDRecipeTests.Services
             using var context = new RecipeContext(ContextOptions);
             var recipeService = new RecipeService(context, _mapper, _logger);
 
-            RecipeDTO recipe = new RecipeDTO
+            var recipe = new RecipeDTO
             {
                 Name = "Chips",
-                Ingredients = new List<IngredientDTO> { new IngredientDTO { Name = "Potato" },
-                        new IngredientDTO { Name = "Oil" }
+                Ingredients = new List<IngredientDTO>
+                {
+                    new()
+                    {
+                        Name = "Potato"
+                    },
+                    new()
+                    {
+                        Name = "Oil"
                     }
+                }
             };
 
             var recipeResult = await recipeService.AddRecipe(recipe);
@@ -93,7 +102,10 @@ namespace CRUDRecipeTests.Services
         {
             using var context = new RecipeContext(ContextOptions);
             var recipeService = new RecipeService(context, _mapper, _logger);
-            var addResult = await recipeService.AddIngredientToRecipe(new IngredientDTO { Name = "Cherry" }, "Fruit Salad");
+            var addResult = await recipeService.AddIngredientToRecipe(new IngredientDTO
+            {
+                Name = "Cherry"
+            }, "Fruit Salad");
 
             Assert.NotNull(addResult);
             Assert.Equal("Fruit Salad", addResult);

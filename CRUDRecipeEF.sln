@@ -5,11 +5,13 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRUDRecipeEF.PL", "CRUDRecipeEF.PL\CRUDRecipeEF.PL.csproj", "{CBED96DB-8CE5-4AA1-832B-EBA5CD71B458}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRUDRecipeEF.BL.DL", "CRUDRecipeEF.BL.DL\CRUDRecipeEF.BL.DL.csproj", "{2E1F02C9-CA4F-469B-8AD8-D2C8115EA5FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRUDRecipeEF.BL", "CRUDRecipeEF.BL\CRUDRecipeEF.BL.csproj", "{2E1F02C9-CA4F-469B-8AD8-D2C8115EA5FB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRUDRecipeTests", "CRUDRecipeTests\CRUDRecipeTests.csproj", "{B14FBFBD-A4A1-40E2-8DCA-C55A697C6965}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDRecipeEF.API", "CRUDRecipeEF.API\CRUDRecipeEF.API.csproj", "{963503F2-E83E-4382-AECF-7171D3F2D58C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDRecipeEF.DAL", "CRUDRecipeEF.DAL\CRUDRecipeEF.DAL.csproj", "{77921857-9877-4CC8-B2BB-126AD5CBD717}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{963503F2-E83E-4382-AECF-7171D3F2D58C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{963503F2-E83E-4382-AECF-7171D3F2D58C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{963503F2-E83E-4382-AECF-7171D3F2D58C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77921857-9877-4CC8-B2BB-126AD5CBD717}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77921857-9877-4CC8-B2BB-126AD5CBD717}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77921857-9877-4CC8-B2BB-126AD5CBD717}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77921857-9877-4CC8-B2BB-126AD5CBD717}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

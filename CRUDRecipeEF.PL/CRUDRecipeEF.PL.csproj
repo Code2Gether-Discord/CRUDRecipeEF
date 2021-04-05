@@ -19,20 +19,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CRUDRecipeEF.BL.DL\CRUDRecipeEF.BL.DL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CRUDRecipeEF.BL.DL\CRUDRecipeEF.BL.DL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Recipe.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CRUDRecipeEF.BL\CRUDRecipeEF.BL.csproj" />
+    <ProjectReference Include="..\CRUDRecipeEF.DAL\CRUDRecipeEF.DAL.csproj" />
   </ItemGroup>
 
 </Project>

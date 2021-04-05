@@ -1,5 +1,5 @@
-﻿using CRUDRecipeEF.BL.DL.DTOs;
-using CRUDRecipeEF.BL.DL.Services;
+﻿using CRUDRecipeEF.BL.DTOs;
+using CRUDRecipeEF.BL.Services;
 using System;
 using System.Linq;
 using System.Collections.Generic;

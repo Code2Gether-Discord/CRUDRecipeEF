@@ -1,5 +1,5 @@
-﻿using CRUDRecipeEF.BL.DL.DTOs;
-using CRUDRecipeEF.BL.DL.Services;
+﻿using CRUDRecipeEF.BL.DTOs;
+using CRUDRecipeEF.BL.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -129,7 +129,7 @@ namespace CRUDRecipeEF.PL.Menus
         {
             ConsoleHelper.ColorWrite("What ingredient would you like to add: ");
             var name = Console.ReadLine();
-
+            
             IngredientDTO newIngreditent = new IngredientDTO { Name = name };
 
             try

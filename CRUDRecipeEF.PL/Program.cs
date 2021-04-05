@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
-using CRUDRecipeEF.BL.DL.Data;
-using CRUDRecipeEF.BL.DL.Services;
+using CRUDRecipeEF.BL.Services;
+using CRUDRecipeEF.DAL.Data;
+using CRUDRecipeEF.DAL.Extensions;
 using CRUDRecipeEF.PL.Menus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace CRUDRecipeEF.PL
@@ -52,7 +52,7 @@ namespace CRUDRecipeEF.PL
         }
 
         /// <summary>
-        /// Register services and app configs here
+        ///     Register services and app configs here
         /// </summary>
         /// <returns>IHostBuilder</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
@@ -60,25 +60,22 @@ namespace CRUDRecipeEF.PL
             //appsettings copy to output
             //auto adds json file appsettings
             return Host.CreateDefaultBuilder(args)
-              .UseSerilog()
-              .ConfigureServices((hostContext, services) =>
-              {
-                  services
-                    .AddTransient<IDataSeed, DataSeed>()
-                    .AddTransient<IRecipeService, RecipeService>()
-                    .AddTransient<IIngredientService, IngredientService>()
-                    .AddAutoMapper(typeof(RecipeService).Assembly)
-                    .AddTransient<IMainMenu, MainMenu>()
-                    .AddTransient<IIngredientMenu, IngredientMenu>()
-                    .AddTransient<IRestaurantService, RestaurantService>()
-                    .AddTransient<IRecipeMenu, RecipeMenu>();
-
-
-                  services.AddDbContext<RecipeContext>(options =>
-                  {
-                      options.UseSqlite(hostContext.Configuration.GetConnectionString("Default"));
-                  });
-              });
+                .UseSerilog()
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services
+                        .AddTransient<IDataSeed, DataSeed>()
+                        .AddTransient<IRecipeService, RecipeService>()
+                        .AddTransient<IIngredientService, IngredientService>()
+                        .AddAutoMapper(typeof(RecipeService).Assembly)
+                        .AddTransient<IMainMenu, MainMenu>()
+                        .AddTransient<IIngredientMenu, IngredientMenu>()
+                        .AddTransient<IRestaurantService, RestaurantService>()
+                        .AddTransient<IRecipeMenu, RecipeMenu>()
+                        .ConfigureDal();
+                    
+                    services.AddDbContext<RecipeContext>(options => { options.UseSqlite(hostContext.Configuration.GetConnectionString("Default")); });
+                });
         }
     }
 }
