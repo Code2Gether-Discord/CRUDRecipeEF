@@ -1,17 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CRUDRecipeEF.DAL.DTOs;
 using CRUDRecipeEF.DAL.Entities;
 
 namespace CRUDRecipeEF.DAL.Repositories
 {
     public interface IIngredientRepo
     {
-        Task<Ingredient> GetIngredientByName(string name);
+        Task<IngredientDTO> GetIngredientDTOByNameAsync(string name);
+        Task<Ingredient> GetIngredientByNameAsync(string name);
 
-        Task<IEnumerable<Ingredient>> GetAllIngredients();
+        /// <summary>
+        ///     Get all of the ingredients from the database
+        /// </summary>
+        /// <returns>IEnumerable of all Ingredients</returns>
+        Task<IEnumerable<IngredientDTO>> GetAllIngredientsDTOsAsync();
 
-        Task<string> AddIngredient(Ingredient ingredient);
+        Task<string> AddIngredientAsync(Ingredient ingredient);
 
-        Task DeleteIngredient(string name);
+        void DeleteIngredient(Ingredient ingredient);
+
+        /// <summary>
+        /// Checks if an ingredient with the specified name already exists
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        Task<bool> IngredientExistsAsync(string name);
     }
 }
