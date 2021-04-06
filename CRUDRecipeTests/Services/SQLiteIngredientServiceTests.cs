@@ -84,7 +84,7 @@ namespace CRUDRecipeTests.Services
             await ingredientService.DeleteIngredient("Apple");
 
 
-            await Assert.ThrowsAsync<KeyNotFoundException>(async () => await ingredientService.GetIngredientByName("Apple"));
+            await Assert.ThrowsAsync<KeyNotFoundException>(async () => await ingredientService.GetIngredientDTOByNameAsync("Apple"));
         }
 
         [Fact]

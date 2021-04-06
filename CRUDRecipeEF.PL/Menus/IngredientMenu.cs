@@ -1,10 +1,10 @@
-﻿using CRUDRecipeEF.BL.DTOs;
-using CRUDRecipeEF.BL.Services;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CRUDRecipeEF.BL.Services;
+using CRUDRecipeEF.DAL.DTOs;
+using Microsoft.Extensions.Logging;
 
 namespace CRUDRecipeEF.PL.Menus
 {
@@ -150,7 +150,7 @@ namespace CRUDRecipeEF.PL.Menus
             Console.WriteLine();
             ConsoleHelper.ColorWriteLine("Known Ingredients: ");
 
-            var result = await _ingredientService.GetAllIngredients();
+            var result = await _ingredientService.GetAllIngredientsDTOsAsync();
             List<IngredientDTO> ingredientList = result.ToList();
 
             for (int i = 0; i < ingredientList.Count; i++)

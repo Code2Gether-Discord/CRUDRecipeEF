@@ -1,9 +1,9 @@
-﻿using CRUDRecipeEF.BL.DTOs;
-using CRUDRecipeEF.BL.Services;
-using System;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using CRUDRecipeEF.BL.Services;
+using CRUDRecipeEF.DAL.DTOs;
 using Microsoft.Extensions.Logging;
 
 namespace CRUDRecipeEF.PL.Menus
@@ -150,7 +150,7 @@ namespace CRUDRecipeEF.PL.Menus
 
                 try
                 {
-                    var ingredient = await _ingredientService.GetIngredientByName(input);
+                    var ingredient = await _ingredientService.GetIngredientDTOByNameAsync(input);
                     var ingredientToAdd = new IngredientDTO { Name = ingredient.Name };
                     ingredients.Add(ingredientToAdd);
                 }
