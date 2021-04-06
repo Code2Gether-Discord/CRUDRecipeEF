@@ -9,6 +9,7 @@ namespace CRUDRecipeEF.DAL.Extensions
         {
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IRestaurantRepo, RestaurantRepo>();
+            services.AddTransient<IIngredientRepo, IngredientRepo>();
             return services;
         }
     }
