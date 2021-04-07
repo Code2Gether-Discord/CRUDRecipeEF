@@ -95,7 +95,7 @@ namespace CRUDRecipeEF.PL.Menus
 
             try
             {
-                var ingredient = await _ingredientService.GetIngredientByName(name);
+                var ingredient = await _ingredientService.GetIngredientDTOByNameAsync(name);
                 ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} exists.");
             }
             catch(KeyNotFoundException)

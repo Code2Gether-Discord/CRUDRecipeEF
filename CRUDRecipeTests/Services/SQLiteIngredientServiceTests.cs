@@ -1,19 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using CRUDRecipeEF.BL.Services;
-using CRUDRecipeEF.DAL.Data;
-using CRUDRecipeEF.DAL.DTOs;
-using CRUDRecipeEF.DAL.Helpers;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
-using Xunit;
-
-namespace CRUDRecipeTests.Services
-{
+﻿namespace CRUDRecipeTests.Services
+{ /*
     public class SQLiteIngredientServiceTests : IngredientServiceTestsDb, IDisposable
     {
         private readonly MapperConfiguration _autoMapperConfig;
@@ -83,7 +69,6 @@ namespace CRUDRecipeTests.Services
             var ingredientService = new IngredientService(context, _mapper, _logger);
             await ingredientService.DeleteIngredient("Apple");
 
-
             await Assert.ThrowsAsync<KeyNotFoundException>(async () => await ingredientService.GetIngredientDTOByNameAsync("Apple"));
         }
 
@@ -104,5 +89,5 @@ namespace CRUDRecipeTests.Services
             var ingredient = await ingredientService.GetIngredientDTOByNameAsync("Monkey");
             Assert.True(ingredient.Name == ingredientDTO.Name);
         }
-    }
+}  */
 }
