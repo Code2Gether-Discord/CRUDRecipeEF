@@ -1,4 +1,4 @@
-﻿namespace CRUDRecipeEF.BL.DTOs
+﻿namespace CRUDRecipeEF.DAL.DTOs
 {
     public class RecipeAddDTO
     {

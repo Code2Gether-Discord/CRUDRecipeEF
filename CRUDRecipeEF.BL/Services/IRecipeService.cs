@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using CRUDRecipeEF.BL.DTOs;
+using CRUDRecipeEF.DAL.DTOs;
 
 namespace CRUDRecipeEF.BL.Services
 {

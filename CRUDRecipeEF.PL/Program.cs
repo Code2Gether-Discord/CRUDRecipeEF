@@ -3,6 +3,7 @@ using System.Linq;
 using CRUDRecipeEF.BL.Services;
 using CRUDRecipeEF.DAL.Data;
 using CRUDRecipeEF.DAL.Extensions;
+using CRUDRecipeEF.DAL.Helpers;
 using CRUDRecipeEF.PL.Menus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -67,14 +68,16 @@ namespace CRUDRecipeEF.PL
                         .AddTransient<IDataSeed, DataSeed>()
                         .AddTransient<IRecipeService, RecipeService>()
                         .AddTransient<IIngredientService, IngredientService>()
-                        .AddAutoMapper(typeof(RecipeService).Assembly)
                         .AddTransient<IMainMenu, MainMenu>()
                         .AddTransient<IIngredientMenu, IngredientMenu>()
                         .AddTransient<IRestaurantService, RestaurantService>()
                         .AddTransient<IRecipeMenu, RecipeMenu>()
                         .ConfigureDal();
-                    
-                    services.AddDbContext<RecipeContext>(options => { options.UseSqlite(hostContext.Configuration.GetConnectionString("Default")); });
+
+                    services.AddDbContext<RecipeContext>(options =>
+                    {
+                        options.UseSqlite(hostContext.Configuration.GetConnectionString("Default"));
+                    });
                 });
         }
     }
