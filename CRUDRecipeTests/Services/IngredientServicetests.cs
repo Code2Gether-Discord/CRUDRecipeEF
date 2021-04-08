@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CRUDRecipeEF.BL.Services;
 using CRUDRecipeEF.DAL.DTOs;
+using CRUDRecipeEF.DAL.Entities;
 using CRUDRecipeEF.DAL.Helpers;
 using CRUDRecipeEF.DAL.Repositories;
 using Microsoft.Extensions.Logging;
@@ -38,6 +39,9 @@ namespace CRUDRecipeTests.Services
         {
             _mockRepo.Setup(x => x.GetIngredientDTOByNameAsync(_ingredientName)).ReturnsAsync(
                 new IngredientDTO { Name = _ingredientName });
+
+            _mockRepo.Setup(x => x.AddIngredientAsync(It.IsAny<Ingredient>()))
+                .ReturnsAsync(_ingredientName);
         }
 
         [Fact]
@@ -53,6 +57,15 @@ namespace CRUDRecipeTests.Services
         {
             await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
                await _ingredientService.DeleteIngredient("13super random name14"));
+        }
+
+        [Fact]
+        public async Task AddIngredient_Returns_Name_Of_Ingredient()
+        {
+            var ingredientName = await _ingredientService.AddIngredient(
+                new IngredientDTO { Name = _ingredientName });
+
+            Assert.Equal(_ingredientName, ingredientName);
         }
     }
 }
