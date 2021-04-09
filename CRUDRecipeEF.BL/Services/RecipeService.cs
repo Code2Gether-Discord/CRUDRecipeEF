@@ -75,6 +75,16 @@ namespace CRUDRecipeEF.BL.Services
             return recipeAddDTO.Name;
         }
 
+        public async Task UpdateRecipe (Recipe recipe, string newName)
+        {
+            await GetRecipeByNameIfExists(recipe.Name);
+
+            var a = new Recipe();
+            a.Ingredients = recipe.Ingredients;
+
+            await DeleteRecipe(recipe.Name);
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="name"></param>

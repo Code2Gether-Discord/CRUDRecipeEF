@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CRUDRecipeEF.BL.DTOs;
+using CRUDRecipeEF.DAL.Entities;
 
 namespace CRUDRecipeEF.BL.Services
 {
@@ -18,5 +19,6 @@ namespace CRUDRecipeEF.BL.Services
         Task RemoveIngredientFromRecipe(string ingredientName, string recipeName);
 
         Task DeleteRecipe(string name);
+        Task UpdateRecipe(Recipe recipe, string newName);
     }
 }
