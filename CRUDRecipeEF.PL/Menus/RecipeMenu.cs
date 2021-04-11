@@ -113,22 +113,9 @@ namespace CRUDRecipeEF.PL.Menus
 
             ConsoleHelper.ColorWrite("What is the new name of the recipe: ");
             Console.WriteLine();
-            var newRecipeName = Console.ReadLine();
+            var recipeName = Console.ReadLine();
 
-            await _recipeService.UpdateRecipe(recipe, newRecipeName);
-
-
-            //var checkedRecipeDTO = new RecipeUpdateDTO { Name = name };
-
-            //maybe add a try - catch
-
-            //var change =_recipeService.UpdateRecipe(newName, checkedRecipeDTO);
-
-            //_recipeService.DeleteRecipe(name);
-
-            //var newNameAddRecipeDTO = new RecipeAddDTO { Name = change };
-
-            //_recipeService.AddRecipe(newNameAddRecipeDTO);
+            await _recipeService.UpdateRecipe(recipe, recipeName);
         }
 
         private async Task ListRecipe()
