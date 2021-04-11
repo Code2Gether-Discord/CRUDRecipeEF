@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CRUDRecipeEF.DAL.DTOs;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace CRUDRecipeEF.BL.DTOs

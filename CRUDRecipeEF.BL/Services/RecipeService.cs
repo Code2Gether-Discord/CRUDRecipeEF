@@ -78,7 +78,6 @@ namespace CRUDRecipeEF.BL.Services
         public async Task UpdateRecipe (RecipeDTO recipeDTO, string recipeName)
         {
             var recipe = await GetRecipeByNameIfExists(recipeDTO.Name);
-
             recipe.Name = recipeName;
             _mapper.Map<RecipeDTO, Recipe>(recipeDTO);
 

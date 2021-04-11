@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using CRUDRecipeEF.BL.Services;
 using CRUDRecipeEF.DAL.DTOs;
 using Microsoft.Extensions.Logging;
-using CRUDRecipeEF.BL.Helpers;
-using CRUDRecipeEF.DAL.Entities;
 
 namespace CRUDRecipeEF.PL.Menus
 {
