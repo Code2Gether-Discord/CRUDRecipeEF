@@ -107,13 +107,15 @@ namespace CRUDRecipeEF.PL.Menus
         private async void UpdateRecipe()
         {
             ConsoleHelper.ColorWrite("What recipe would you like to update: ");
-            var recipe = Console.ReadLine();
+            var input = Console.ReadLine();
+
+            var recipe = await _recipeService.GetRecipeByName(input);
 
             ConsoleHelper.ColorWrite("What is the new name of the recipe: ");
             Console.WriteLine();
             var newRecipeName = Console.ReadLine();
 
-            var a = new RecipeDTO();
+            await _recipeService.UpdateRecipe(recipe, newRecipeName);
 
 
             //var checkedRecipeDTO = new RecipeUpdateDTO { Name = name };
