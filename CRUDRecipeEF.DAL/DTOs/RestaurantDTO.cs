@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace CRUDRecipeEF.BL.DTOs
+namespace CRUDRecipeEF.DAL.DTOs
 {
     public class RestaurantDTO
     {

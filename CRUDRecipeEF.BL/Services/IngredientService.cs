@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using CRUDRecipeEF.BL.DTOs;
 using CRUDRecipeEF.DAL.Data;
+using CRUDRecipeEF.DAL.DTOs;
 using CRUDRecipeEF.DAL.Entities;
+using CRUDRecipeEF.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -13,91 +14,71 @@ namespace CRUDRecipeEF.BL.Services
 {
     public class IngredientService : IIngredientService
     {
-        private readonly RecipeContext _context;
         private readonly ILogger<IngredientService> _logger;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IIngredientRepo _ingredientRepo;
         private readonly IMapper _mapper;
 
-        public IngredientService(RecipeContext context,
-            IMapper mapper,
-            ILogger<IngredientService> logger)
+        public IngredientService(IIngredientRepo ingredientRepo, IMapper mapper, ILogger<IngredientService> logger,
+            IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _ingredientRepo = ingredientRepo;
             _mapper = mapper;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="IngredientAddDTO"></param>
-        /// <returns>Name of the Ingredient unless a ingredient with the same name already exists</returns>
-        /// <exception cref="ArgumentException"></exception>
         public async Task<string> AddIngredient(IngredientDTO ingredientAddDTO)
         {
-            if (await IngredientExists(ingredientAddDTO.Name))
+            if (await _ingredientRepo.IngredientExistsAsync(ingredientAddDTO.Name))
             {
                 _logger.LogWarning($"Attempted to add existing ingredient {ingredientAddDTO.Name}");
                 throw new ArgumentException("Ingredient exists");
             }
 
-            await _context.AddAsync(_mapper.Map<Ingredient>(ingredientAddDTO));
-            await Save();
-
+            var ingredientName = await _ingredientRepo.AddIngredientAsync(_mapper.Map<Ingredient>(ingredientAddDTO));
+            await _unitOfWork.SaveAsync();
             _logger.LogInformation($"Added {ingredientAddDTO.Name}");
 
-            return ingredientAddDTO.Name;
+            return ingredientName;
         }
 
-        /// <summary>
-        ///     Delete an Ingredient from the database
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        /// <exception cref="KeyNotFoundException"></exception>
         public async Task DeleteIngredient(string name)
         {
-            var ingredient = await GetIngredientByNameIfExists(name);
+            var ingredient = await GetIngredientByNameIfExistsAsync(name);
 
-            _context.Remove(ingredient);
-            await Save();
-
+            _ingredientRepo.DeleteIngredient(ingredient);
+            await _unitOfWork.SaveAsync();
             _logger.LogInformation($"Deleted {name}");
         }
 
-        /// <summary>
-        ///     Get all of the ingredients from the database
-        /// </summary>
-        /// <returns>IEnumerable of all Ingredients</returns>
-        public async Task<IEnumerable<IngredientDTO>> GetAllIngredients()
+        public Task<IEnumerable<IngredientDTO>> GetAllIngredientsDTOsAsync()
         {
-            var ingredients = await _context.Ingredients
-                .ProjectTo<IngredientDTO>(_mapper.ConfigurationProvider).ToListAsync();
-            return ingredients;
+            return _ingredientRepo.GetAllIngredientsDTOsAsync();
         }
-
-
-        /// <summary>
-        ///     Gets an ingredient by name
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns>Ingredient</returns>
-        /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<IngredientDTO> GetIngredientByName(string name)
+      
+        public Task<IngredientDTO> GetIngredientDTOByNameAsync(string name)
         {
-            var ingredient = await GetIngredientByNameIfExists(name);
-            return _mapper.Map<IngredientDTO>(ingredient);
+            return _ingredientRepo.GetIngredientDTOByNameAsync(name);            
         }
 
         public async Task UpdateIngredient(IngredientDTO ingredientDTO, string ingredientName)
         {
-            var ingredient = await GetIngredientByNameIfExists(ingredientName);
+            var ingredient = await GetIngredientByNameIfExistsAsync(ingredientName);
 
             _mapper.Map(ingredientDTO, ingredient);
-            await Save();
+            await _unitOfWork.SaveAsync();
         }
 
-        private async Task<Ingredient> GetIngredientByNameIfExists(string name)
+        /// <summary>
+        /// Gets an ingredient by name if it exists
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        private async Task<Ingredient> GetIngredientByNameIfExistsAsync(string name)
         {
-            var ingredient = await _context.Ingredients.SingleOrDefaultAsync(i => i.Name.ToLower() == name.ToLower().Trim());
+            var ingredient = await _ingredientRepo.GetIngredientByNameAsync(name);
             if (ingredient == null)
             {
                 _logger.LogDebug($"Attempted to get ingredient that does not exist: {name}");
@@ -105,28 +86,6 @@ namespace CRUDRecipeEF.BL.Services
             }
 
             return ingredient;
-        }
-
-        /// <summary>
-        ///     Commits any changes to the db that are tracked by EF
-        /// </summary>
-        /// <returns></returns>
-        private async Task Save()
-        {
-            await _context.SaveChangesAsync();
-        }
-
-        /// <summary>
-        ///     Checks if a recipe with the specified name already exists
-        /// </summary>
-        /// <param name="ingredientName"></param>
-        /// <returns>If the ingredient exists or not</returns>
-        private async Task<bool> IngredientExists(string ingredientName)
-        {
-            bool exists = await _context.Ingredients.AnyAsync(i => i.Name.ToLower() == ingredientName.ToLower().Trim());
-            return exists;
-            // Not using => makes this easier to debug. For some reason .ToLowerInvariant() does not work in the predicate.
-            // Possibly not compatiable with async? May look into this later.
         }
     }
 }

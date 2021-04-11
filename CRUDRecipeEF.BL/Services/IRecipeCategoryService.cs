@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CRUDRecipeEF.BL.DTOs;
+﻿using System.Threading.Tasks;
+using CRUDRecipeEF.DAL.DTOs;
 
 namespace CRUDRecipeEF.BL.Services
 {

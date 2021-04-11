@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using CRUDRecipeEF.BL.DTOs;
+using CRUDRecipeEF.DAL.DTOs;
 using CRUDRecipeEF.DAL.Entities;
 using CRUDRecipeEF.DAL.Repositories;
 

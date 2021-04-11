@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace CRUDRecipeEF.BL.DTOs
+namespace CRUDRecipeEF.DAL.DTOs
 {
-    public class MenuAddDTO
+    public class RecipeDTO
     {
-        public string RestaurantName { get; set; }
+        public int Id { get; set; }
+
         [StringLength(200, MinimumLength = 3)]
         public string Name { get; set; }
 
-        public List<RecipeAddDTO> Recipes { get; set; } = new();
+        public List<IngredientDTO> Ingredients { get; set; } = new List<IngredientDTO>();
     }
 }

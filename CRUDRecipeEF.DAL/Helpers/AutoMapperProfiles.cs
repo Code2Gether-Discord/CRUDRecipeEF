@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using CRUDRecipeEF.BL.DTOs;
+using CRUDRecipeEF.DAL.DTOs;
 using CRUDRecipeEF.DAL.Entities;
 
-namespace CRUDRecipeEF.BL.Helpers
+namespace CRUDRecipeEF.DAL.Helpers
 {
     public class AutoMapperProfiles : Profile
     {
