@@ -75,14 +75,12 @@ namespace CRUDRecipeEF.BL.Services
             return recipeAddDTO.Name;
         }
 
-        public async Task UpdateRecipe (Recipe recipe, string newName)
+        public async Task UpdateRecipe (RecipeDTO recipeDTO, string newName)
         {
-            await GetRecipeByNameIfExists(recipe.Name);
+            var recipe = await GetRecipeByNameIfExists(newName);
 
-            var a = new Recipe();
-            a.Ingredients = recipe.Ingredients;
+            _mapper.Map(recipeDTO, recipe);
 
-            await DeleteRecipe(recipe.Name);
         }
 
         /// <summary>
@@ -183,5 +181,7 @@ namespace CRUDRecipeEF.BL.Services
         {
             return await _context.Recipes.AnyAsync(r => r.Name.ToLower() == recipeName.ToLower().Trim());
         }
+
+
     }
 }
