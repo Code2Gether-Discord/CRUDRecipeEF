@@ -79,7 +79,6 @@ namespace CRUDRecipeEF.BL.Services
         {
             var recipe = await GetRecipeByNameIfExists(recipeDTO.Name);
             recipe.Name = recipeName;
-            _mapper.Map<RecipeDTO, Recipe>(recipeDTO);
 
             await Save();
         }
