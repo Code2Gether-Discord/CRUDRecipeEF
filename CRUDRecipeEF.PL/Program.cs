@@ -72,6 +72,8 @@ namespace CRUDRecipeEF.PL
                         .AddTransient<IIngredientMenu, IngredientMenu>()
                         .AddTransient<IRestaurantService, RestaurantService>()
                         .AddTransient<IRecipeMenu, RecipeMenu>()
+                        .AddTransient<IUpdateRecipeMenu, UpdateRecipeMenu>()
+                        .AddTransient<IUpdateRecipeMenuService, UpdateRecipeMenuService>()
                         .ConfigureDal();
 
                     services.AddDbContext<RecipeContext>(options =>

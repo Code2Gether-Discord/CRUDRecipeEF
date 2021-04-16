@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CRUDRecipeEF.PL.Menus
 {
-    public class UpdateRecipeMenu : IUpdateMenu
+    public class UpdateRecipeMenu : IUpdateRecipeMenu
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
@@ -36,6 +36,7 @@ namespace CRUDRecipeEF.PL.Menus
             Console.WriteLine();
             ConsoleHelper.ColorWriteLine("1.) Change Name");
             ConsoleHelper.ColorWriteLine("2.) Change Ingredient");
+            Console.WriteLine();
             ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "6.) Back to Main Menu");
             Console.WriteLine();
 

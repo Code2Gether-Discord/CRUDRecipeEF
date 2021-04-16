@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CRUDRecipeEF.PL.Menus
 {
-    public interface IUpdateMenu
+    public interface IUpdateRecipeMenu
     {
         Task Show();
     }

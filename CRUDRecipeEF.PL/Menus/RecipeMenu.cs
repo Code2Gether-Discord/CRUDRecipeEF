@@ -12,7 +12,7 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
-        private readonly IUpdateMenu _updateMenu;
+        private readonly IUpdateRecipeMenu _updateMenu;
         private readonly ILogger _logger;
         private readonly int _recipePerPage = 8;
 
@@ -25,7 +25,7 @@ namespace CRUDRecipeEF.PL.Menus
 
         public RecipeMenu(IRecipeService recipeService,
             IIngredientService ingredientService, 
-            IUpdateMenu updateMenu,
+            IUpdateRecipeMenu updateMenu,
             ILogger<RecipeMenu> logger)
         {
             _recipeService = recipeService;
