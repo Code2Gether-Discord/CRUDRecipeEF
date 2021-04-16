@@ -1,0 +1,19 @@
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using CRUDRecipeEF.BL.DL.DTOs;
+
+namespace CRUDRecipeEF.BL.DL.Services
+{
+    public interface IIngredientService
+    {
+        Task<IngredientDetailDTO> GetIngredientByName(string name);
+
+        Task<IEnumerable<IngredientDetailDTO>> GetAllIngredients();
+
+        Task<string> AddIngredient(IngredientAddDTO ingredient);
+
+        Task UpdateIngredient(string name, IngredientAddDTO ingredientAddDTO);
+
+        Task DeleteIngredient(string name);
+    }
+}

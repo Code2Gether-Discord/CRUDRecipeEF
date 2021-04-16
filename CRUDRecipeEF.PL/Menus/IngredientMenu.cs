@@ -14,7 +14,7 @@ namespace CRUDRecipeEF.PL.Menus
         private readonly ILogger _logger;
         private readonly int _ingredientsPerPage = 8;
 
-        private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngredient = 2, ShowIngredient = 3, DeleteIngredient = 4, GoBack = 5 };
+        private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngredient = 2, ShowIngredient = 3, EditIngredient = 4, DeleteIngredient = 5, GoBack = 6 };
 
         public IngredientMenu(IIngredientService ingredientService,
             ILogger<IngredientMenu> logger)
@@ -31,9 +31,10 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("1.) New Ingredient");
             ConsoleHelper.ColorWriteLine("2.) Lookup Ingredient");
             ConsoleHelper.ColorWriteLine("3.) Show Ingredient List");
-            ConsoleHelper.ColorWriteLine("4.) Delete Ingredient");
+            ConsoleHelper.ColorWriteLine("4.) Rename Ingredient");
+            ConsoleHelper.ColorWriteLine("5.) Delete Ingredient");
             Console.WriteLine();
-            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "5.) Back to Main Menu");
+            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "6.) Back to Main Menu");
             Console.WriteLine();
 
             string input = string.Empty;
@@ -78,12 +79,38 @@ namespace CRUDRecipeEF.PL.Menus
                 case IngredientMenuOption.DeleteIngredient:
                     await DeleteIngredient();
                     break;
+                case IngredientMenuOption.EditIngredient:
+                    await EditIngredient();
+                    break;
                 case IngredientMenuOption.GoBack:
                     Console.WriteLine();
                     break;
                 default:
                     break;
             }
+        }
+
+        private async Task EditIngredient()
+        {
+            ConsoleHelper.ColorWrite("What ingredient would you like to edit: ");
+            var name = Console.ReadLine();
+
+            try
+            {
+                var ingredient = await _ingredientService.GetIngredientByName(name);
+
+                ConsoleHelper.ColorWrite("What would you like to re-name the ingredient: ");
+                var newName = Console.ReadLine();
+
+                await _ingredientService.UpdateIngredient(name, new IngredientAddDTO { Name = newName });
+            }
+            catch (KeyNotFoundException)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} does not exist.");
+            }
+
+            Console.WriteLine();
+            await this.Show();
         }
 
         private async Task LookupIngredient()

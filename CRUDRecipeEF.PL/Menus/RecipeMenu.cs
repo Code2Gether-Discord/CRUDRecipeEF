@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CRUDRecipeEF.BL.DL.DTOs;
+using CRUDRecipeEF.BL.DL.Services;
+using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using CRUDRecipeEF.BL.Services;
-using CRUDRecipeEF.DAL.DTOs;
-using Microsoft.Extensions.Logging;
+using AutoMapper;
 
 namespace CRUDRecipeEF.PL.Menus
 {
@@ -12,18 +12,15 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
-        private readonly ILogger _logger;
         private readonly int _recipePerPage = 8;
 
-        private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4, GoBack = 5 };
+        private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, EditRecipe = 4, DeleteRecipe = 5, GoBack = 6 };
 
         public RecipeMenu(IRecipeService recipeService,
-            IIngredientService ingredientService,
-            ILogger<RecipeMenu> logger)
+            IIngredientService ingredientService)
         {
             _recipeService = recipeService;
             _ingredientService = ingredientService;
-            _logger = logger;
         }
 
         public async Task Show()
@@ -34,9 +31,10 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("1.) New Recipe");
             ConsoleHelper.ColorWriteLine("2.) Lookup Recipe");
             ConsoleHelper.ColorWriteLine("3.) Show Recipe List");
-            ConsoleHelper.ColorWriteLine("4.) Delete Recipe");
+            ConsoleHelper.ColorWriteLine("4.) Edit Recipe");
+            ConsoleHelper.ColorWriteLine("5.) Delete Recipe");
             Console.WriteLine();
-            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "5.) Back to Main Menu");
+            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "6.) Back to Main Menu");
             Console.WriteLine();
 
             string input = string.Empty;
@@ -52,7 +50,7 @@ namespace CRUDRecipeEF.PL.Menus
 
                 if (!Enum.IsDefined(typeof(RecipeMenuOption), option))
                 {
-                    _logger.LogWarning("Option is not in enum");
+                    // Not in the enum - log here if desired
                     valid = false;
                 }
 
@@ -67,7 +65,7 @@ namespace CRUDRecipeEF.PL.Menus
             switch (option)
             {
                 case RecipeMenuOption.InValid:
-                    _logger.LogWarning("Attempted to execute invalid menu selection");
+                    //TODO throw an exception or something
                     break;
                 case RecipeMenuOption.NewRecipe:
                     Console.WriteLine();
@@ -85,6 +83,9 @@ namespace CRUDRecipeEF.PL.Menus
                     Console.WriteLine();
                     await DeleteRecipe();
                     break;
+                case RecipeMenuOption.EditRecipe:
+                    await EditRecipe();
+                    break;
                 case RecipeMenuOption.GoBack:
                     Console.WriteLine();
                     break;
@@ -93,13 +94,102 @@ namespace CRUDRecipeEF.PL.Menus
             }
         }
 
+        private async Task EditRecipe()
+        {
+            ConsoleHelper.ColorWrite("What Recipe would you like to edit: ");
+            var name = Console.ReadLine();
+
+            try
+            {
+                // this is super shit code, sorry
+                //TODO: Fix this mess
+                var recipe = await _recipeService.GetRecipeByName(name);
+                RecipeAddDTO recipeAdd = new RecipeAddDTO() { Name = recipe.Name };
+
+                foreach(var i in recipe.Ingredients)
+                {
+                    recipeAdd.Ingredients.Add(new IngredientAddDTO { Name = i.Name });
+                }
+                
+
+                ConsoleHelper.ColorWrite("What would you like to edit (N)ame or reset (I)ngredients: ");
+                var editWhat = Console.ReadLine();
+
+                if (char.ToUpper(editWhat[0]) == 'N')
+                {
+                    
+                    Console.Write("What would you like to re-name the recipe: ");
+                    var newName = Console.ReadLine();
+                    recipeAdd.Name = newName;
+                }
+                else if (char.ToUpper(editWhat[0]) == 'I')
+                {
+                    //TODO: Not DRY, extract this and use it in common locations
+                    bool another = true;
+                    List<IngredientAddDTO> ingredients = new List<IngredientAddDTO>();
+
+                    while (another)
+                    {
+                        ConsoleHelper.ColorWrite("What ingredeient would you like to add: ");
+                        var input = Console.ReadLine();
+
+                        try
+                        {
+                            var ingredient = await _ingredientService.GetIngredientByName(input);
+                            var ingredientToAdd = new IngredientAddDTO { Name = ingredient.Name };
+                            ingredients.Add(ingredientToAdd);
+                        }
+                        catch (KeyNotFoundException)
+                        {
+                            ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, "The ingredient does not exist!");
+                            ConsoleHelper.ColorWrite("Would you like to add it? (Y/n): ");
+                            var add = Console.ReadLine();
+
+                            if (Char.ToUpperInvariant(add[0]) == 'N')
+                            {
+                                ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "Recipe not added.");
+                                Console.WriteLine();
+                                return;
+                            }
+
+                            ingredients.Add(new IngredientAddDTO { Name = input });
+                        }
+
+                        ConsoleHelper.ColorWrite("Would you like to add another ingredient? (y/N): ");
+                        var addAnother = Console.ReadLine();
+
+                        if (Char.ToUpperInvariant(addAnother[0]) != 'Y')
+                        {
+                            another = false;
+                        }
+                    }
+
+                    recipeAdd.Ingredients = ingredients;
+                }
+                else
+                {
+                    // TODO: I will add a loop later, just want this done for now
+                    Console.WriteLine("Invalid choice!");
+                }
+
+                await _recipeService.UpdateRecipe(name, recipeAdd);
+            }
+            catch (KeyNotFoundException)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{name} does not exist.");
+            }
+
+            Console.WriteLine();
+            await this.Show();
+        }
+
         private async Task ListRecipe()
         {
             Console.WriteLine();
             ConsoleHelper.ColorWriteLine("Known Recipes: ");
 
             var result = await _recipeService.GetAllRecipes();
-            List<RecipeDTO> recipeList = result.ToList();
+            List<RecipeDetailDTO> recipeList = result.ToList();
 
             for (int i = 0; i < recipeList.Count; i++)
             {
@@ -138,10 +228,10 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWrite("What recipe would you like to add: ");
             var name = Console.ReadLine();
 
-            RecipeDTO recipe = new RecipeDTO { Name = name };
+            RecipeAddDTO recipe = new RecipeAddDTO { Name = name };
 
             bool another = true;
-            List<IngredientDTO> ingredients = new List<IngredientDTO>();
+            List<IngredientAddDTO> ingredients = new List<IngredientAddDTO>();
 
             while (another)
             {
@@ -150,8 +240,8 @@ namespace CRUDRecipeEF.PL.Menus
 
                 try
                 {
-                    var ingredient = await _ingredientService.GetIngredientDTOByNameAsync(input);
-                    var ingredientToAdd = new IngredientDTO { Name = ingredient.Name };
+                    var ingredient = await _ingredientService.GetIngredientByName(input);
+                    var ingredientToAdd = new IngredientAddDTO { Name = ingredient.Name };
                     ingredients.Add(ingredientToAdd);
                 }
                 catch (KeyNotFoundException)
@@ -167,7 +257,7 @@ namespace CRUDRecipeEF.PL.Menus
                         return;
                     }
 
-                    ingredients.Add(new IngredientDTO { Name = input });
+                    ingredients.Add(new IngredientAddDTO { Name = input });
                 }
 
                 ConsoleHelper.ColorWrite("Would you like to add another ingredient? (y/N): ");
