@@ -20,6 +20,5 @@ namespace CRUDRecipeEF.BL.Services
         Task RemoveIngredientFromRecipe(string ingredientName, string recipeName);
 
         Task DeleteRecipe(string name);
-        Task UpdateRecipe(RecipeDTO recipeDTO, string recipeName);
     }
 }
