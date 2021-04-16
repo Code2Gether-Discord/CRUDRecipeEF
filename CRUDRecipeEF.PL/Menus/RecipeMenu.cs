@@ -15,7 +15,11 @@ namespace CRUDRecipeEF.PL.Menus
         private readonly ILogger _logger;
         private readonly int _recipePerPage = 8;
 
-        private enum RecipeMenuOption { InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4, GoBack = 5 };
+        private enum RecipeMenuOption
+        {
+            InValid = 0, NewRecipe = 1, LookUpRecipe = 2, ShowRecipe = 3, DeleteRecipe = 4,
+            UpdateRecipe = 5, GoBack = 6
+        };
 
         public RecipeMenu(IRecipeService recipeService,
             IIngredientService ingredientService,
@@ -35,8 +39,9 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("2.) Lookup Recipe");
             ConsoleHelper.ColorWriteLine("3.) Show Recipe List");
             ConsoleHelper.ColorWriteLine("4.) Delete Recipe");
+            ConsoleHelper.ColorWriteLine("5.) Update Recipe");
             Console.WriteLine();
-            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "5.) Back to Main Menu");
+            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "6.) Back to Main Menu");
             Console.WriteLine();
 
             string input = string.Empty;
@@ -85,12 +90,30 @@ namespace CRUDRecipeEF.PL.Menus
                     Console.WriteLine();
                     await DeleteRecipe();
                     break;
+                case RecipeMenuOption.UpdateRecipe:
+                    Console.WriteLine();
+                    UpdateRecipe();
+                    break;
                 case RecipeMenuOption.GoBack:
                     Console.WriteLine();
                     break;
                 default:
                     break;
             }
+        }
+
+        private async void UpdateRecipe()
+        {
+            ConsoleHelper.ColorWrite("What recipe would you like to update: ");
+            var input = Console.ReadLine();
+
+            var recipe = await _recipeService.GetRecipeByName(input);
+
+            ConsoleHelper.ColorWrite("What is the new name of the recipe: ");
+            Console.WriteLine();
+            var recipeName = Console.ReadLine();
+
+            await _recipeService.UpdateRecipe(recipe, recipeName);
         }
 
         private async Task ListRecipe()
@@ -145,7 +168,7 @@ namespace CRUDRecipeEF.PL.Menus
 
             while (another)
             {
-                ConsoleHelper.ColorWrite("What ingredeient would you like to add: ");
+                ConsoleHelper.ColorWrite("What ingredient would you like to add: ");
                 var input = Console.ReadLine();
 
                 try
