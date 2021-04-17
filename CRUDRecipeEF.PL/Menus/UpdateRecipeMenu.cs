@@ -1,4 +1,6 @@
 ﻿using CRUDRecipeEF.BL.Services;
+using CRUDRecipeEF.DAL.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ namespace CRUDRecipeEF.PL.Menus
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
         private readonly IUpdateRecipeMenuService _updateMenuService;
+        private readonly RecipeContext _context;
         private readonly ILogger _logger;
 
         private enum RecipeUpdateOption
@@ -22,45 +25,63 @@ namespace CRUDRecipeEF.PL.Menus
 
         public UpdateRecipeMenu(IRecipeService recipeService,
             IIngredientService ingredientService,
+            RecipeContext context,
             ILogger<RecipeMenu> logger)
         {
             _recipeService = recipeService;
             _ingredientService = ingredientService;
             _logger = logger;
+            _context = context;
         }
 
         public async Task Show()
         {
-            ConsoleHelper.DefaultColor = ConsoleColor.Blue;
-            ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "Recipe Change");
-            Console.WriteLine();
-            ConsoleHelper.ColorWriteLine("1.) Change Name");
-            ConsoleHelper.ColorWriteLine("2.) Change Ingredient");
-            Console.WriteLine();
-            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "6.) Back to Main Menu");
-            Console.WriteLine();
+            ConsoleHelper.ColorWriteLine("Please provide the name of the recipe that you want to update: ");
+            var recipe = Console.ReadLine();
 
-            string input = string.Empty;
-            int option = 0;
-            bool valid = false;
+            var findRecipe = await _context.Recipes.Include(i => i.Ingredients)
+                .SingleOrDefaultAsync(r => r.Name.ToLower() == recipe.ToLower().Trim());
 
-            while (!valid)
+            if (findRecipe != null)
             {
-                ConsoleHelper.ColorWrite(ConsoleColor.Yellow, "Please select an option: ");
-                input = Console.ReadLine();
+                Console.WriteLine();
+                ConsoleHelper.DefaultColor = ConsoleColor.Blue;
+                ConsoleHelper.ColorWriteLine(ConsoleColor.Yellow, "Recipe Change Menu");
+                Console.WriteLine();
+                ConsoleHelper.ColorWriteLine("1.) Change Name");
+                ConsoleHelper.ColorWriteLine("2.) Change Ingredient");
+                Console.WriteLine();
+                ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "3.) Back to Main Menu");
+                Console.WriteLine();
 
-                valid = ConsoleHelper.ValidateInt(input, (int)RecipeUpdateOption.Name, (int)RecipeUpdateOption.GoBack, out option);
+                string input = string.Empty;
+                int option = 0;
+                bool valid = false;
 
-                if (!Enum.IsDefined(typeof(RecipeUpdateOption), option))
+                while (!valid)
                 {
-                    _logger.LogWarning("Option is not in enum");
-                    valid = false;
+                    ConsoleHelper.ColorWrite(ConsoleColor.Yellow, "Please select an option: ");
+                    input = Console.ReadLine();
+
+                    valid = ConsoleHelper.ValidateInt(input, (int)RecipeUpdateOption.Name, (int)RecipeUpdateOption.GoBack, out option);
+
+                    if (!Enum.IsDefined(typeof(RecipeUpdateOption), option))
+                    {
+                        _logger.LogWarning("Option is not in enum");
+                        valid = false;
+                    }
+
                 }
 
+                RecipeUpdateOption choice = (RecipeUpdateOption)option;
+                await ExecuteUpdateRecipeSelection(choice);
             }
-
-            RecipeUpdateOption choice = (RecipeUpdateOption)option;
-            await ExecuteUpdateRecipeSelection(choice);
+            else
+            {
+                Console.WriteLine();
+                ConsoleHelper.ColorWriteLine(ConsoleColor.DarkYellow, $"{recipe} does not exist.");
+                Console.WriteLine();
+            }
         }
 
         private async Task ExecuteUpdateRecipeSelection(RecipeUpdateOption recipeUpdateOption)
