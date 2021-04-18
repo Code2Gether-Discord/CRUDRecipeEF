@@ -1,5 +1,6 @@
 ﻿using CRUDRecipeEF.BL.Services;
 using CRUDRecipeEF.DAL.Data;
+using CRUDRecipeEF.DAL.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -33,6 +34,7 @@ namespace CRUDRecipeEF.PL.Menus
             _logger = logger;
             _context = context;
         }
+        RecipeDTO findRecipe = new RecipeDTO();
 
         public async Task Show()
         {
@@ -109,12 +111,23 @@ namespace CRUDRecipeEF.PL.Menus
 
         private async Task UpdateRecipeIngredient()
         {
-            _updateMenuService.UpdateRecipeIngredient();
+            ConsoleHelper.ColorWriteLine("Which one is the ingredient you want to change: ");
+            var input = Console.ReadLine();
+
+            var ingredient = await _ingredientService.GetIngredientDTOByNameAsync(input);
+
+            ConsoleHelper.ColorWriteLine("Which is the new name of the ingredient: ");
+            var newName = Console.ReadLine();
+
+            await _updateMenuService.UpdateIngredient(ingredient, newName);
         }
 
         private async Task UpdateRecipeName()
         {
-            _updateMenuService.UpdateRecipeName();
+            ConsoleHelper.ColorWriteLine("Which is the new recipe name: ");
+            var newName = Console.ReadLine();
+
+            await _updateMenuService.UpdateRecipeName(findRecipe, newName);
         }
         
     }

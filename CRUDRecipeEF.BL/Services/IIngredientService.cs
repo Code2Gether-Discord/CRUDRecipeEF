@@ -28,6 +28,5 @@ namespace CRUDRecipeEF.BL.Services
         /// <returns></returns>
         /// <exception cref="KeyNotFoundException"></exception>
         Task DeleteIngredient(string name);
-        Task UpdateIngredient(IngredientDTO ingredientDTO, string ingredientName);
     }
 }
