@@ -15,7 +15,7 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
-        private readonly IUpdateRecipeMenuService _updateMenuService;
+        private readonly IUpdateRecipeMenuService _updateRecipeMenuService;
         private readonly RecipeContext _context;
         private readonly ILogger _logger;
 
@@ -27,12 +27,14 @@ namespace CRUDRecipeEF.PL.Menus
         public UpdateRecipeMenu(IRecipeService recipeService,
             IIngredientService ingredientService,
             RecipeContext context,
-            ILogger<RecipeMenu> logger)
+            ILogger<RecipeMenu> logger,
+            IUpdateRecipeMenuService updateRecipeMenuService)
         {
             _recipeService = recipeService;
             _ingredientService = ingredientService;
             _logger = logger;
             _context = context;
+            _updateRecipeMenuService = updateRecipeMenuService;
         }
         RecipeDTO findRecipe = new RecipeDTO();
 
@@ -114,12 +116,14 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("Which one is the ingredient you want to change: ");
             var input = Console.ReadLine();
 
-            var ingredient = await _ingredientService.GetIngredientDTOByNameAsync(input);
+            IngredientDTO ingredient = new IngredientDTO();
+
+            ingredient = await _ingredientService.GetIngredientDTOByNameAsync(input);
 
             ConsoleHelper.ColorWriteLine("Which is the new name of the ingredient: ");
             var newName = Console.ReadLine();
 
-            await _updateMenuService.UpdateIngredient(ingredient, newName);
+            await _updateRecipeMenuService.UpdateIngredient(ingredient, newName);
         }
 
         private async Task UpdateRecipeName()
@@ -127,7 +131,7 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("Which is the new recipe name: ");
             var newName = Console.ReadLine();
 
-            await _updateMenuService.UpdateRecipeName(findRecipe, newName);
+            await _updateRecipeMenuService.UpdateRecipeName(findRecipe, newName);
         }
         
     }

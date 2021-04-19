@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CRUDRecipeEF.DAL.Data;
 using CRUDRecipeEF.DAL.DTOs;
+using CRUDRecipeEF.DAL.Entities;
 using CRUDRecipeEF.DAL.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
@@ -40,7 +41,9 @@ namespace CRUDRecipeEF.BL.Services
 
             var ingredient = await _ingredientService.GetIngredientDTOByNameAsync(ingredientDTO.Name);
 
-            _mapper.Map(ingredientDTO, ingredient);
+            ingredientDTO.Name = ingredientName;
+
+            //_mapper.Map<Ingredient, IngredientDTO>(ingredient);
 
             await _unitOfWork.SaveAsync();
         }
