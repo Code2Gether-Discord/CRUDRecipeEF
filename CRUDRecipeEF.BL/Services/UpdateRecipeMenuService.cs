@@ -20,13 +20,15 @@ namespace CRUDRecipeEF.BL.Services
         private readonly IIngredientService _ingredientService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRecipeService _recipeService;
+        private readonly IIngredientRepo _ingredientRepo;
 
         public UpdateRecipeMenuService(RecipeContext context,
             IMapper mapper,
             IIngredientService ingredientService,
             ILogger<UpdateRecipeMenuService> logger,
             IUnitOfWork unitOfWork,
-            IRecipeService recipeService)
+            IRecipeService recipeService,
+            IIngredientRepo ingredientRepo)
         {
             _context = context;
             _mapper = mapper;
@@ -34,16 +36,14 @@ namespace CRUDRecipeEF.BL.Services
             _logger = logger;
             _unitOfWork = unitOfWork;
             _recipeService = recipeService;
+            _ingredientRepo = ingredientRepo;
         }
 
-        public async Task UpdateIngredient(IngredientDTO ingredientDTO, string ingredientName)
+        public async Task UpdateIngredient(string input, string ingredientName)
         {
+            Ingredient ingredient = await _ingredientRepo.GetIngredientByNameAsync(input);
 
-            var ingredient = await _ingredientService.GetIngredientDTOByNameAsync(ingredientDTO.Name);
-
-            ingredientDTO.Name = ingredientName;
-
-            //_mapper.Map<Ingredient, IngredientDTO>(ingredient);
+            ingredient.Name = ingredientName;
 
             await _unitOfWork.SaveAsync();
         }

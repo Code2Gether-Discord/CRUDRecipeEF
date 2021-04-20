@@ -114,22 +114,28 @@ namespace CRUDRecipeEF.PL.Menus
         private async Task UpdateRecipeIngredient()
         {
             ConsoleHelper.ColorWriteLine("Which one is the ingredient you want to change: ");
-            var input = Console.ReadLine();
+            var input = Console.ReadLine().ToLower().Trim();
 
-            IngredientDTO ingredient = new IngredientDTO();
+            var ingredient = await _ingredientService.GetIngredientDTOByNameAsync(input);
 
-            ingredient = await _ingredientService.GetIngredientDTOByNameAsync(input);
+            if (ingredient == null)
+            {
+                ConsoleHelper.ColorWriteLine(ConsoleColor.Red, $"Attempted to update an ingredient that does not exist: {input}");
+                Console.WriteLine();
+                _logger.LogDebug($"Attempted to get ingredient that does not exist: {input}");
+                throw new KeyNotFoundException("Ingredient doesnt exist");
+            }
 
             ConsoleHelper.ColorWriteLine("Which is the new name of the ingredient: ");
-            var newName = Console.ReadLine();
+            var newName = Console.ReadLine().ToLower().Trim();
 
-            await _updateRecipeMenuService.UpdateIngredient(ingredient, newName);
+            await _updateRecipeMenuService.UpdateIngredient(input, newName);
         }
 
         private async Task UpdateRecipeName()
         {
             ConsoleHelper.ColorWriteLine("Which is the new recipe name: ");
-            var newName = Console.ReadLine();
+            var newName = Console.ReadLine().ToLower().Trim();
 
             await _updateRecipeMenuService.UpdateRecipeName(findRecipe, newName);
         }

@@ -9,7 +9,7 @@ namespace CRUDRecipeEF.BL.Services
 {
     public interface IUpdateRecipeMenuService
     {
-        Task UpdateIngredient(IngredientDTO ingredientDTO, string ingredientName);
+        Task UpdateIngredient(string name, string ingredientName);
         Task UpdateRecipeName(RecipeDTO recipeDTO, string name);
     }
 }
