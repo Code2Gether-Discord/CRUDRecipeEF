@@ -29,7 +29,7 @@ namespace CRUDRecipeEF.DAL.Repositories
         {
             return _context.Restaurants
                 .Include(m => m.Menus)
-                .FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower().Trim());
+                .FirstOrDefaultAsync(r => r.Name == name.ToLower().Trim());
         }
 
         public Task<bool> RestaurantExists(string name)

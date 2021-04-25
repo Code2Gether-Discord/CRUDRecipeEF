@@ -52,7 +52,7 @@ namespace CRUDRecipeEF.BL.Services
         {
             var category = await GetCategoryByNameIfExists(categoryName);
             var recipe = await _context.Recipes
-                .FirstOrDefaultAsync(x => x.Name.ToLower() == recipeAddDTO.Name.ToLower().Trim());
+                .FirstOrDefaultAsync(x => x.Name == recipeAddDTO.Name.ToLower().Trim());
 
             if (recipe == null)
             {
@@ -75,7 +75,7 @@ namespace CRUDRecipeEF.BL.Services
 
         private async Task<RecipeCategory> GetCategoryByNameIfExists(string name)
         {
-            var category = await _context.RecipeCategories.FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower().Trim());
+            var category = await _context.RecipeCategories.FirstOrDefaultAsync(c => c.Name == name.ToLower().Trim());
             if (category == null)
             {
                 throw new KeyNotFoundException("Category doesn't exist");
@@ -86,10 +86,8 @@ namespace CRUDRecipeEF.BL.Services
 
         private async Task<bool> CategoryExists(string categoryName)
         {
-            bool exists = await _context.RecipeCategories.AnyAsync(c => c.Name.ToLower() == categoryName.ToLower().Trim());
+            bool exists = await _context.RecipeCategories.AnyAsync(c => c.Name == categoryName.ToLower().Trim());
             return exists;
-            // Not using => makes this easier to debug. For some reason .ToLowerInvariant() does not work in the predicate.
-            // Possibly not compatiable with async? May look into this later.
         }
     }
 }

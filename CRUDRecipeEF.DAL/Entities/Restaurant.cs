@@ -9,7 +9,7 @@ namespace CRUDRecipeEF.DAL.Entities
 
         public int Id { get; set; }
         [Required]
-        public string Name { get => _name; set => _name = value.Trim(); }
+        public string Name { get => _name; set => _name = value.Trim().ToLower(); }
         public List<Menu> Menus { get; set; } = new List<Menu>();
     }
 }

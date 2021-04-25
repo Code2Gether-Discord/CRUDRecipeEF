@@ -36,7 +36,7 @@ namespace CRUDRecipeEF.DAL.Repositories
         }
 
         public Task<Ingredient> GetIngredientByNameAsync(string name) =>
-            _context.Ingredients.SingleOrDefaultAsync(i => i.Name.ToLower() == name.ToLower().Trim());
+            _context.Ingredients.SingleOrDefaultAsync(i => i.Name == name.ToLower().Trim());
 
         public Task<IngredientDTO> GetIngredientDTOByNameAsync(string name)
         {
@@ -45,7 +45,7 @@ namespace CRUDRecipeEF.DAL.Repositories
         }
 
         public Task<bool> IngredientExistsAsync(string name) =>
-            _context.Ingredients.AnyAsync(i => i.Name.ToLower() == name.ToLower().Trim());
+            _context.Ingredients.AnyAsync(i => i.Name == name.ToLower().Trim());
 
     }
 }
