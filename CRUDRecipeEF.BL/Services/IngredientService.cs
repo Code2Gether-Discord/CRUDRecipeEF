@@ -62,13 +62,7 @@ namespace CRUDRecipeEF.BL.Services
             return _ingredientRepo.GetIngredientDTOByNameAsync(name);            
         }
 
-        public async Task UpdateIngredient(IngredientDTO ingredientDTO, string ingredientName)
-        {
-            var ingredient = await GetIngredientByNameIfExistsAsync(ingredientName);
-
-            _mapper.Map(ingredientDTO, ingredient);
-            await _unitOfWork.SaveAsync();
-        }
+        
 
         /// <summary>
         /// Gets an ingredient by name if it exists

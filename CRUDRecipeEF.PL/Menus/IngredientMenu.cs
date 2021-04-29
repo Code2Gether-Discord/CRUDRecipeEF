@@ -14,7 +14,7 @@ namespace CRUDRecipeEF.PL.Menus
         private readonly ILogger _logger;
         private readonly int _ingredientsPerPage = 8;
 
-        private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngredient = 2, ShowIngredient = 3, DeleteIngredient = 4, GoBack = 5 };
+        private enum IngredientMenuOption { InValid = 0, NewIngredient = 1, LookUpIngredient = 2, ShowIngredient = 3, DeleteIngredient = 4, UpdateIngredient = 5, GoBack = 6 };
 
         public IngredientMenu(IIngredientService ingredientService,
             ILogger<IngredientMenu> logger)
@@ -32,8 +32,9 @@ namespace CRUDRecipeEF.PL.Menus
             ConsoleHelper.ColorWriteLine("2.) Lookup Ingredient");
             ConsoleHelper.ColorWriteLine("3.) Show Ingredient List");
             ConsoleHelper.ColorWriteLine("4.) Delete Ingredient");
+            ConsoleHelper.ColorWriteLine("5.) Update Ingredient");
             Console.WriteLine();
-            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "5.) Back to Main Menu");
+            ConsoleHelper.ColorWriteLine(ConsoleColor.Red, "6.) Back to Main Menu");
             Console.WriteLine();
 
             string input = string.Empty;
@@ -77,6 +78,9 @@ namespace CRUDRecipeEF.PL.Menus
                     break;
                 case IngredientMenuOption.DeleteIngredient:
                     await DeleteIngredient();
+                    break;
+                case IngredientMenuOption.UpdateIngredient:
+                    //await UpdateIngredient();
                     break;
                 case IngredientMenuOption.GoBack:
                     Console.WriteLine();
@@ -166,5 +170,7 @@ namespace CRUDRecipeEF.PL.Menus
             Console.WriteLine();
             await this.Show();
         }
+
+        
     }
 }

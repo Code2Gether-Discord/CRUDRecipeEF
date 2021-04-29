@@ -12,6 +12,7 @@ namespace CRUDRecipeEF.PL.Menus
     {
         private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
+        private readonly IUpdateRecipeMenu _updateMenu;
         private readonly ILogger _logger;
         private readonly int _recipePerPage = 8;
 
@@ -21,12 +22,15 @@ namespace CRUDRecipeEF.PL.Menus
             UpdateRecipe = 5, GoBack = 6
         };
 
+
         public RecipeMenu(IRecipeService recipeService,
-            IIngredientService ingredientService,
+            IIngredientService ingredientService, 
+            IUpdateRecipeMenu updateMenu,
             ILogger<RecipeMenu> logger)
         {
             _recipeService = recipeService;
             _ingredientService = ingredientService;
+            _updateMenu = updateMenu;
             _logger = logger;
         }
 
@@ -67,6 +71,7 @@ namespace CRUDRecipeEF.PL.Menus
             await ExecuteMenuSelection(choice);
         }
 
+        
         private async Task ExecuteMenuSelection(RecipeMenuOption option)
         {
             switch (option)
@@ -92,7 +97,7 @@ namespace CRUDRecipeEF.PL.Menus
                     break;
                 case RecipeMenuOption.UpdateRecipe:
                     Console.WriteLine();
-                    UpdateRecipe();
+                    await _updateMenu.Show();
                     break;
                 case RecipeMenuOption.GoBack:
                     Console.WriteLine();
@@ -102,19 +107,8 @@ namespace CRUDRecipeEF.PL.Menus
             }
         }
 
-        private async void UpdateRecipe()
-        {
-            ConsoleHelper.ColorWrite("What recipe would you like to update: ");
-            var input = Console.ReadLine();
+        
 
-            var recipe = await _recipeService.GetRecipeByName(input);
-
-            ConsoleHelper.ColorWrite("What is the new name of the recipe: ");
-            Console.WriteLine();
-            var recipeName = Console.ReadLine();
-
-            await _recipeService.UpdateRecipe(recipe, recipeName);
-        }
 
         private async Task ListRecipe()
         {
