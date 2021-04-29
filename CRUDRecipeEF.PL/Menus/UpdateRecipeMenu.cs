@@ -13,7 +13,6 @@ namespace CRUDRecipeEF.PL.Menus
 {
     public class UpdateRecipeMenu : IUpdateRecipeMenu
     {
-        private readonly IRecipeService _recipeService;
         private readonly IIngredientService _ingredientService;
         private readonly IUpdateRecipeMenuService _updateRecipeMenuService;
         private readonly RecipeContext _context;
@@ -24,13 +23,11 @@ namespace CRUDRecipeEF.PL.Menus
             InValid = 0, Name = 1, Ingredient = 2, GoBack = 3
         };
 
-        public UpdateRecipeMenu(IRecipeService recipeService,
-            IIngredientService ingredientService,
+        public UpdateRecipeMenu(IIngredientService ingredientService,
             RecipeContext context,
             ILogger<RecipeMenu> logger,
             IUpdateRecipeMenuService updateRecipeMenuService)
         {
-            _recipeService = recipeService;
             _ingredientService = ingredientService;
             _logger = logger;
             _context = context;
@@ -114,22 +111,22 @@ namespace CRUDRecipeEF.PL.Menus
         private async Task UpdateRecipeIngredient()
         {
             ConsoleHelper.ColorWriteLine("Which one is the ingredient you want to change: ");
-            var input = Console.ReadLine().ToLower().Trim();
+            var ingredientToBeChanged = Console.ReadLine().ToLower().Trim();
 
-            var ingredient = await _ingredientService.GetIngredientDTOByNameAsync(input);
+            var ingredient = await _ingredientService.GetIngredientDTOByNameAsync(ingredientToBeChanged);
 
             if (ingredient == null)
             {
-                ConsoleHelper.ColorWriteLine(ConsoleColor.Red, $"Attempted to update an ingredient that does not exist: {input}");
+                ConsoleHelper.ColorWriteLine(ConsoleColor.Red, $"Attempted to update an ingredient that does not exist: {ingredientToBeChanged}");
                 Console.WriteLine();
-                _logger.LogDebug($"Attempted to get ingredient that does not exist: {input}");
+                _logger.LogDebug($"Attempted to get ingredient that does not exist: {ingredientToBeChanged}");
                 throw new KeyNotFoundException("Ingredient doesnt exist");
             }
 
             ConsoleHelper.ColorWriteLine("Which is the new name of the ingredient: ");
             var newName = Console.ReadLine().ToLower().Trim();
 
-            await _updateRecipeMenuService.UpdateIngredient(input, newName);
+            await _updateRecipeMenuService.UpdateIngredient(ingredientToBeChanged, newName);
         }
 
         private async Task UpdateRecipeName()

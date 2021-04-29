@@ -14,26 +14,18 @@ namespace CRUDRecipeEF.BL.Services
 {
     public class UpdateRecipeMenuService : IUpdateRecipeMenuService
     {
-        private readonly RecipeContext _context;
-        private readonly ILogger<UpdateRecipeMenuService> _logger;
         private readonly IMapper _mapper;
-        private readonly IIngredientService _ingredientService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRecipeService _recipeService;
         private readonly IIngredientRepo _ingredientRepo;
 
-        public UpdateRecipeMenuService(RecipeContext context,
+        public UpdateRecipeMenuService(
             IMapper mapper,
-            IIngredientService ingredientService,
-            ILogger<UpdateRecipeMenuService> logger,
             IUnitOfWork unitOfWork,
             IRecipeService recipeService,
             IIngredientRepo ingredientRepo)
         {
-            _context = context;
             _mapper = mapper;
-            _ingredientService = ingredientService;
-            _logger = logger;
             _unitOfWork = unitOfWork;
             _recipeService = recipeService;
             _ingredientRepo = ingredientRepo;
